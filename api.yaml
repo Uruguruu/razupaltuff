@@ -1,7 +1,7 @@
 swagger: '0.1'
 info:
   description: 'This is the API for the Store'
-  version: 0.0.1
+  version: 0.0.2
   title: API Store
 tags:
   - name: login
@@ -78,135 +78,41 @@ paths:
         '405':
           description: user already exist
 
+  /create_product:
+    post:
+      summary: 
+        description: 'to create a product'
+        operationId: create_product
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        parameters:
+          - in: body
+            name: name
+            required: true
+          - in: body
+            name: description
+            required: true
+          - in: body
+            name: price
+            required: true
+          - in: body
+            name: Category
+            required: true
+          - in: body
+            name: producer
+            required: true
+          - in: formData
+            name: images
+            required: true
+        responses:
+          '200':
+            description: product was created successfully
+          '405':
+            description: product already exist
+
 #ab hier nicht mehr betrachten
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
 #
 #
 #
