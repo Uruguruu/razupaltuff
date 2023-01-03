@@ -15,8 +15,8 @@ module.exports = function (file) {
 
   this.check_user = function (eMail, password) {
     const check_user = this.db.prepare(
-      "SHOW TABLES"
-      // "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
+      
+      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
     return check_user.get({ eMail, password });
   };
