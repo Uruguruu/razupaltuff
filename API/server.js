@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3004;
+<<<<<<< HEAD
 /*const database = require("./database.js");
 const db = new database("./messages.db");
 const fs = require("fs");*/
@@ -9,161 +10,144 @@ const session = require('express-session');
 const { response } = require("express");
 
 
+=======
+const database = require("./database.js");
+const db = new database("./database.db");
+const fs = require("fs");
+var bodyParser = require("body-parser");
+const session = require("express-session");
+console.log(db.getMessages());
+>>>>>>> b8824123bc0c62dbe8760c3ede144fe9193ad2e4
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
 
-
-app.post('/login', (req, res) => {
-    // to login into your account
-    make()
-    async function make(){
-        let { email, password } = request.body;
-        var check = await check_password(email, password);
-        if(check){
-            
-            res.status(200);
-            res.send(genAPIKey)
-        }
-        else{
-            res.status(403);
-            res.send('wrong user or password')    
-        }
+app.post("/login", (req, res) => {
+  // to login into your account
+  make();
+  async function make() {
+    let { email, password } = request.body;
+    var check = await check_password(email, password);
+    if (check) {
+      res.status(200);
+      res.send(genAPIKey);
+    } else {
+      res.status(403);
+      res.send("wrong user or password");
     }
-    })
+  }
+});
 
-app.post('/logout', (req, res) => {
-    // to logout
-    make()
-    async function make(){
-    }
-})
+app.post("/logout", (req, res) => {
+  // to logout
+  make();
+  async function make() {}
+});
 
-
-app.post('/create_user', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { email, username, password, geburtsdatum, adresse } = req.body;
-        if(user_exist(username, email)){
-            response = "user exist"
-        }
-        else{
-            generate_user(email, username, password, geburtsdatum, adresse);
-            response = "user created"
-        }
-    }
-})
-app.post('/create_product', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { name, description, price, Category, producer, images } = req.body;
-        if(product_exist(name)){
-            response = "product exist"
-        }
-        else{
-            generate_product(name, description, price, Category, producer, images);
-            response = "product added"
-        }
-    }
-})
-
+app.post("/create_user", (req, res) => {
+  // to create a user
+  make();
+  async function make() {
+    let { adresse, geburtsdatum, username, password, email } = request.body;
+  }
+});
 
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
   hell = genAPIKey();
   console.log(hell);
-  
 });
 
-app.get('/', function (request, response) {
-	response.send("Welcome to Chatnode");
-})
+app.get("/", function (request, response) {
+  response.send("Welcome to Chatnode");
+});
 
-app.post('/content', function (request, response) {
-    db.getMessage(100);
-    make()
-    async function make(){
+app.post("/content", function (request, response) {
+  db.getMessage(100);
+  make();
+  async function make() {
     let { email, password } = request.body;
     var json = await check_password(email, password);
-    
+
     var data = JSON.parse(json);
-    if(receiver > sender){
-        name = receiver.toString() + sender.toString();
+    if (receiver > sender) {
+      name = receiver.toString() + sender.toString();
+    } else {
+      name = sender.toString() + receiver.toString();
     }
-    else{
-        name = sender.toString() + receiver.toString();    
-    }
-    if(!Object.hasOwn(data, name)) response.send("no content");
-    eval("var responsdata = data["+name+"];");
+    if (!Object.hasOwn(data, name)) response.send("no content");
+    eval("var responsdata = data[" + name + "];");
     console.log(data);
     response.send(JSON.stringify(responsdata));
-}})
+  }
+});
 
-app.post('/password', function (request, response) {
-    hell()
-    async function hell(){
+app.post("/password", function (request, response) {
+  hell();
+  async function hell() {
     let { password, sender } = request.body;
     var json = await getpassword();
     var data = JSON.parse(json);
-    if(Object.hasOwn(data, password)) response.send("already exist");
-    eval("data["+sender+"] = password")
+    if (Object.hasOwn(data, password)) response.send("already exist");
+    eval("data[" + sender + "] = password");
     json = JSON.stringify(data);
-    fs.writeFile('password.json', json, 'utf8', callback);
-    function callback(){
-        response.send("su")
+    fs.writeFile("password.json", json, "utf8", callback);
+    function callback() {
+      response.send("su");
     }
-}})
+  }
+});
 
-
-app.post('/send-message', function (request, response) {
-hell();
-async function hell(){
+app.post("/send-message", function (request, response) {
+  hell();
+  async function hell() {
     let { receiver, sender, message, password } = request.body;
     var check = await passwod(password, sender);
-    if(check == false){
-        response.send("false");
-        return;
+    if (check == false) {
+      response.send("false");
+      return;
     }
     var json = await getjson();
     var name = 0;
     console.log(1);
     var data = JSON.parse(json);
-    if(receiver > sender){
-        name = receiver.toString() + sender.toString();
+    if (receiver > sender) {
+      name = receiver.toString() + sender.toString();
+    } else {
+      name = sender.toString() + receiver.toString();
     }
-    else{
-        name = sender.toString() + receiver.toString();    
-    }
-    var chatlist = []
-    if(Object.hasOwn(data, name)){
-        chatlist = eval("data["+name+"];");
+    var chatlist = [];
+    if (Object.hasOwn(data, name)) {
+      chatlist = eval("data[" + name + "];");
     }
     console.log(2);
     chatlist.push(sender);
     chatlist.push(message);
-    eval("data["+name+"] = chatlist");
+    eval("data[" + name + "] = chatlist");
     json = JSON.stringify(data);
-    fs.writeFile('data.json', json, 'utf8', callback);
-    function callback(){
-        response.send("su")
+    fs.writeFile("data.json", json, "utf8", callback);
+    function callback() {
+      response.send("su");
     }
-}
-})
+  }
+});
 // Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
 // im Ordner "public" zu finden sind.
+<<<<<<< HEAD
 app.use(
     express.static(__dirname + '/public')
 
     );
+=======
+app.use(express.static(__dirname + "/public"));
+>>>>>>> b8824123bc0c62dbe8760c3ede144fe9193ad2e4
 
-    const genAPIKey = () => {
-        //create a base-36 string that contains 30 chars in a-z,0-9
-        return [...Array(30)]
-          .map((e) => ((Math.random() * 36) | 0).toString(36))
-          .join('');
-      };
+const genAPIKey = () => {
+  //create a base-36 string that contains 30 chars in a-z,0-9
+  return [...Array(30)]
+    .map((e) => ((Math.random() * 36) | 0).toString(36))
+    .join("");
+};
