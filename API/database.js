@@ -24,8 +24,28 @@ module.exports = function (file) {
     insert.run({ userID, UserName, eMail, birthDate, password });
   };
 
+  this.update_user = function (
+    UserName,
+    newUserName,
+    eMail,
+    birthDate,
+    password
+  ) {
+    const update = this.db.prepare(
+      "UPDATE users SET UserName = @newUserName, eMail = @eMail, birthDate = @birthDate, password = @password WHERE UserName = @UserName"
+    );
+    update.run({ newUserName, eMail, birthDate, password, UserName });
+  };
+
   this.getMessages = function () {
     return "hi";
+  };
+
+  this.create_product = function (productID, Name, Image, price, producer) {
+    const insert = this.db.prepare(
+      "insert into products (productID, Name, Image, price, producer) values (@productID, @Name, @Image, @price, @producer)"
+    );
+    insert.run({ productID, Name, Image, price, producer });
   };
 
   this.close = function () {
