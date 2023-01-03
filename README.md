@@ -1,6 +1,6 @@
 # razupaltuff
 
-razupaltuff ist ein online shop
+Razupaltuff ist ein Onlineshop bei dem man alle wichtigen Dinge, die man sonst so in einem Onlineshop vorfindet tun kann wie z.B. das man ein loggin erstellen kann oder dass man nach einem Produkt suchen kann. Nur das Bestellen von Produkten kann man nicht.
 
 # API
 
