@@ -24,6 +24,12 @@ module.exports = function (file) {
     return this.db.prepare("SELECT * FROM users").all();
   };
 
+  
+  this.user_exist = function (email) {
+    return this.db.prepare("SELECT * FROM users WHERE '"+email+"' = @eMail").all();
+  };
+
+
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
     const insert = this.db.prepare(
       "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"

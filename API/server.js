@@ -56,7 +56,7 @@ app.post('/create_user', (req, res) => {
     make(req, res)
     async function make(req, res){
         let { email, username, password, geburtsdatum, adresse } = req.body;
-        if(db.user_exist(username, email)){
+        if(db.user_exist(email)){
             response = "user exist"
         }
         else{
