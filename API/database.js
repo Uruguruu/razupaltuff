@@ -1,37 +1,34 @@
 /* jshint esversion: 6 */
 
 module.exports = function (file) {
-  const database = require("better-sqlite3");
+  const Database = require("better-sqlite3");
 
-  const db = new sqlite3.Database("my_database.db");
-
-  database.connect(db, function (error) {
-    if (error) {
-      console.error("Error connecting to database: " + error);
-    } else {
-      console.log("Connected to database");
-    }
+  this.db = new Database(file, {
+    //  verbose: console.log
   });
 
-  function getUseres() {
-    return database.all("SELECT * FROM users");
-  }
+  this.connect = function (file) {
+    this.db = new Database(file, {
+      verbose: console.log,
+    });
+  };
+
+  this.getUsers = function () {
+    return this.db.prepare("SELECT * FROM useres");
+  };
+
+  this.add;
 
   this.getMessages = function () {
     return "hi";
   };
 
-  function getUser(id) {
-    return database.get("SELECT * FROM users WHERE id = ?", id);
-  }
-
-  function addUser(user) {
-    return database.run(
-      "INSERT INTO users VALUES (?, ?, ?, ?)",
-      user.id,
-      user.name,
-      user.email,
-      user.password
-    );
-  }
+  this.close = function () {
+    this.db.close((error) => {
+      if (error) {
+        return console.error(error.message);
+      }
+      console.log("Close the database connection.");
+    });
+  };
 };
