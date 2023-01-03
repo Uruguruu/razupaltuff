@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Beispiel</title>
+</head>
+<body>
+    <h1>Hallo Chat!</h1>
+    <div id="content"></div>
+    <input id="empfanger" placeholder="empfanger">
+    <input id="sender" placeholder="sender">
+    <input id="nachricht" placeholder="nachricht">
+    <input id="password" placeholder="password">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <button onclick="send()">senden</button>
+    <button onclick="getdata()">aktualisieren</button>
+    <br>
+    <input id="sender2" placeholder="sender2">
+    <input id="password2" placeholder="password2">
+    <button onclick="setpassword()">neues password</button>
+    <script>
+          axios.post('/login',{
+            email: "deinemutter@gmail.ch",
+            password: "hell"
+          })
+          .then(function (response) {
+            console.log(response);
+            website(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    
+    </script>
+</body>
+</html>

@@ -12,28 +12,36 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-
+var keys = {};
 app.post('/login', (req, res) => {
     // to login into your account
     make()
     async function make(){
-        let { email, password } = request.body;
-        var check = await check_password(email, password);
+        let { email, password } = req.body;
+        // var check = await check_password(email, password);
+        var key_array = [];
+        var key = genAPIKey();
+        var check = true;
         if(check){
-            var key_array = [];
-            var key = genAPIKey;
-            if(!key[email] === undefined){
-            key_array = key[email];
+            console.log(2);
+            console.log(keys[email]);
+            console.log(1);
+            if(!(keys[email] === undefined)){
+                console.log(3);
+                console.log(key[email]);
+            key_array = keys[email];
             }
             key_array.push(key);
             keys[email] = key_array;
             res.status(200);
-            res.send();
+            res.send(key);
+            
         }
         else{
             res.status(403);
             res.send('wrong user or password')    
         }
+        console.log(keys);
     }
   }
 );
@@ -48,7 +56,7 @@ app.post("/create_user", (req, res) => {
   // to create a user
   make();
   async function make() {
-    let { adresse, geburtsdatum, username, password, email } = request.body;
+    let { adresse, geburtsdatum, username, password, email } = req.body;
   }
 });
 
@@ -60,7 +68,8 @@ app.listen(port, () => {
 });
 
 app.get("/", function (request, response) {
-  response.send("Welcome to Chatnode");
+  response.sendFile(__dirname +"/test_backend.html");
+
 });
 
 app.post("/content", function (request, response) {
