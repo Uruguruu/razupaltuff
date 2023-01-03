@@ -1,6 +1,6 @@
 # razupaltuff
 
-razupaltuff ist ein online shop
+Razupaltuff ist ein Onlineshop für Krimskrams.
 
 # API
 
