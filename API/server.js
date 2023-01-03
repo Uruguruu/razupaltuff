@@ -47,10 +47,47 @@ app.post('/login', (req, res) => {
 );
 
 app.post("/logout", (req, res) => {
-  // to logout
-  make();
-  async function make() {}
-});
+    // Clear the user's session
+    req.session.destroy(err => {
+      if (err) {
+        console.error(err);
+        return res.sendStatus(500);
+      }
+  
+      // Send a response indicating that the user has been logged out
+      res.send({ message: "Successfully logged out." });
+    });
+  });
+  
+
+app.post('/create_user', (req, res) => {
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { email, username, password, geburtsdatum, adresse } = req.body;
+        if(user_exist(username, email)){
+            response = "user exist"
+        }
+        else{
+            generate_user(email, username, password, geburtsdatum, adresse);
+            response = "user created"
+        }
+    }
+})
+app.post('/create_product', (req, res) => {
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { name, description, price, Category, producer, images } = req.body;
+        if(product_exist(name)){
+            response = "product exist"
+        }
+        else{
+            generate_product(name, description, price, Category, producer, images);
+            response = "product added"
+        }
+    }
+})
 
 app.post("/create_user", (req, res) => {
   // to create a user

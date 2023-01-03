@@ -3,5 +3,5 @@ const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 
-//db.addUser(1, "John", "john@example.com", "1970-01-01", "mypassword");
+db.update_user("John", "john@newMail.com", "1970-01-01", "mypassword", "John");
 console.log(db.getUsers());

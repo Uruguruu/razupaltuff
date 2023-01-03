@@ -75,10 +75,10 @@ paths:
         '405':
           description: user already exist
   /update_user:
-    put:
-       summary:
-       description: 'to update a user'
-       operarionId: update_user
+    post:
+      summary: 
+        description: 'to update a user'
+        operationId: update_product
         consumes:
           - application/json
         produces:
@@ -86,22 +86,27 @@ paths:
         parameters:
           - in: body
             name: email
-            require: true
-                  - in: body
-          name: password
-          required: true
-        - in: body
-          name: username
-          required: true
-        - in: body
-          name: geburtsdatum
-          required: true
-      responses:
-      response:
-        '200':
-          description: user updated successfully
-        '405':
-          description: No changes
+            required: true
+          - in: body
+            name: password
+            required: true
+          - in: body
+            name: username
+            required: true
+          - in: body
+            name: geburtsdatum
+            required: true
+          - in: body
+            name: producer
+            required: true
+          - in: formData
+            name: adresse
+            required: true
+        responses:
+          '200':
+            description: user was update successfully
+          '405':
+            description: no changes
 
   /create_product:
     post:
