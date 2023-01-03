@@ -1,2 +1,2 @@
 # razupaltuff
-![Logo](/img/Log.png)
+![Logo](/img/logo.png)
