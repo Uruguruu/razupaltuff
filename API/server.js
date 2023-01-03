@@ -1,23 +1,12 @@
 const express = require("express");
 const app = express();
 const port = 3004;
-<<<<<<< HEAD
-/*const database = require("./database.js");
-const db = new database("./messages.db");
-const fs = require("fs");*/
-var bodyParser = require('body-parser');
-const session = require('express-session');
-const { response } = require("express");
-
-
-=======
 const database = require("./database.js");
 const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
 console.log(db.getMessages());
->>>>>>> b8824123bc0c62dbe8760c3ede144fe9193ad2e4
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -136,15 +125,10 @@ app.post("/send-message", function (request, response) {
 });
 // Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
 // im Ordner "public" zu finden sind.
-<<<<<<< HEAD
 app.use(
     express.static(__dirname + '/public')
 
     );
-=======
-app.use(express.static(__dirname + "/public"));
->>>>>>> b8824123bc0c62dbe8760c3ede144fe9193ad2e4
-
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
   return [...Array(30)]
