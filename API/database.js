@@ -13,6 +13,8 @@ module.exports = function (file) {
     });
   };
 
+  // do not touch this function unless you know what you are doing
+
   this.getUsers = function () {
     return this.db
       .prepare("SELECT * FROM users")
@@ -52,9 +54,23 @@ module.exports = function (file) {
     return 200, "User updated";
   };
 
+  this.delete_user = function (UserName) {
+    const delete_user = this.db.prepare(
+      "DELETE FROM users WHERE UserName = @UserName"
+    );
+    delete_user.run({ UserName }).catch((error) => {
+      console.log(405, error.message);
+    });
+    return 200, "User deleted";
+  };
+
+  // for testing purposes only - do not use in production
+
   this.test = function () {
     return "up and running";
   };
+
+  // do not touch this function unless you know what you are doing
 
   this.getProducts = function () {
     return this.db
@@ -83,6 +99,16 @@ module.exports = function (file) {
       console.log(405, error.message);
     });
     return 200, "Product updated";
+  };
+
+  this.delete_product = function (productID) {
+    const delete_product = this.db.prepare(
+      "delete from products where productID = @productID"
+    );
+    delete_product.run({ productID }).catch((error) => {
+      console.log(405, error.message);
+    });
+    return 200, "Product deleted";
   };
 
   this.close = function () {
