@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -232.8000000000002,
-    "scrollLeft": -294.4000000000003,
-    "zoomLevel": 0.8,
+    "scrollTop": -250.20312499999966,
+    "scrollLeft": -115.20000000000009,
+    "zoomLevel": 0.9,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -19,7 +19,7 @@
     },
     "database": "SQLite",
     "databaseName": "",
-    "canvasType": "@vuerd/builtin-sql-ddl",
+    "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -166,7 +166,7 @@
           "active": false,
           "left": 193.6,
           "top": 458.4,
-          "zIndex": 218,
+          "zIndex": 3,
           "widthName": 60,
           "widthComment": 60
         },
@@ -320,7 +320,7 @@
           "active": false,
           "left": 641.6,
           "top": 162.4,
-          "zIndex": 216,
+          "zIndex": 2,
           "widthName": 60,
           "widthComment": 60
         },
@@ -451,7 +451,7 @@
           "active": false,
           "left": 867.2,
           "top": 463.2,
-          "zIndex": 212,
+          "zIndex": 1,
           "widthName": 60,
           "widthComment": 60
         },
@@ -559,7 +559,7 @@
           "active": false,
           "left": 417.4,
           "top": 768.4,
-          "zIndex": 235,
+          "zIndex": 4,
           "widthName": 69.17724609375,
           "widthComment": 60
         },
