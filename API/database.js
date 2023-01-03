@@ -105,6 +105,22 @@ module.exports = function (file) {
     return 200, "Product added to cart";
   };
 
+  this.update_cart = function (userID, status) {
+    const update = this.db.prepare(
+      "update warenkorb set status = @status where userID = @userID"
+    );
+    update.run({ status, userID });
+    return 200, "Cart updated";
+  };
+
+  this.delete_from_cart = function (warenkorbID) {
+    const delete_from_cart = this.db.prepare(
+      "delete from warenkorb where warenkorbID = @warenkorbID"
+    );
+    delete_from_cart.run({ warenkorbID });
+    return 200, "Product deleted from cart";
+  };
+
   this.add_rating = function (
     ratingID,
     starts,
@@ -114,7 +130,7 @@ module.exports = function (file) {
     comment
   ) {
     const insert = this.db.prepare(
-      "insert into bewertungen (ratingID, starts, date, produktID, userID, comment) values (@ratingID, @starts, @date, @produktID, @userID, @comment)"
+      "insert into Rating (ratingID, starts, date, produktID, userID, comment) values (@ratingID, @starts, @date, @produktID, @userID, @comment)"
     );
     insert.run({ ratingID, starts, date, produktID, userID, comment });
     return 200, "Rating added";
@@ -122,17 +138,25 @@ module.exports = function (file) {
 
   this.get_ratings = function (produktID) {
     const get_ratings = this.db.prepare(
-      "select * from bewertungen where produktID = @produktID"
+      "select * from Rating where produktID = @produktID"
     );
     return get_ratings.all({ produktID });
   };
 
   this.update_rating = function (ratingID, starts, comment) {
     const update = this.db.prepare(
-      "update bewertungen set starts = @starts, comment = @comment where ratingID = @ratingID"
+      "update Rating set starts = @starts, comment = @comment where ratingID = @ratingID"
     );
     update.run({ starts, comment, ratingID });
     return 200, "Rating updated";
+  };
+
+  this.delete_rating = function (ratingID) {
+    const delete_rating = this.db.prepare(
+      "delete from Rating where ratingID = @ratingID"
+    );
+    delete_rating.run({ ratingID });
+    return 200, "Rating deleted";
   };
 
   this.close = function () {
