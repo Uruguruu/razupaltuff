@@ -56,15 +56,33 @@ app.post('/create_user', (req, res) => {
     make(req, res)
     async function make(req, res){
         let { email, username, password, geburtsdatum, adresse } = req.body;
-        if(user_exist(username, email)){
+        if(db.user_exist(username, email)){
             response = "user exist"
         }
         else{
-            generate_user(email, username, password, geburtsdatum, adresse);
+            db.generate_user(email, username, password, geburtsdatum, adresse);
             response = "user created"
         }
     }
 })
+
+ app.post('/update_user', (req, res) => {
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+      let { email, username, password, geburtsdatum, adresse, key } = req.body;
+      if(!(check_key(email, key))){
+        res.status(403);
+        res.send('forbidden')    
+      } 
+      else{
+        db.update_user(email, username, password, geburtsdatum, adresse);
+        response = "user created"
+    
+    }
+  }
+})
+
 app.post('/create_product', (req, res) => {
     // to login into your account
     make(req, res)
@@ -79,6 +97,30 @@ app.post('/create_product', (req, res) => {
         }
     }
 })
+
+
+app.post('/update_product', (req, res) => {
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+    let {email, name, description, price, Category, producer, images, key } = req.body;
+    if(!(check_key(email, key))){
+      res.status(403);
+      res.send('forbidden')    
+    } 
+    else{
+      if(product_exist(name)){
+          response = "product exist"
+      }
+      else{
+          generate_product(name, description, price, Category, producer, images);
+          response = "product added"
+      }
+    }
+  }
+})
+
+
 
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
