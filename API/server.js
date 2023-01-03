@@ -6,49 +6,86 @@ const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
-console.log(db.getMessages());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-
+var keys = {};
 app.post('/login', (req, res) => {
     // to login into your account
     make()
     async function make(){
-        let { email, password } = request.body;
-        var check = await check_password(email, password);
+        let { email, password } = req.body;
+        // var check = await check_password(email, password);
+        var key_array = [];
+        var key = genAPIKey();
+        var check = true;
         if(check){
-            var key_array = [];
-            var key = genAPIKey;
-            if(!key[email] === undefined){
-            key_array = key[email];
+            if(!(keys[email] === undefined)){
+            key_array = keys[email];
             }
             key_array.push(key);
             keys[email] = key_array;
             res.status(200);
-            res.send();
+            res.send(key);
         }
         else{
             res.status(403);
             res.send('wrong user or password')    
         }
+        console.log(keys);
     }
   }
 );
 
 app.post("/logout", (req, res) => {
-  // to logout
-  make();
-  async function make() {}
+  let { email, key } = req.body;
+  array_list = keys[email];
+  if(!(array_list.includes(key))) res.send({ message: "failed. Not logged in" });
+  else{
+  const index = array_list.indexOf(key);
+  const x = array_list.splice(index, 1);
+  res.send({ message: "Successfully logged out." });
+  console.log(keys);
+  }
 });
+  
+
+app.post('/create_user', (req, res) => {
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { email, username, password, geburtsdatum, adresse } = req.body;
+        if(user_exist(username, email)){
+            response = "user exist"
+        }
+        else{
+            generate_user(email, username, password, geburtsdatum, adresse);
+            response = "user created"
+        }
+    }
+})
+app.post('/create_product', (req, res) => {
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { name, description, price, Category, producer, images } = req.body;
+        if(product_exist(name)){
+            response = "product exist"
+        }
+        else{
+            generate_product(name, description, price, Category, producer, images);
+            response = "product added"
+        }
+    }
+})
 
 app.post("/create_user", (req, res) => {
   // to create a user
   make();
   async function make() {
-    let { adresse, geburtsdatum, username, password, email } = request.body;
+    let { adresse, geburtsdatum, username, password, email } = req.body;
   }
 });
 
@@ -60,7 +97,8 @@ app.listen(port, () => {
 });
 
 app.get("/", function (request, response) {
-  response.send("Welcome to Chatnode");
+  response.sendFile(__dirname +"/test_backend.html");
+
 });
 
 app.post("/content", function (request, response) {
@@ -144,3 +182,8 @@ const genAPIKey = () => {
     .map((e) => ((Math.random() * 36) | 0).toString(36))
     .join("");
 };
+
+function check_key( email,key){
+  list = keys[email];
+  return list.includes(key);
+}
