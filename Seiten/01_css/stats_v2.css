@@ -1,144 +1,41 @@
 body {
   width: 100%;
   min-height: 100vh;
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  margin: 2em;
 }
 
-.d-flex{
+.navbar {
+  background-color: #fff;
+}
+
+.container-fluid {
   display: flex;
-  flex-wrap: wrap;
-  
-  }
-
-.d-flex a img {
-width: 10vw !important;
-
+  justify-content: space-between;
 }
 
-#buch_bild {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 100%;
+.navbar-brand {
+  display: flex;
+  align-items: center;
 }
 
-
-.superbigmargin {
-  margin-top: 20vh;
-}
-
-.bg-imagehtml{
-  min-height: 100vh;
-  background-image: url("/images/Startseite.png");
-}
-
-.bg-imagehtmlvalo{
-  height: 100vh;
-  background-image: url("/images/valohintergrund.jpg");
-}
-.bg-imagehtmlgold{
-  height: 100vh;
-  background-image: url("/images/Gold.png");
-}
-.Frei {
-  margin-top: 4vh;
-}
-#modules {
-  padding: 20px;
-  background: #eee;
-  margin-bottom: 20px;
-  z-index: 1;
-  border-radius: 10px;
-}
-
-#dropzone {
-  padding: 20px;
-  background: #eee;
-  min-height: 100px;
-  margin-bottom: 20px;
-  z-index: 0;
-  border-radius: 10px;
-}
-
-.active {
-  outline: 1px solid red;
-}
-
-.hover {
-  outline: 1px solid blue;
-}
-
-.drop-item {
-  cursor: pointer;
-  margin-bottom: 10px;
-  background-color: rgb(255, 255, 255);
-  padding: 5px 10px;
-  border-radius: 3px;
-  border: 1px solid rgb(204, 204, 204);
-  position: relative;
-}
-
-.drop-item .remove {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-}
-
-
-/* CSS files add styling rules to your content */
-
-body {
-font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-margin: 2em;
-}
-
-.dragdrop {
-display: grid;
-grid-template-columns: repeat(5, 1fr);
-gap: 10px;
-}
-
-.box {
-border: 3px solid #666;
-background-color: #ddd;
-border-radius: .5em;
-padding: 10px;
-cursor: move;
-}
-
-.box.over {
-border: 3px dotted #666;
-}
-
-[draggable] {
-user-select: none;
-}
-
-
-
-
-
-
-
-#div1, #div2 {
-float: left;
-width: 100px;
-height: 35px;
-margin: 10px;
-padding: 10px;
-border: 1px solid black;
-}
-
-.row{
-display: flex;
-justify-content: space-around;
-flex-direction: row;
+.navbar-brand img {
+  margin-right: 10px;
 }
 
 .navbar-search {
+  display: flex;
   flex: 1;
 }
 
-.navbar-brand{
-  margin-left: 10px;
+.form-control {
+  border-radius: 0;
 }
 
+.nav-pills {
+  display: flex;
+}
+
+.nav-pills .navbar-brand img {
+  margin: 0 10px;
+}
