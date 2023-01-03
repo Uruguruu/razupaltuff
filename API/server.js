@@ -17,7 +17,7 @@ app.post('/login', (req, res) => {
     make()
     async function make(){
         let { email, password } = req.body;
-        var check = await check_password(email, password);
+        var check = await db.check_user(email, password);
         var key_array = [];
         var key = genAPIKey();
         var check = true;
@@ -60,7 +60,7 @@ app.post('/create_user', (req, res) => {
             response = "user exist"
         }
         else{
-            db.generate_user(email, username, password, geburtsdatum, adresse);
+            db.create_user(email, username, password, geburtsdatum, adresse);
             response = "user created"
         }
     }
