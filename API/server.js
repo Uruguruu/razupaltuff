@@ -125,8 +125,10 @@ app.post("/send-message", function (request, response) {
 });
 // Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
 // im Ordner "public" zu finden sind.
-app.use(express.static(__dirname + "/public"));
+app.use(
+    express.static(__dirname + '/public')
 
+    );
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
   return [...Array(30)]
