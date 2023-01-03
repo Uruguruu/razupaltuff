@@ -111,6 +111,36 @@ module.exports = function (file) {
     return 200, "Product added to cart";
   };
 
+  this.add_rating = function (
+    ratingID,
+    starts,
+    date,
+    produktID,
+    userID,
+    comment
+  ) {
+    const insert = this.db.prepare(
+      "insert into bewertungen (ratingID, starts, date, produktID, userID, comment) values (@ratingID, @starts, @date, @produktID, @userID, @comment)"
+    );
+    insert.run({ ratingID, starts, date, produktID, userID, comment });
+    return 200, "Rating added";
+  };
+
+  this.get_ratings = function (produktID) {
+    const get_ratings = this.db.prepare(
+      "select * from bewertungen where produktID = @produktID"
+    );
+    return get_ratings.all({ produktID });
+  };
+
+  this.update_rating = function (ratingID, starts, comment) {
+    const update = this.db.prepare(
+      "update bewertungen set starts = @starts, comment = @comment where ratingID = @ratingID"
+    );
+    update.run({ starts, comment, ratingID });
+    return 200, "Rating updated";
+  };
+
   this.close = function () {
     this.db.close((error) => {
       if (error) {
