@@ -14,10 +14,15 @@ module.exports = function (file) {
   };
 
   this.getUsers = function () {
-    return this.db.prepare("SELECT * FROM useres");
+    return this.db.prepare("SELECT * FROM users").all();
   };
 
-  this.add;
+  this.create_user = function (userID, UserName, eMail, birthDate, password) {
+    const insert = this.db.prepare(
+      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
+    );
+    insert.run({ userID, UserName, eMail, birthDate, password });
+  };
 
   this.getMessages = function () {
     return "hi";
