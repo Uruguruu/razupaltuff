@@ -6,7 +6,6 @@ const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
-console.log(db.getMessages());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -23,19 +22,13 @@ app.post('/login', (req, res) => {
         var key = genAPIKey();
         var check = true;
         if(check){
-            console.log(2);
-            console.log(keys[email]);
-            console.log(1);
             if(!(keys[email] === undefined)){
-                console.log(3);
-                console.log(key[email]);
             key_array = keys[email];
             }
             key_array.push(key);
             keys[email] = key_array;
             res.status(200);
             res.send(key);
-            
         }
         else{
             res.status(403);
@@ -47,17 +40,16 @@ app.post('/login', (req, res) => {
 );
 
 app.post("/logout", (req, res) => {
-    // Clear the user's session
-    req.session.destroy(err => {
-      if (err) {
-        console.error(err);
-        return res.sendStatus(500);
-      }
-  
-      // Send a response indicating that the user has been logged out
-      res.send({ message: "Successfully logged out." });
-    });
-  });
+  let { email, key } = req.body;
+  array_list = keys[email];
+  if(!(array_list.includes(key))) res.send({ message: "failed. Not logged in" });
+  else{
+  const index = array_list.indexOf(key);
+  const x = array_list.splice(index, 1);
+  res.send({ message: "Successfully logged out." });
+  console.log(keys);
+  }
+});
   
 
 app.post('/create_user', (req, res) => {
@@ -190,3 +182,8 @@ const genAPIKey = () => {
     .map((e) => ((Math.random() * 36) | 0).toString(36))
     .join("");
 };
+
+function check_key( email,key){
+  list = keys[email];
+  return list.includes(key);
+}
