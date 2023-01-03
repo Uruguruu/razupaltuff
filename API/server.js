@@ -17,7 +17,7 @@ app.post('/login', (req, res) => {
     make()
     async function make(){
         let { email, password } = req.body;
-        // var check = await check_password(email, password);
+        var check = await check_password(email, password);
         var key_array = [];
         var key = genAPIKey();
         var check = true;
@@ -51,7 +51,6 @@ app.post("/logout", (req, res) => {
   }
 });
   
-
 app.post('/create_user', (req, res) => {
     // to login into your account
     make(req, res)
@@ -81,14 +80,6 @@ app.post('/create_product', (req, res) => {
     }
 })
 
-app.post("/create_user", (req, res) => {
-  // to create a user
-  make();
-  async function make() {
-    let { adresse, geburtsdatum, username, password, email } = req.body;
-  }
-});
-
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -99,76 +90,6 @@ app.listen(port, () => {
 app.get("/", function (request, response) {
   response.sendFile(__dirname +"/test_backend.html");
 
-});
-
-app.post("/content", function (request, response) {
-  db.getMessage(100);
-  make();
-  async function make() {
-    let { email, password } = request.body;
-    var json = await check_password(email, password);
-
-    var data = JSON.parse(json);
-    if (receiver > sender) {
-      name = receiver.toString() + sender.toString();
-    } else {
-      name = sender.toString() + receiver.toString();
-    }
-    if (!Object.hasOwn(data, name)) response.send("no content");
-    eval("var responsdata = data[" + name + "];");
-    console.log(data);
-    response.send(JSON.stringify(responsdata));
-  }
-});
-
-app.post("/password", function (request, response) {
-  hell();
-  async function hell() {
-    let { password, sender } = request.body;
-    var json = await getpassword();
-    var data = JSON.parse(json);
-    if (Object.hasOwn(data, password)) response.send("already exist");
-    eval("data[" + sender + "] = password");
-    json = JSON.stringify(data);
-    fs.writeFile("password.json", json, "utf8", callback);
-    function callback() {
-      response.send("su");
-    }
-  }
-});
-
-app.post("/send-message", function (request, response) {
-  hell();
-  async function hell() {
-    let { receiver, sender, message, password } = request.body;
-    var check = await passwod(password, sender);
-    if (check == false) {
-      response.send("false");
-      return;
-    }
-    var json = await getjson();
-    var name = 0;
-    console.log(1);
-    var data = JSON.parse(json);
-    if (receiver > sender) {
-      name = receiver.toString() + sender.toString();
-    } else {
-      name = sender.toString() + receiver.toString();
-    }
-    var chatlist = [];
-    if (Object.hasOwn(data, name)) {
-      chatlist = eval("data[" + name + "];");
-    }
-    console.log(2);
-    chatlist.push(sender);
-    chatlist.push(message);
-    eval("data[" + name + "] = chatlist");
-    json = JSON.stringify(data);
-    fs.writeFile("data.json", json, "utf8", callback);
-    function callback() {
-      response.send("su");
-    }
-  }
 });
 // Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
 // im Ordner "public" zu finden sind.
