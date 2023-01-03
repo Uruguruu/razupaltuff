@@ -21,4 +21,4 @@ Wir erstellen unsere eigene API
 
 # beschreibung
 
-Es ist ein kleiner Onlineshop der krimskrams verkauft wie z.B. Kugelschreiber, Stifte, Schreibgeräte,böller, Tische, Bananen, etc.
+Es ist ein kleiner Onlineshop der krimskrams verkauft wie z.B. Kugelschreiber, Stifte, Schreibgeräte,böller, Tische, Bananen, etc. Es gibt verschidene Pages wie eine Login, Acount, Produkte und warenkorb. Alles soll über unsere eingene Api laufen.
