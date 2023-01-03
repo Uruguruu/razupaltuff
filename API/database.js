@@ -87,6 +87,29 @@ module.exports = function (file) {
     return 200, "Product deleted";
   };
 
+  this.add_to_cart = function (warenkorbID, produktID, userID) {
+    const insert = this.db.prepare(
+      "insert into Warenkorb (warenkorbID, produktID, userID) values (@warenkorbID, @produktID, @userID)"
+    );
+    insert.run({ warenkorbID, produktID, userID });
+    return 200, "Product added to cart";
+  };
+
+  this.get_cart = function (userID) {
+    const get_cart = this.db.prepare(
+      "select * from Warenkorb where userID = @userID"
+    );
+    return get_cart.all({ userID });
+  };
+
+  this.delete_from_cart = function (warenkorbID) {
+    const delete_from_cart = this.db.prepare(
+      "delete from Warenkorb where warenkorbID = @warenkorbID"
+    );
+    delete_from_cart.run({ warenkorbID });
+    return 200, "Product deleted from cart";
+  };
+
   this.close = function () {
     this.db.close((error) => {
       if (error) {

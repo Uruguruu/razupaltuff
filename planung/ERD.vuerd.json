@@ -3,9 +3,9 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -352.60312500000083,
-    "scrollLeft": -47.20000000000012,
-    "zoomLevel": 0.9,
+    "scrollTop": -412.60312500000083,
+    "scrollLeft": -203.20000000000005,
+    "zoomLevel": 1,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -19,7 +19,7 @@
     },
     "database": "SQLite",
     "databaseName": "",
-    "canvasType": "@vuerd/builtin-sql-ddl",
+    "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -556,10 +556,10 @@
           }
         ],
         "ui": {
-          "active": false,
-          "left": 482.2887,
-          "top": 582.6214,
-          "zIndex": 64,
+          "active": true,
+          "left": 476.6887,
+          "top": 560.2214,
+          "zIndex": 72,
           "widthName": 69.17724609375,
           "widthComment": 60
         },
@@ -644,7 +644,7 @@
           "active": false,
           "left": 208.5331,
           "top": 775.7148,
-          "zIndex": 59,
+          "zIndex": 71,
           "widthName": 62.6962890625,
           "widthComment": 60
         },
@@ -729,8 +729,8 @@
           "columnIds": [
             "ce992a5b-82e8-462c-a7f5-a0c52d126456"
           ],
-          "x": 849.8394812500001,
-          "y": 658.1214,
+          "x": 844.2394812499999,
+          "y": 635.7214,
           "direction": "right"
         },
         "constraintName": "fk_users_to_order",
@@ -807,8 +807,8 @@
           "columnIds": [
             "3b62f794-72ee-44e2-9552-9c79471da2e8"
           ],
-          "x": 666.0640906250001,
-          "y": 733.6214,
+          "x": 660.4640906249999,
+          "y": 711.2214,
           "direction": "bottom"
         },
         "constraintName": "fk_warenkorb_to_userorders",
