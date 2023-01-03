@@ -60,34 +60,54 @@ app.post("/logout", (req, res) => {
   });
   
 
-app.post('/create_user', (req, res) => {
+  app.post('/create_user', (req, res) => {
     // to login into your account
     make(req, res)
     async function make(req, res){
         let { email, username, password, geburtsdatum, adresse } = req.body;
+        let lowestId1 = null;
+        // Iterate through all existing users
+        for(let user of users){
+            if(user.id < lowestId1 || lowestId1 === null){
+                lowestId1 = user.id;
+            }
+        }
+        // Generate a new ID for the user
+        let newId = lowestId1 - 1;
         if(user_exist(username, email)){
             response = "user exist"
         }
         else{
-            generate_user(email, username, password, geburtsdatum, adresse);
+            generate_user(email, username, password, geburtsdatum, adresse, newId);
             response = "user created"
         }
     }
 })
+
 app.post('/create_product', (req, res) => {
     // to login into your account
     make(req, res)
     async function make(req, res){
         let { name, description, price, Category, producer, images } = req.body;
+        let lowestId = null;
+        // Iterate through all existing products
+        for(let product of products){
+            if(product.id < lowestId || lowestId === null){
+                lowestId = product.id;
+            }
+        }
+        // Generate a new ID for the product
+        let newId = lowestId - 1;
         if(product_exist(name)){
             response = "product exist"
         }
         else{
-            generate_product(name, description, price, Category, producer, images);
+            generate_product(name, description, price, Category, producer, images, newId);
             response = "product added"
         }
     }
 })
+
 
 app.post("/create_user", (req, res) => {
   // to create a user

@@ -168,3 +168,18 @@ paths:
             description: product was update successfully
           '405':
             description: no changes
+  /warenkorb:
+    get:
+      summary:
+        description: ''
+        operationId:
+          - application/json
+        produces:
+          - application/json
+        parameters:
+          - in: body
+            email: email
+            required: true
+          - in: body
+            key: key
+            required: true 
