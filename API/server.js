@@ -6,7 +6,7 @@ const db = new database("./messages.db");
 const fs = require("fs");*/
 var bodyParser = require('body-parser');
 const session = require('express-session');
-
+var keys = {};
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -21,9 +21,14 @@ app.post('/login', (req, res) => {
         let { email, password } = request.body;
         var check = await check_password(email, password);
         if(check){
-            
+            var key_array = [];
+            var key = genAPIKey;
+            if(!key[email] === undefined){
+            key_array = key[email];
+            }
+            keys[email] = 
             res.status(200);
-            res.send(genAPIKey)
+            res.send();
         }
         else{
             res.status(403);
