@@ -13,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-
 app.post('/login', (req, res) => {
     // to login into your account
     make()
@@ -21,9 +20,15 @@ app.post('/login', (req, res) => {
         let { email, password } = request.body;
         var check = await check_password(email, password);
         if(check){
-            
+            var key_array = [];
+            var key = genAPIKey;
+            if(!key[email] === undefined){
+            key_array = key[email];
+            }
+            key_array.push(key);
+            keys[email] = key_array;
             res.status(200);
-            res.send(genAPIKey)
+            res.send();
         }
         else{
             res.status(403);
@@ -31,7 +36,7 @@ app.post('/login', (req, res) => {
         }
     }
   }
-});
+);
 
 app.post("/logout", (req, res) => {
   // to logout
