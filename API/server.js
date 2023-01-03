@@ -6,6 +6,8 @@ const db = new database("./messages.db");
 const fs = require("fs");*/
 var bodyParser = require('body-parser');
 const session = require('express-session');
+const { response } = require("express");
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,12 +41,33 @@ app.post('/logout', (req, res) => {
     }
 })
 
+
 app.post('/create_user', (req, res) => {
-    // to create a user
-    make()
-    async function make(){
-        let {adresse,geburtsdatum, username, password, email } = request.body;
-        
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { email, username, password, geburtsdatum, adresse } = req.body;
+        if(user_exist(username, email)){
+            response = "user exist"
+        }
+        else{
+            generate_user(email, username, password, geburtsdatum, adresse);
+            response = "user created"
+        }
+    }
+})
+app.post('/create_product', (req, res) => {
+    // to login into your account
+    make(req, res)
+    async function make(req, res){
+        let { name, description, price, Category, producer, images } = req.body;
+        if(product_exist(name)){
+            response = "product exist"
+        }
+        else{
+            generate_product(name, description, price, Category, producer, images);
+            response = "product added"
+        }
     }
 })
 
@@ -135,12 +158,7 @@ async function hell(){
 // im Ordner "public" zu finden sind.
 app.use(
     express.static(__dirname + '/public')
-    ,sessions({
-        secret: genAPIKey,
-        saveUninitialized:true,
-        cookie: { maxAge: oneDay },
-        resave: false 
-    })
+
     );
 
     const genAPIKey = () => {
