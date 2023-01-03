@@ -21,12 +21,7 @@ app.post('/login', (req, res) => {
         let { email, password } = request.body;
         var check = await check_password(email, password);
         if(check){
-            const genAPIKey = () => {
-                //create a base-36 string that contains 30 chars in a-z,0-9
-                return [...Array(30)]
-                  .map((e) => ((Math.random() * 36) | 0).toString(36))
-                  .join('');
-              };
+            
             res.status(200);
             res.send(genAPIKey)
         }
@@ -53,12 +48,6 @@ app.post('/create_user', (req, res) => {
     }
 })
 
-const genAPIKey = () => {
-    //create a base-36 string that contains 30 chars in a-z,0-9
-    return [...Array(30)]
-      .map((e) => ((Math.random() * 36) | 0).toString(36))
-      .join('');
-  };
 
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
@@ -144,42 +133,19 @@ async function hell(){
 })
 // Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
 // im Ordner "public" zu finden sind.
-app.use(express.static(__dirname + '/public'));
+app.use(
+    express.static(__dirname + '/public')
+    ,sessions({
+        secret: genAPIKey,
+        saveUninitialized:true,
+        cookie: { maxAge: oneDay },
+        resave: false 
+    })
+    );
 
-// Fertig. Wir haben unseren ersten, eigenen Webserver programmiert :-)  
-function getjson(){
-    return new Promise((resolve) => {
-        var end = "";
-        var i = 1;
-        fs.readFile("./data.json", "utf8", (err, jsonString) => {
-        if (err) {
-            console.log("File read failed:", err);
-            resolve("error");
-        }
-        console.log(1);
-        resolve(jsonString);
-        });    
-    });
-}
-
-function passwod(password, sender){
-    return new Promise((resolve) => {
-        fs.readFile("./password.json", "utf8", (err, jsonString) => {
-        if (err) {}
-        var data = JSON.parse(jsonString);
-        if(eval("data["+sender+"] === password")){
-        resolve(true);
-        }
-        else{
-            resolve(false);
-        }
-        });    
-    });
-}
-function getpassword(){
-    return new Promise((resolve) => {
-        fs.readFile("./password.json", "utf8", (err, jsonString) => {
-            resolve(jsonString);
-        });    
-    });
-}
+    const genAPIKey = () => {
+        //create a base-36 string that contains 30 chars in a-z,0-9
+        return [...Array(30)]
+          .map((e) => ((Math.random() * 36) | 0).toString(36))
+          .join('');
+      };
