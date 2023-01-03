@@ -86,7 +86,6 @@ paths:
         parameters:
           - in: body
             name: email
-<<<<<<< HEAD
             required: true
           - in: body
             name: password
@@ -108,24 +107,6 @@ paths:
             description: user was update successfully
           '405':
             description: no changes
-=======
-            require: true
-                  - in: body
-          name: password
-          required: true
-        - in: body
-          name: username
-          required: true
-        - in: body
-          name: geburtsdatum
-          required: true
-      responses:
-      response:
-        '200':
-          description: user updated successfully
-        '405':
-          description: No changes
->>>>>>> 45354ab032306c65b35127da3f5c39b1ae800aef
 
   /create_product:
     post:
