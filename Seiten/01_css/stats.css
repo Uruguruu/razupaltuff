@@ -149,5 +149,17 @@ body {
   flex-direction: row;
 }
 
-.navbar-brand{
+.TextTitel{
+  color:#666;
+  font-size:24pt;
+  font-family:arial, "lucida console", sans-serif;
+}
+.TitelGText{
+  text-align: center;
+  float: right;
+  margin-left: 10px;
+}
+.TitelKText{
+  text-align: left;
+  font-size:10pt;
 }
