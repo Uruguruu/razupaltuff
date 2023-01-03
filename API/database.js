@@ -13,7 +13,12 @@ module.exports = function (file) {
     });
   };
 
-  // do not touch this function unless you know what you are doing
+  this.check_user = function (eMail, password) {
+    const check_user = this.db.prepare(
+      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
+    );
+    return check_user.get({ eMail, password });
+  };
 
   this.getUsers = function () {
     return this.db.prepare("SELECT * FROM users").all();
@@ -57,8 +62,6 @@ module.exports = function (file) {
     return "up and running";
   };
 
-  // do not touch this function unless you know what you are doing
-
   this.getProducts = function () {
     return this.db.prepare("select * from Produkte").all();
   };
@@ -85,6 +88,21 @@ module.exports = function (file) {
     );
     delete_product.run({ produktID });
     return 200, "Product deleted";
+  };
+
+  this.get_cart = function (userID) {
+    const get_cart = this.db.prepare(
+      "select * from warenkorb where userID = @userID"
+    );
+    return get_cart.all({ userID });
+  };
+
+  this.add_to_cart = function (warenkorbID, produktID, userID, status) {
+    const insert = this.db.prepare(
+      "insert into warenkorb (warenkorbID, produktID, userID, status) values (@warenkorbID, @produktID, @userID, @status)"
+    );
+    insert.run({ warenkorbID, produktID, userID, status });
+    return 200, "Product added to cart";
   };
 
   this.close = function () {
