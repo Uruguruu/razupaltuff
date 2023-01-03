@@ -1,0 +1,48 @@
+header {
+  display: flex;
+  align-items: center;
+}
+
+header ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+header li {
+  flex: 1;
+  text-align: center;
+}
+
+header a {
+  display: block;
+  padding: 20px;
+  text-decoration: none;
+  color: black;
+}
+
+header a img:hover {
+  background-color: lightgray;
+}
+
+header ul ul {
+  display: none;
+  transition: all 0.2s ease-in-out;
+  transform: scale(0);
+}
+
+header ul li:hover > ul {
+  display: block;
+  position: absolute;
+  background-color: lightgray;
+  transform: scale(1);
+}
+
+header ul ul li {
+  flex: 0;
+}
+
+header img {
+  height: 50px;
+}
