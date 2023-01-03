@@ -15,7 +15,8 @@ module.exports = function (file) {
 
   this.check_user = function (eMail, password) {
     const check_user = this.db.prepare(
-      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
+      
+      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
     return check_user.get({ eMail, password });
   };
@@ -23,6 +24,12 @@ module.exports = function (file) {
   this.getUsers = function () {
     return this.db.prepare("SELECT * FROM users").all();
   };
+
+  
+  this.user_exist = function (email) {
+    return this.db.prepare("SELECT * FROM users WHERE '"+email+"' = @eMail").all();
+  };
+
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
     const insert = this.db.prepare(
