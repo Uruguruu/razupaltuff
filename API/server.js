@@ -93,13 +93,13 @@ app.post("/create_product", (req, res) => {
   async function make(req, res){
       let { name, description, price, Category, producer, images, key, imageBlob } = req.body;
       if(!(key == aidmin_key))  res.send('forbidden'); 
-        // Lese den Inhalt der hochgeladenen Datei in eine Variable
+      
+      // Lese den Inhalt der hochgeladenen Datei in eine Variable
       const imageData = req.file.buffer;
       // Wandeln  den Inhalt in einen BLOB um
       imageBlob = Buffer.from(imageData).toString('base64');
-
-  // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-  db.create_product(imageBlob);
+      // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
+      console.log(imageBlob)
       let lowestIdp = null;
       // Iterate through all existing products
       for(let product of products){
@@ -113,7 +113,7 @@ app.post("/create_product", (req, res) => {
           response = "product exist"
       }
       else{
-          generate_product(name, description, price, Category, producer, images, newId, imageBlob);
+          create_product(name, description, price, Category, producer, images, newId, imageBlob);
           response = "product added"
       }
     }
@@ -241,15 +241,6 @@ app.get('/get_html', (req,res) =>{
   res.sendFile(__dirname+"\\createproduct.html");
 })
 
-app.post('/upload_image', upload.single('image'), (req, res) => {
-  // Lese den Inhalt der hochgeladenen Datei in eine Variable
-  const imageData = req.file.buffer;
+app.post('/')
 
-  // Wandeln  den Inhalt in einen BLOB um
-  const imageBlob = Buffer.from(imageData).toString('base64');
-
-  // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-  db.create_product(imageBlob);
-
-});
 
