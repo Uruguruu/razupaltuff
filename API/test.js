@@ -66,7 +66,6 @@ function both() {
 }
 
 // this is just a test function
-
 function idk() {
   console.log("test");
 }
