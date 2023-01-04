@@ -33,10 +33,18 @@ const genAPIKey = () => {
     .join("");
 };
 
-async function getuser(rkey) {
-  return Object.keys(keys).find((key) => object[key] === rkey);
+async function check_key(key, email){
+  if(keys[email].includes(key)){
+    return true;
+  }
+  else {
+    return false;
+  }
 }
-
+async function getuser(value) {
+  var object = keys
+  return Object.keys(object).find(key =>  object[key].includes(value));
+}
 app.post('/login', urlencodedParser,(req, res) => {
   // to login into your account
     make()
@@ -51,6 +59,8 @@ app.post('/login', urlencodedParser,(req, res) => {
           var check = await db.check_user(email, password);
           var key_array = [];
           var key = genAPIKey();
+          console.log(1111);
+          console.log(check);
           if(!(check === undefined || check.length === 0)){
               if(!(keys[email] === undefined)){
               key_array = keys[email];
@@ -71,9 +81,10 @@ app.post('/login', urlencodedParser,(req, res) => {
   });
 
 
-app.post("/logout", (req, res) => {
+app.post("/logout", urlencodedParser,(req, res) => {
   let { email, key } = req.body;
   array_list = keys[email];
+  console.log(key);
   if (!array_list.includes(key)) res.send({ message: "failed. Not logged in" });
   else {
     const index = array_list.indexOf(key);
@@ -163,65 +174,48 @@ app.post("/update_product", (req, res) => {
   }
 });
 
-app.post("/create_user", (req, res) => {
+app.post("/create_user", urlencodedParser, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
     let { email, username, password, geburtsdatum, adresse } = req.body;
     let lowestIduser = null;
     // Iterate through all existing users
-    for (let user of users) {
-      if (user.id < lowestIduser || lowestIduser === null) {
-        lowestIduser = user.id;
-      }
-    }
+    var id = await db.get_new_userID();
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");;
     // Generate a new ID for the user
-    let newIduser = lowestIduser + 1;
-    if (user_exist(username, email)) {
-      response = "user exist";
+    let newIduser = id["userID"] + 1;
+    console.log(id);
+    console.log(db.user_exist(email));
+    if (!(db.user_exist(email) === undefined || db.user_exist(email).length === 0)) { 
+      res.send("user exist");
     } else {
-      create_user(email, username, password, geburtsdatum, adresse, newIduser);
-      if (db.user_exist(email)) {
-        response = "user exist";
-      } else {
-        var userID = 1;
-        console.log(newIduser, username, email, geburtsdatum, password);
-        db.create_user(newIduser, username, email, geburtsdatum, password);
-        response = "user created";
-      }
+      console.log("wwwwwwwwwwwwwwwww");
+      db.create_user(newIduser, username, email, geburtsdatum, password, adresse);
+      res.send("succesful");
     }
   }
 });
 
-app.post("/update_user", (req, res) => {
+app.post("/update_user", urlencodedParser, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let { email, username, password, geburtsdatum, adresse, key } = req.body;
-    if (!check_key(key)) {
+    let {original_email ,email, username, password, geburtsdatum, adresse, key } = req.body;
+    console.log(await getuser(key));
+    console.log(await getuser(key) === undefined);
+    console.log(111);
+    if (await getuser(key) === undefined) {
       res.status(403);
       res.send("forbidden");
     } else {
-      db.update_user(email, username, password, geburtsdatum, adresse);
-      response = "user created";
+      console.log(await getuser(key), username, email, password, geburtsdatum, adresse);
+      db.update_user(await getuser(key), username, email, password, geburtsdatum, adresse);
+      res.send("user updated");
     }
   }
 });
 
-app.post("/update_user", (req, res) => {
-  // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    let { email, username, password, geburtsdatum, adresse, key } = req.body;
-    if (!check_key(key)) {
-      res.status(403);
-      res.send("forbidden");
-    } else {
-      db.update_user(email, username, password, geburtsdatum, adresse);
-      response = "user created";
-    }
-  }
-});
 
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");

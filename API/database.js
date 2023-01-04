@@ -28,12 +28,12 @@ module.exports = function (file) {
   // gets the user with the given email
   this.user_exist = function (email) {
     return this.db
-      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
+      .prepare("SELECT * FROM Users WHERE eMail= '" + email+"'")
       .all();
   };
 
   // makes a new user
-  this.create_user = function (userID, UserName, eMail, birthDate, password) {
+  this.create_user = function (userID, UserName, eMail, birthDate, password, adress) {
     const insert = this.db.prepare(
       "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
@@ -41,18 +41,19 @@ module.exports = function (file) {
 
     return 200, "User created";
   };
+
   // updates the user with the given username
   this.update_user = function (
-    UserName,
+    old_email,
     newUserName,
     eMail,
     birthDate,
     password
   ) {
     const update = this.db.prepare(
-      "UPDATE users SET UserName = @newUserName, eMail = @eMail, birthDate = @birthDate, password = @password WHERE UserName = @UserName"
+      "UPDATE users SET UserName = @newUserName, eMail = @eMail, birthDate = @birthDate, password = @password WHERE eMail = @old_email"
     );
-    update.run({ newUserName, eMail, birthDate, password, UserName });
+    update.run({ newUserName, eMail, birthDate, password, old_email });
 
     return 200, "User updated";
   };
@@ -207,7 +208,7 @@ module.exports = function (file) {
   // gets the userID of the last user
   this.get_new_userID = function () {
     const get_new_userID = this.db.prepare(
-      "select max(userID) as userID from users"
+      "select max(userID) as userID from Users"
     );
     return get_new_userID.get();
   };
