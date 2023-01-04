@@ -100,6 +100,7 @@ app.post("/upload_image", (req, res) => {
 
 app.post("/create_product", (req, res) => {
   // to login into your account
+  make(req, res);
   async function make(req, res){
       let { produktID,  name, imageData, price,  producer  } = req.body;
 
