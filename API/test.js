@@ -1,5 +1,6 @@
 const database = require("./database.js");
 const db = new database("./database.db");
+const readline = require("readline");
 
 db.create_user(1, "John", "john@newMail.com", "1970-01-01", "mypassword");
 console.log(db.getUsers());
@@ -15,5 +16,3 @@ console.log(db.delete_rating(1));
 console.log(db.delete_from_cart(1));
 console.log(db.delete_product(1));
 console.log(db.delete_user("John"));
-
-//console.log(db.get_new_id_user());

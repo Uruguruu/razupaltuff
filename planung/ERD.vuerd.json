@@ -3,7 +3,7 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -457.4031250000003,
+    "scrollTop": -471.0031250000003,
     "scrollLeft": 0,
     "zoomLevel": 1,
     "show": {
@@ -19,7 +19,7 @@
     },
     "database": "SQLite",
     "databaseName": "",
-    "canvasType": "ERD",
+    "canvasType": "@vuerd/builtin-sql-ddl",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -160,13 +160,36 @@
               "widthDefault": 60
             },
             "id": "60f3fe7d-8855-40da-b24e-85fec31f648c"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "VARCHAR",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 64.8671875,
+              "widthComment": 60,
+              "widthDataType": 64.6005859375,
+              "widthDefault": 60
+            },
+            "id": "d05f8df7-e167-40ac-9bc7-6a69038b4902"
           }
         ],
         "ui": {
           "active": false,
           "left": 15.9999,
           "top": 541.9557,
-          "zIndex": 1,
+          "zIndex": 15,
           "widthName": 60,
           "widthComment": 60
         },
@@ -583,8 +606,8 @@
           "columnIds": [
             "c31e534d-cba1-4fbc-9a47-42dfed256e3d"
           ],
-          "x": 367.6004859375,
-          "y": 627.7057,
+          "x": 372.4676734375,
+          "y": 637.9557,
           "direction": "right"
         },
         "end": {
@@ -635,8 +658,8 @@
           "columnIds": [
             "c31e534d-cba1-4fbc-9a47-42dfed256e3d"
           ],
-          "x": 191.80019296875,
-          "y": 713.4557,
+          "x": 194.23378671875,
+          "y": 733.9557,
           "direction": "bottom"
         },
         "end": {
