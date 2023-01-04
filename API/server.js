@@ -52,13 +52,28 @@ app.post("/logout", (req, res) => {
   }
 });
   
+
+  app.post('/create_user', (req, res) => {
 app.post('/create_user', (req, res) => {
     // to login into your account
     make(req, res)
     async function make(req, res){
         let { email, username, password, geburtsdatum, adresse } = req.body;
-        console.log(req.body);
-        if(!(db.user_exist(email).length === 0)){
+        let lowestId1 = null;
+        // Iterate through all existing users
+        for(let user of users){
+            if(user.id < lowestId1 || lowestId1 === null){
+                lowestId1 = user.id;
+            }
+        }
+        // Generate a new ID for the user
+        let newId = lowestId1 - 1;
+        if(user_exist(username, email)){
+            response = "user exist"
+        }
+        else{
+            generate_user(email, username, password, geburtsdatum, adresse, newId);
+        if(db.user_exist(email)){
             response = "user exist"
         }
         else{
@@ -68,7 +83,6 @@ app.post('/create_user', (req, res) => {
             response = "user created"
         }
     }
-})
 
  app.post('/update_user', (req, res) => {
   // to login into your account
@@ -92,17 +106,31 @@ app.post('/create_product', (req, res) => {
     make(req, res)
     async function make(req, res){
         let { name, description, price, Category, producer, images } = req.body;
-        if(db.product_exist(name).length === 0){
+        let lowestId = null;
+        // Iterate through all existing products
+        for(let product of products){
+            if(product.id < lowestId || lowestId === null){
+                lowestId = product.id;
+            }
+        }
+        // Generate a new ID for the product
+        let newId = lowestId - 1;
+        if(product_exist(name)){
             response = "product exist"
         }
         else{
-            db.generate_product(name, description, price, Category, producer, images);
+            generate_product(name, description, price, Category, producer, images, newId);
             response = "product added"
         }
     }
 })
 
 
+app.post("/create_user", (req, res) => {
+  // to create a user
+  make();
+  async function make() {
+    let { adresse, geburtsdatum, username, password, email } = req.body;
 app.post('/update_product', (req, res) => {
   // to login into your account
   make(req, res)
@@ -128,24 +156,9 @@ app.listen(port, () => {
   console.log(hell);
 });
 
-app.get("/", function (request, response) {
-  response.sendFile(__dirname +"/test_backend.html");
-
-});
-// Hier teilen wir express mit, dass die öffentlichen HTML-Dateien
-// im Ordner "public" zu finden sind.
-app.use(
-    express.static(__dirname + '/public')
-
-    );
-const genAPIKey = () => {
-  //create a base-36 string that contains 30 chars in a-z,0-9
-  return [...Array(30)]
-    .map((e) => ((Math.random() * 36) | 0).toString(36))
-    .join("");
-};
-
-function check_key( email,key){
-  list = keys[email];
-  return list.includes(key);
+  }
+})
 }
+
+})
+  })
