@@ -10,14 +10,13 @@ const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
 const multer = require('multer');
-
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.use(bodyParser.urlencoded({ extended: false }));
-
 // parse application/json
 app.use(bodyParser.json());
+// app.use(bodyParser);
 var keys = {};
 var aidmin_key = "";
 // Mit diesem Kommando starten wir den Webserver.
@@ -38,11 +37,8 @@ async function getuser(rkey) {
   return Object.keys(keys).find((key) => object[key] === rkey);
 }
 
-async function check_rights(user){
-
-}
-app.post('/login', (req, res) => {
-    // to login into your account
+app.post('/login', urlencodedParser,(req, res) => {
+  // to login into your account
     make()
     async function make(){
         let { email, password } = req.body;
@@ -55,7 +51,7 @@ app.post('/login', (req, res) => {
           var check = await db.check_user(email, password);
           var key_array = [];
           var key = genAPIKey();
-          if(!(check.length === 0)){
+          if(!(check === undefined || check.length === 0)){
               if(!(keys[email] === undefined)){
               key_array = keys[email];
               }
@@ -242,14 +238,14 @@ app.get('/get_html', (req,res) =>{
 })
 
   // Führen  die Abfrage aus
-  connection.execute(query, ['image_name', imageBlob], (err, results) => {
+ /* connection.execute(query, ['image_name', imageBlob], (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).send('Error saving image to database');
     } else {
     }
   })
-
+*/
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
