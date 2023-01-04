@@ -212,6 +212,9 @@ module.exports = function (file) {
     return get_new_userID.get();
   };
 
+  // do i have to explain this?
+
+  // gives the higest id back which is in the database
   this.get_new_warenkorbID = function () {
     const get_new_warenkorbID = this.db.prepare(
       "select max(warenkorbID) as warenkorbID from warenkorb"
@@ -233,6 +236,8 @@ module.exports = function (file) {
     return get_new_produktID.get();
   };
 
+  // deletes evrething thats is in the tabel
+  // by the way this is only for testing purposes only so pleas don't use it
   this.kill_all = function () {
     const delete_users = this.db.prepare("delete from users");
     const delete_products = this.db.prepare("delete from Produkte");
