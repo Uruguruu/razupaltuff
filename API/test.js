@@ -11,13 +11,15 @@ const rl = readline.createInterface({
 });
 
 // asks the user what he wants to do
-rl.question("1. create, 2. delelt, 3. Both, :   ", (answer) => {
+rl.question("1. create, 2. delelt, 3. Both, 4. Experimental :   ", (answer) => {
   if (answer == 1) {
     create();
   } else if (answer == 2) {
     deleteAll();
   } else if (answer == 3) {
     both();
+  } else if (answer == 4) {
+    idk();
   } else {
     console.log("fuck you");
   }
@@ -56,4 +58,8 @@ function deleteAll() {
 function both() {
   create();
   deleteAll();
+}
+
+function idk() {
+  console.log("test");
 }
