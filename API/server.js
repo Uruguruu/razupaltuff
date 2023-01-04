@@ -130,6 +130,14 @@ app.post('/create_product', (req, res) => {
 
 
 
+  }
+})
+}
+
+)
+
+
+  
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -137,7 +145,4 @@ app.listen(port, () => {
   console.log(hell);
 });
 
-  }
-})
-})
 
