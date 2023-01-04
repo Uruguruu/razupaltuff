@@ -118,11 +118,11 @@ module.exports = function (file) {
     return 200, "Cart updated";
   };
 
-  this.delete_from_cart = function (warenkorbID) {
+  this.delete_from_cart = function (warenkorbID, produktID) {
     const delete_from_cart = this.db.prepare(
-      "delete from warenkorb where warenkorbID = @warenkorbID"
+      "delete from warenkorb where warenkorbID = @warenkorbID and produktID = @produktID"
     );
-    delete_from_cart.run({ warenkorbID });
+    delete_from_cart.run({ warenkorbID, produktID });
     return 200, "Product deleted from cart";
   };
 
