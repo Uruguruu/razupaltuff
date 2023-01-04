@@ -7,35 +7,71 @@ db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
+const mysql = require('mysql2');
+const { response } = require("express");
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+
 
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
+var aidmin_key = "";
+// Mit diesem Kommando starten wir den Webserver.
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+  hell = genAPIKey();
+  console.log(hell);
+});
+
+const genAPIKey = () => {
+  //create a base-36 string that contains 30 chars in a-z,0-9
+  return [...Array(300)]
+    .map((e) => ((Math.random() * 36) | 0).toString(36))
+    .join("");
+};
+
+async function getuser(rkey){
+  return Object.keys(keys).find(key => object[key] === rkey);
+}
+
+async function check_rights(user){
+
+}
 app.post('/login', (req, res) => {
     // to login into your account
     make()
     async function make(){
         let { email, password } = req.body;
-
-        var check = await db.check_user(email, password);
-        var key_array = [];
-        var key = genAPIKey();
-        if(!(check.length === 0)){
-            if(!(keys[email] === undefined)){
-            key_array = keys[email];
-            }
-            key_array.push(key);
-            keys[email] = key_array;
-            res.status(200);
-            res.send(key);
+        console.log(email, password);
+        console.log(email === "admin");
+        console.log(password === "12345");
+        console.log(email === "admin" && password === "12345");
+        if(email === "admin" && password === "12345"){
+          aidmin_key = await genAPIKey();
+          console.log(5);
+          res.sendFile(__dirname+"\\test_backend.html");
         }
         else{
-            res.status(403);
-            res.send('wrong user or password')    
-        }
-        console.log(keys);
+          var check = await db.check_user(email, password);
+          var key_array = [];
+          var key = genAPIKey();
+          if(!(check.length === 0)){
+              if(!(keys[email] === undefined)){
+              key_array = keys[email];
+              }
+              key_array.push(key);
+              keys[email] = key_array;
+              res.status(200);
+              res.send(key);
+          }
+          else{
+              res.status(403);
+              res.send('wrong user or password')    
+          }
+          console.log(keys);
+      }
     }
   }
 );
@@ -52,44 +88,94 @@ app.post("/logout", (req, res) => {
   }
 });
   
+app.post('/create_product', (req, res) => {
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+      let { name, description, price, Category, producer, images, key } = req.body;
+      if(!(key == aidmin_key))  res.send('forbidden'); 
+      let lowestIdp = null;
+      // Iterate through all existing products
+      for(let product of products){
+          if(product.id < lowestIdp || lowestIdp === null){
+              lowestIdp = product.id;
+          }
+      }
+      // Generate a new ID for the product
+      let newId = lowestIdp + 1;
+      if(product_exist(name)){
+          response = "product exist"
+      }
+      else{
+          generate_product(name, description, price, Category, producer, images, newId);
+          response = "product added"
+      }
+  }
+})
 
-  app.post('/create_user', (req, res) => {
+app.post('/update_product', (req, res) => {
+  make(req, res)
+  async function make(req, res){
+      let { name, description, price, Category, producer, images, key} = req.body;
+      if(!(key == aidmin_key))  res.send('forbidden'); 
+      let lowestIdp = null;
+      // Iterate through all existing products
+      for(let product of products){
+          if(product.id < lowestIdp || lowestIdp === null){
+              lowestIdp = product.id;
+          }
+      }
+      // Generate a new ID for the product
+      let newId = lowestIdp + 1;
+      if(check_rights(key, email)){
+          response = "product exist"
+      }
+      else{
+          generate_product(name, description, price, Category, producer, images, newId);
+          response = "product added"
+      }
+  }
+})
+
+
 app.post('/create_user', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { email, username, password, geburtsdatum, adresse } = req.body;
-        let lowestId1 = null;
-        // Iterate through all existing users
-        for(let user of users){
-            if(user.id < lowestId1 || lowestId1 === null){
-                lowestId1 = user.id;
-            }
-        }
-        // Generate a new ID for the user
-        let newId = lowestId1 - 1;
-        if(user_exist(username, email)){
-            response = "user exist"
-        }
-        else{
-            generate_user(email, username, password, geburtsdatum, adresse, newId);
-        if(db.user_exist(email)){
-            response = "user exist"
-        }
-        else{
-          var userID= 3;
-          console.log(userID, username, email, geburtsdatum, password);
-            db.create_user(userID, username, email, geburtsdatum, password);
-            response = "user created"
-        }
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+      let { email, username, password, geburtsdatum, adresse } = req.body;
+      let lowestIduser = null;
+      // Iterate through all existing users
+      for(let user of users){
+          if(user.id < lowestIduser || lowestIduser === null){
+              lowestIduser = user.id;
+          }
+      }
+      // Generate a new ID for the user
+      let newIduser = lowestIduser + 1;
+      if(user_exist(username, email)){
+          response = "user exist"
+      }
+      else{
+          create_user(email, username, password, geburtsdatum, adresse, newIduser);
+      if(db.user_exist(email)){
+          response = "user exist"
+      }
+      else{
+        var userID= 1;
+        console.log(newIduser, username, email, geburtsdatum, password);
+          db.create_user(newIduser, username, email, geburtsdatum, password);
+          response = "user created"
+      }
     }
+  }
+})
 
- app.post('/update_user', (req, res) => {
+app.post('/update_user', (req, res) => {
   // to login into your account
   make(req, res)
   async function make(req, res){
       let { email, username, password, geburtsdatum, adresse, key } = req.body;
-      if(!(check_key(email, key))){
+      if(!(check_key(key))){
         res.status(403);
         res.send('forbidden')    
       } 
@@ -101,65 +187,57 @@ app.post('/create_user', (req, res) => {
   }
 })
 
-app.post('/create_product', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { name, description, price, Category, producer, images } = req.body;
-        let lowestId = null;
-        // Iterate through all existing products
-        for(let product of products){
-            if(product.id < lowestId || lowestId === null){
-                lowestId = product.id;
-            }
-        }
-        // Generate a new ID for the product
-        let newId = lowestId - 1;
-        if(product_exist(name)){
-            response = "product exist"
-        }
-        else{
-            generate_product(name, description, price, Category, producer, images, newId);
-            response = "product added"
-        }
-    }
-})
-
-
-app.post("/create_user", (req, res) => {
-  // to create a user
-  make();
-  async function make() {
-    let { adresse, geburtsdatum, username, password, email } = req.body;
-app.post('/update_product', (req, res) => {
+app.post('/update_user', (req, res) => {
   // to login into your account
   make(req, res)
   async function make(req, res){
-    let {email, name, description, price, Category, producer, images, key } = req.body;
-    if(!(check_key(email, key))){
-      res.status(403);
-      res.send('forbidden')    
-    } 
-    else{
-          generate_product(name, description, price, Category, producer, images);
-          response = "product added"
+      let { email, username, password, geburtsdatum, adresse, key } = req.body;
+      if(!(check_key(key))){
+        res.status(403);
+        res.send('forbidden')    
+      } 
+      else{
+        db.update_user(email, username, password, geburtsdatum, adresse);
+        response = "user created"
+    
     }
   }
 })
 
+app.post('/upload_image', (req, res) =>{
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  const imageData = fs.readFileSync(req.files.image.path);
+
+  // Wandeln  den Inhalt in einen BLOB um
+  const imageBlob = Buffer.from(imageData).toString('base64');
+  responseimageData
+  console.log(imageData);
+
+  // Stellen  eine Verbindung zur Datenbank her
+  const connection = mysql.createConnection({
+    database: 'database.db'
+  });
+
+  // Erstellen  eine SQL-Abfrage, um den Eintrag in der Datenbank zu erstellen
+  const query = 'INSERT INTO images (name, image) VALUES (?, ?)';
+
+  // Führen  die Abfrage aus
+  connection.execute(query, ['image_name', imageBlob], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error saving image to database');
+    } else {
+    
 
 
-  }
-})
-}
-
-})
+    }
   })
+})
 
-  
-// Mit diesem Kommando starten wir den Webserver.
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-  hell = genAPIKey();
-  console.log(hell);
-});
+app.get("/admin",(req, res) => {
+  res.sendFile(__dirname+"\\admin_login.html");
+})
+
+app.get("/admin",(req, res) => {
+  res.sendFile(__dirname+"\\admin_login.html");
+})

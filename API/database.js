@@ -1,11 +1,10 @@
-/* jshint esversion: 6 */
+//please note that this is alredy working code so pleas do not change anything in this file unless you know what you are doing
 
+//wathever you doing do not touch this please
 module.exports = function (file) {
   const Database = require("better-sqlite3");
 
-  this.db = new Database(file, {
-    //  verbose: console.log
-  });
+  this.db = new Database(file, {});
 
   this.connect = function (file) {
     this.db = new Database(file, {
@@ -13,38 +12,36 @@ module.exports = function (file) {
     });
   };
 
+  // cheacks if the user is in the database with the mail and password
   this.check_user = function (eMail, password) {
     const check_user = this.db.prepare(
-      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
+      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
     return check_user.get({ eMail, password });
   };
 
+  // gets every user from the database
   this.getUsers = function () {
     return this.db.prepare("SELECT * FROM users").all();
   };
 
+  // gets the user with the given email
   this.user_exist = function (email) {
-    const user_exist = this.db
-      .prepare("SELECT * FROM Users WHERE eMail = @eMail")
+    return this.db
+      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
       .all();
-    return user_exist({ email });
   };
 
-  this.product_exist = function (name) {
-    const product_exist = this.db
-      .prepare("SELECT * FROM users WHERE name = @name")
-      .all();
-    return product_exist({ name });
-  };
-
+  // makes a new user
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
-    const insert = this.db.prepare("INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES ('"+userID+"', '"+UserName+"', '"+eMail+"', '"+birthDate+"', '"+password+"')"
+    const insert = this.db.prepare(
+      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
     insert.run({ userID, UserName, eMail, birthDate, password });
+
     return 200, "User created";
   };
-
+  // updates the user with the given username
   this.update_user = function (
     UserName,
     newUserName,
@@ -59,7 +56,7 @@ module.exports = function (file) {
 
     return 200, "User updated";
   };
-
+  // deletes the user with the given username
   this.delete_user = function (UserName) {
     const delete_user = this.db.prepare(
       "DELETE FROM users WHERE UserName = @UserName"
@@ -74,26 +71,44 @@ module.exports = function (file) {
     return "up and running";
   };
 
+  // gets all products from the database
   this.getProducts = function () {
     return this.db.prepare("select * from Produkte").all();
   };
 
-  this.create_product = function (produktID, Name, Image, price, producer) {
+  // creates a new product
+  this.create_product = function (
+    produktID,
+    Name,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const insert = this.db.prepare(
-      "insert into Produkte (produktID, Name, Image, price, producer) values (@produktID, @Name, @Image, @price, @producer)"
+      "insert into Produkte (produktID, Name, Image, price, producer, description) values (@produktID, @Name, @Image, @price, @producer, @description)"
     );
-    insert.run({ produktID, Name, Image, price, producer });
+    insert.run({ produktID, Name, Image, price, producer, description });
     return 200, "Product created";
   };
 
-  this.update_product = function (Name, newName, Image, price, producer) {
+  //updates the product with the given name
+  this.update_product = function (
+    Name,
+    newName,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const update = this.db.prepare(
-      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer where Name = @Name"
+      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer, description = @description where Name = @Name"
     );
-    update.run({ newName, Image, price, producer, Name });
+    update.run({ newName, Image, price, producer, description, Name });
     return 200, "Product updated";
   };
 
+  //deletes the product with the given ID
   this.delete_product = function (produktID) {
     const delete_product = this.db.prepare(
       "delete from Produkte where produktID = @produktID"
@@ -102,6 +117,7 @@ module.exports = function (file) {
     return 200, "Product deleted";
   };
 
+  // gets the cart with the given userID
   this.get_cart = function (userID) {
     const get_cart = this.db.prepare(
       "select * from warenkorb where userID = @userID"
@@ -109,6 +125,7 @@ module.exports = function (file) {
     return get_cart.all({ userID });
   };
 
+  // adds a product to the cart
   this.add_to_cart = function (warenkorbID, produktID, userID, status) {
     const insert = this.db.prepare(
       "insert into warenkorb (warenkorbID, produktID, userID, status) values (@warenkorbID, @produktID, @userID, @status)"
@@ -117,6 +134,7 @@ module.exports = function (file) {
     return 200, "Product added to cart";
   };
 
+  // updates the cart with the given userID
   this.update_cart = function (userID, status) {
     const update = this.db.prepare(
       "update warenkorb set status = @status where userID = @userID"
@@ -125,14 +143,16 @@ module.exports = function (file) {
     return 200, "Cart updated";
   };
 
-  this.delete_from_cart = function (warenkorbID, produktID) {
+  // deletes the product with the given warenkorbID
+  this.delete_from_cart = function (warenkorbID) {
     const delete_from_cart = this.db.prepare(
-      "delete from warenkorb where warenkorbID = @warenkorbID and produktID = @produktID"
+      "delete from warenkorb where warenkorbID = @warenkorbID"
     );
-    delete_from_cart.run({ warenkorbID, produktID });
+    delete_from_cart.run({ warenkorbID });
     return 200, "Product deleted from cart";
   };
 
+  // adds a rating to the database
   this.add_rating = function (
     ratingID,
     starts,
@@ -148,6 +168,7 @@ module.exports = function (file) {
     return 200, "Rating added";
   };
 
+  // gets the rating with the given produktID
   this.get_ratings = function (produktID) {
     const get_ratings = this.db.prepare(
       "select * from Rating where produktID = @produktID"
@@ -155,6 +176,7 @@ module.exports = function (file) {
     return get_ratings.all({ produktID });
   };
 
+  // updates the rating with the given ratingID
   this.update_rating = function (ratingID, starts, comment) {
     const update = this.db.prepare(
       "update Rating set starts = @starts, comment = @comment where ratingID = @ratingID"
@@ -163,6 +185,7 @@ module.exports = function (file) {
     return 200, "Rating updated";
   };
 
+  // deletes the rating with the given ratingID
   this.delete_rating = function (ratingID) {
     const delete_rating = this.db.prepare(
       "delete from Rating where ratingID = @ratingID"
@@ -171,6 +194,7 @@ module.exports = function (file) {
     return 200, "Rating deleted";
   };
 
+  // closes the database connection so simmpli don't touch this unless you know what you're doing
   this.close = function () {
     this.db.close((error) => {
       if (error) {
@@ -180,7 +204,11 @@ module.exports = function (file) {
     });
   };
 
-  this.get_new_id_user = function () {
-    return this.db.prepare("SELECT MAX(userID) FROM users").all();
+  // gets the userID of the last user
+  this.get_new_userID = function () {
+    const get_new_userID = this.db.prepare(
+      "select max(userID) as userID from users"
+    );
+    return get_new_userID.get();
   };
 };
