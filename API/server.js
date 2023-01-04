@@ -44,14 +44,10 @@ app.post('/login', (req, res) => {
     make()
     async function make(){
         let { email, password } = req.body;
-        console.log(email, password);
-        console.log(email === "admin");
-        console.log(password === "12345");
         console.log(email === "admin" && password === "12345");
         if(email === "admin" && password === "12345"){
           aidmin_key = await genAPIKey();
-          console.log(5);
-          res.sendFile(__dirname+"\\test_backend.html");
+          res.send("admin_page?key="+aidmin_key);
         }
         else{
           var check = await db.check_user(email, password);
@@ -240,4 +236,14 @@ app.get("/admin",(req, res) => {
 
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
+})
+
+app.get("/admin_page?:key",(req, res) => {
+  console.log(1);
+  if(!(aidmin_key === req.query.key)){
+  res.sendFile(__dirname+"\\admin_login.html");
+  }
+  else{
+    res.sendFile(__dirname+"\\admin_page.html");
+  }
 })
