@@ -91,7 +91,7 @@ app.post("/create_product", (req, res) => {
   // to login into your account
   make(req, res)
   async function make(req, res){
-      let { name, description, price, Category, producer, images, key, imageBlob } = req.body;
+      let { name,  price, description,Category,  images  } = req.body;
       if(!(key == aidmin_key))  res.send('forbidden'); 
       
       // Lese den Inhalt der hochgeladenen Datei in eine Variable
@@ -100,6 +100,8 @@ app.post("/create_product", (req, res) => {
       imageBlob = Buffer.from(imageData).toString('base64');
       // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
       console.log(imageBlob)
+      const formData = req.body;
+
       let lowestIdp = null;
       // Iterate through all existing products
       for(let product of products){
@@ -113,7 +115,7 @@ app.post("/create_product", (req, res) => {
           response = "product exist"
       }
       else{
-          create_product(name, description, price, Category, producer, images, newId, imageBlob);
+          create_product(formData);
           response = "product added"
       }
     }
@@ -241,6 +243,8 @@ app.get('/get_html', (req,res) =>{
   res.sendFile(__dirname+"\\createproduct.html");
 })
 
-app.post('/')
+app.post('/upload_image', (req,res) =>{
+  res.sendFile(__dirname+"\\createproduct.html")
+})
 
 
