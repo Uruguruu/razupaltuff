@@ -9,8 +9,11 @@ var bodyParser = require("body-parser");
 const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
+const multer = require('multer');
 
-// parse application/x-www-form-urlencoded
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
@@ -69,8 +72,8 @@ app.post('/login', (req, res) => {
       }
       console.log(keys);
     }
-  }
-});
+  });
+
 
 app.post("/logout", (req, res) => {
   let { email, key } = req.body;
@@ -86,16 +89,32 @@ app.post("/logout", (req, res) => {
 
 app.post("/create_product", (req, res) => {
   // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    let { name, description, price, Category, producer, images, key } =
-      req.body;
-    if (!(key == aidmin_key)) res.send("forbidden");
-    let lowestIdp = null;
-    // Iterate through all existing products
-    for (let product of products) {
-      if (product.id < lowestIdp || lowestIdp === null) {
-        lowestIdp = product.id;
+  make(req, res)
+  async function make(req, res){
+      let { name, description, price, Category, producer, images, key, imageBlob } = req.body;
+      if(!(key == aidmin_key))  res.send('forbidden'); 
+        // Lese den Inhalt der hochgeladenen Datei in eine Variable
+      const imageData = req.file.buffer;
+      // Wandeln  den Inhalt in einen BLOB um
+      imageBlob = Buffer.from(imageData).toString('base64');
+
+  // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
+  db.create_product(imageBlob);
+      let lowestIdp = null;
+      // Iterate through all existing products
+      for(let product of products){
+          if(product.id < lowestIdp || lowestIdp === null){
+              lowestIdp = product.id;
+          }
+      }
+      // Generate a new ID for the product
+      let newId = lowestIdp + 1;
+      if(product_exist(name)){
+          response = "product exist"
+      }
+      else{
+          generate_product(name, description, price, Category, producer, images, newId, imageBlob);
+          response = "product added"
       }
     }
     // Generate a new ID for the product
@@ -114,8 +133,8 @@ app.post("/create_product", (req, res) => {
       );
       response = "product added";
     }
-  }
-});
+  })
+
 
 app.post("/update_product", (req, res) => {
   make(req, res);
@@ -209,51 +228,28 @@ app.post("/update_user", (req, res) => {
   }
 });
 
-app.post("/upload_image", (req, res) => {
-  // Lese den Inhalt der hochgeladenen Datei in eine Variable
-  const imageData = fs.readFileSync(req.files.image.path);
 
-  // Wandeln  den Inhalt in einen BLOB um
-  const imageBlob = Buffer.from(imageData).toString("base64");
-  responseimageData;
-  console.log(imageData);
-
-  // Stellen  eine Verbindung zur Datenbank her
-  const connection = mysql.createConnection({
-    database: "database.db",
-  });
-
-  // Erstellen  eine SQL-Abfrage, um den Eintrag in der Datenbank zu erstellen
-  const query = "INSERT INTO images (name, image) VALUES (?, ?)";
-
-  // Führen  die Abfrage aus
-  connection.execute(query, ["image_name", imageBlob], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error saving image to database");
-    } else {
-    }
-  });
-});
-
-app.get("/admin", (req, res) => {
-  res.sendFile(__dirname + "\\admin_login.html");
-});
-
-app.get("/admin", (req, res) => {
-  res.sendFile(__dirname + "\\admin_login.html");
-});
 
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
 
-app.get("/admin_page?:key",(req, res) => {
-  console.log(1);
-  if(!(aidmin_key === req.query.key)){
-  res.sendFile(__dirname+"\\admin_login.html");
-  }
-  else{
-    res.sendFile(__dirname+"\\admin_page.html");
-  }
+
+
+
+app.get('/get_html', (req,res) =>{
+  res.sendFile(__dirname+"\\createproduct.html");
 })
+
+app.post('/upload_image', upload.single('image'), (req, res) => {
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  const imageData = req.file.buffer;
+
+  // Wandeln  den Inhalt in einen BLOB um
+  const imageBlob = Buffer.from(imageData).toString('base64');
+
+  // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
+  db.create_product(imageBlob);
+
+});
+
