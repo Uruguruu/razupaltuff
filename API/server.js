@@ -53,38 +53,47 @@ app.post("/logout", (req, res) => {
 });
   
 
-  app.post('/create_user', (req, res) => {
-app.post('/create_user', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { email, username, password, geburtsdatum, adresse } = req.body;
-        let lowestIduser = null;
-        // Iterate through all existing users
-        for(let user of users){
-            if(user.id < lowestIduser || lowestIduser === null){
-                lowestIduser = user.id;
-            }
-        }
-        // Generate a new ID for the user
-        let newIduser = lowestIduser + 1;
-        if(user_exist(username, email)){
-            response = "user exist"
-        }
-        else{
-            generate_user(email, username, password, geburtsdatum, adresse, newIduser);
-        if(db.user_exist(email)){
-            response = "user exist"
-        }
-        else{
-          var userID= 1;
-          console.log(newIduser, username, email, geburtsdatum, password);
-            db.create_user(newIduser, username, email, geburtsdatum, password);
-            response = "user created"
-        }
-    }
 
- app.post('/update_user', (req, res) => {
+  
+// Mit diesem Kommando starten wir den Webserver.
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+  hell = genAPIKey();
+  console.log(hell);
+});
+
+const genAPIKey = () => {
+  //create a base-36 string that contains 30 chars in a-z,0-9
+  return [...Array(30)]
+    .map((e) => ((Math.random() * 36) | 0).toString(36))
+    .join("");
+};
+
+app.post('/create_product', (req, res) => {
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+      let { name, description, price, Category, producer, images } = req.body;
+      let lowestIdp = null;
+      // Iterate through all existing products
+      for(let product of products){
+          if(product.id < lowestIdp || lowestIdp === null){
+              lowestIdp = product.id;
+          }
+      }
+      // Generate a new ID for the product
+      let newId = lowestIdp + 1;
+      if(product_exist(name)){
+          response = "product exist"
+      }
+      else{
+          generate_product(name, description, price, Category, producer, images, newId);
+          response = "product added"
+      }
+  }
+})
+
+app.post('/update_user', (req, res) => {
   // to login into your account
   make(req, res)
   async function make(req, res){
@@ -101,48 +110,34 @@ app.post('/create_user', (req, res) => {
   }
 })
 
-app.post('/create_product', (req, res) => {
-    // to login into your account
-    make(req, res)
-    async function make(req, res){
-        let { name, description, price, Category, producer, images } = req.body;
-        let lowestIdp = null;
-        // Iterate through all existing products
-        for(let product of products){
-            if(product.id < lowestIdp || lowestIdp === null){
-                lowestIdp = product.id;
-            }
-        }
-        // Generate a new ID for the product
-        let newId = lowestIdp + 1;
-        if(product_exist(name)){
-            response = "product exist"
-        }
-        else{
-            generate_product(name, description, price, Category, producer, images, newId);
-            response = "product added"
-        }
+app.post('/create_user', (req, res) => {
+  // to login into your account
+  make(req, res)
+  async function make(req, res){
+      let { email, username, password, geburtsdatum, adresse } = req.body;
+      let lowestIduser = null;
+      // Iterate through all existing users
+      for(let user of users){
+          if(user.id < lowestIduser || lowestIduser === null){
+              lowestIduser = user.id;
+          }
+      }
+      // Generate a new ID for the user
+      let newIduser = lowestIduser + 1;
+      if(user_exist(username, email)){
+          response = "user exist"
+      }
+      else{
+          generate_user(email, username, password, geburtsdatum, adresse, newIduser);
+      if(db.user_exist(email)){
+          response = "user exist"
+      }
+      else{
+        var userID= 1;
+        console.log(newIduser, username, email, geburtsdatum, password);
+          db.create_user(newIduser, username, email, geburtsdatum, password);
+          response = "user created"
+      }
     }
-})
-
-
-
-
-
-
   }
 })
-}
-
-)
-
-
-  
-// Mit diesem Kommando starten wir den Webserver.
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-  hell = genAPIKey();
-  console.log(hell);
-});
-
-
