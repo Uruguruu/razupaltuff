@@ -235,13 +235,13 @@ module.exports = function (file) {
 
   this.kill_all = function () {
     const delete_users = this.db.prepare("delete from users");
-    delete_users.run();
     const delete_products = this.db.prepare("delete from Produkte");
-    delete_products.run();
     const delete_ratings = this.db.prepare("delete from Rating");
-    delete_ratings.run();
     const delete_cart = this.db.prepare("delete from warenkorb");
+    delete_ratings.run();
     delete_cart.run();
+    delete_products.run();
+    delete_users.run();
     return 200, "All tables cleared";
   };
 };
