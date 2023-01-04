@@ -131,7 +131,6 @@ app.post("/create_product", (req, res) => {
     }
   })
 
-
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -224,13 +223,14 @@ app.post("/update_user", (req, res) => {
   }
 });
 
-
-
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
 
 
+app.get("/",(req, res) => {
+  res.sendFile(__dirname.substring(0, __dirname.length - 4)+"\\Seiten\\Html\\Homepage.html");
+})
 
 
 app.get('/get_html', (req,res) =>{
