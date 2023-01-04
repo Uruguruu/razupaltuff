@@ -15,13 +15,13 @@ input[type="password"] {
 
 /* Set a style for all buttons */
 button {
-  background-color: #04aa6d;
+ background-color: #04aa6d;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
-  width: 100%;
+  width: 100%; 
 }
 
 button:hover {
@@ -49,6 +49,7 @@ img.avatar {
 
 .container {
   padding: 16px;
+  margin: 20px;
 }
 
 span.psw {
@@ -147,4 +148,9 @@ span.psw {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
+  opacity: 0.4;
+}
+
+.white-box:hover{
+    opacity: 1;
 }
