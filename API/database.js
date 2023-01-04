@@ -15,7 +15,7 @@ module.exports = function (file) {
 
   this.check_user = function (eMail, password) {
     const check_user = this.db.prepare(
-      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
+      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
     );
     return check_user.get({ eMail, password });
   };
@@ -25,9 +25,17 @@ module.exports = function (file) {
   };
 
   this.user_exist = function (email) {
-    return this.db
-      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
+    const user_exist = this.db
+      .prepare("SELECT * FROM Users WHERE eMail = @eMail")
       .all();
+    return user_exist({ email });
+  };
+
+  this.product_exist = function (name) {
+    const product_exist = this.db
+      .prepare("SELECT * FROM users WHERE name = @name")
+      .all();
+    return product_exist({ name });
   };
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
@@ -35,7 +43,6 @@ module.exports = function (file) {
       "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
     insert.run({ userID, UserName, eMail, birthDate, password });
-
     return 200, "User created";
   };
 
@@ -119,11 +126,11 @@ module.exports = function (file) {
     return 200, "Cart updated";
   };
 
-  this.delete_from_cart = function (warenkorbID) {
+  this.delete_from_cart = function (warenkorbID, produktID) {
     const delete_from_cart = this.db.prepare(
-      "delete from warenkorb where warenkorbID = @warenkorbID"
+      "delete from warenkorb where warenkorbID = @warenkorbID and produktID = @produktID"
     );
-    delete_from_cart.run({ warenkorbID });
+    delete_from_cart.run({ warenkorbID, produktID });
     return 200, "Product deleted from cart";
   };
 
@@ -172,5 +179,9 @@ module.exports = function (file) {
       }
       console.log("Close the database connection.");
     });
+  };
+
+  this.get_new_id_user = function () {
+    return this.db.prepare("SELECT MAX(userID) FROM users").all();
   };
 };
