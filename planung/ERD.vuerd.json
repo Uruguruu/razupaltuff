@@ -3,7 +3,7 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -471.0031250000003,
+    "scrollTop": -491.0031250000005,
     "scrollLeft": 0,
     "zoomLevel": 1,
     "show": {
@@ -19,7 +19,7 @@
     },
     "database": "SQLite",
     "databaseName": "",
-    "canvasType": "@vuerd/builtin-sql-ddl",
+    "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -189,7 +189,7 @@
           "active": false,
           "left": 15.9999,
           "top": 541.9557,
-          "zIndex": 15,
+          "zIndex": 20,
           "widthName": 60,
           "widthComment": 60
         },
