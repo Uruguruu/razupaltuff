@@ -46,3 +46,11 @@ body {
 .red{
   color: rgb(172, 0, 0);
 }
+.blue-line {
+ 
+  position: absolute;
+  left: 290px;
+  right: 290px;
+  border: 1px solid rgba(2, 123, 188, 0.418);
+  height: 0;
+}
