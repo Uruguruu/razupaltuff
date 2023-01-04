@@ -7,6 +7,9 @@ db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
+const mysql = require('mysql2');
+const { response } = require("express");
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -69,7 +72,22 @@ app.post("/logout", (req, res) => {
 
 
   
+// Mit diesem Kommando starten wir den Webserver.
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+  hell = genAPIKey();
+  console.log(hell);
+});
+
+const genAPIKey = () => {
+  //create a base-36 string that contains 30 chars in a-z,0-9
+  return [...Array(30)]
+    .map((e) => ((Math.random() * 36) | 0).toString(36))
+    .join("");
+};
+
 app.post('/create_product', (req, res) => {
+  // to login into your account
   make(req, res)
   async function make(req, res){
       let { name, description, price, Category, producer, images } = req.body;
@@ -141,6 +159,32 @@ app.post('/create_user', (req, res) => {
   }
 })
 
-app.get("/",(req, res) => {
-  res.sendFile(__dirname+"\\test_backend.html");
+app.post('/upload_image', (req, res) =>{
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  const imageData = fs.readFileSync(req.files.image.path);
+
+  // Wandeln  den Inhalt in einen BLOB um
+  const imageBlob = Buffer.from(imageData).toString('base64');
+  responseimageData
+  console.log(imageData);
+
+  // Stellen  eine Verbindung zur Datenbank her
+  const connection = mysql.createConnection({
+    database: 'database.db'
+  });
+
+  // Erstellen  eine SQL-Abfrage, um den Eintrag in der Datenbank zu erstellen
+  const query = 'INSERT INTO images (name, image) VALUES (?, ?)';
+
+  // Führen  die Abfrage aus
+  connection.execute(query, ['image_name', imageBlob], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error saving image to database');
+    } else {
+    
+
+
+    }
+  })
 })
