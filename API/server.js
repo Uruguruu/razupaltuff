@@ -13,6 +13,21 @@ const { response } = require("express");
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+
+// Mit diesem Kommando starten wir den Webserver.
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+  hell = genAPIKey();
+  console.log(hell);
+});
+
+const genAPIKey = () => {
+  //create a base-36 string that contains 30 chars in a-z,0-9
+  return [...Array(30)]
+    .map((e) => ((Math.random() * 36) | 0).toString(36))
+    .join("");
+};
+
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
@@ -21,7 +36,6 @@ app.post('/login', (req, res) => {
     make()
     async function make(){
         let { email, password } = req.body;
-
         var check = await db.check_user(email, password);
         var key_array = [];
         var key = genAPIKey();
