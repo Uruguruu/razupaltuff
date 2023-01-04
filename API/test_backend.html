@@ -21,8 +21,8 @@
     <script>
         var data;
           axios.post('/login',{
-            email: "deinemutter@gmail.ch",
-            password: "hell"
+            email: "niel@gmail.com",
+            password: "Niel"
           })
           .then(function (response) {
             data = response["data"]
@@ -33,10 +33,12 @@
             console.log(error);
           });
     function getdata(){
-        axios.post('/create_user',{
-            email: "afds", username: "afsd", password: "afsd", geburtsdatum: "fads", adresse: "fasd"
+       /* axios.post('/logout',{
+            email: "niel@gmail.com", key: data, password: "afsd", geburtsdatum: "fads", adresse: "fasd"
+          })*/
+          axios.post('/create_user',{
+            eMail:"niel", UserName:"Niel", password:"Niel", geburtsdatum: "25.01.2007", adresse:"Wol" 
           })
-        
     }
     </script>
 </body>

@@ -3,6 +3,7 @@ const app = express();
 const port = 3004;
 const database = require("./database.js");
 const db = new database("./database.db");
+db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const session = require("express-session");
@@ -17,11 +18,11 @@ app.post('/login', (req, res) => {
     make()
     async function make(){
         let { email, password } = req.body;
+
         var check = await db.check_user(email, password);
         var key_array = [];
         var key = genAPIKey();
-        var check = true;
-        if(check){
+        if(!(check.length === 0)){
             if(!(keys[email] === undefined)){
             key_array = keys[email];
             }
@@ -76,7 +77,9 @@ app.post('/create_user', (req, res) => {
             response = "user exist"
         }
         else{
-            db.create_user(email, username, password, geburtsdatum, adresse);
+          var userID= 1;
+          console.log(userID, username, email, geburtsdatum, password);
+            db.create_user(userID, username, email, geburtsdatum, password);
             response = "user created"
         }
     }
@@ -138,13 +141,8 @@ app.post('/update_product', (req, res) => {
       res.send('forbidden')    
     } 
     else{
-      if(product_exist(name)){
-          response = "product exist"
-      }
-      else{
           generate_product(name, description, price, Category, producer, images);
           response = "product added"
-      }
     }
   }
 })
