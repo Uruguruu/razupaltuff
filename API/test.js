@@ -15,3 +15,5 @@ console.log(db.delete_rating(1));
 console.log(db.delete_from_cart(1));
 console.log(db.delete_product(1));
 console.log(db.delete_user("John"));
+
+console.log(db.get_new_id_user());
