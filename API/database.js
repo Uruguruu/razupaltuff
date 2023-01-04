@@ -211,4 +211,25 @@ module.exports = function (file) {
     );
     return get_new_userID.get();
   };
+
+  this.get_new_warenkorbID = function () {
+    const get_new_warenkorbID = this.db.prepare(
+      "select max(warenkorbID) as warenkorbID from warenkorb"
+    );
+    return get_new_warenkorbID.get();
+  };
+
+  this.get_new_ratingID = function () {
+    const get_new_ratingID = this.db.prepare(
+      "select max(ratingID) as ratingID from Rating"
+    );
+    return get_new_ratingID.get();
+  };
+
+  this.get_new_produktID = function () {
+    const get_new_produktID = this.db.prepare(
+      "select max(produktID) as produktID from Produkte"
+    );
+    return get_new_produktID.get();
+  };
 };
