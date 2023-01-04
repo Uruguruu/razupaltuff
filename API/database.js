@@ -30,8 +30,7 @@ module.exports = function (file) {
   };
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
-    const insert = this.db.prepare(
-      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES ("+userID, UserName, eMail, birthDate, password+")"
+    const insert = this.db.prepare("INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES ('"+userID+"', '"+UserName+"', '"+eMail+"', '"+birthDate+"', '"+password+"')"
     );
     insert.run({ userID, UserName, eMail, birthDate, password });
 

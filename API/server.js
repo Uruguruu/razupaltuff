@@ -77,7 +77,7 @@ app.post('/create_user', (req, res) => {
             response = "user exist"
         }
         else{
-          var userID= 1;
+          var userID= 3;
           console.log(userID, username, email, geburtsdatum, password);
             db.create_user(userID, username, email, geburtsdatum, password);
             response = "user created"
@@ -149,16 +149,17 @@ app.post('/update_product', (req, res) => {
 
 
 
-// Mit diesem Kommando starten wir den Webserver.
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-  hell = genAPIKey();
-  console.log(hell);
-});
-
   }
 })
 }
 
 })
   })
+
+  
+// Mit diesem Kommando starten wir den Webserver.
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+  hell = genAPIKey();
+  console.log(hell);
+});
