@@ -19,18 +19,25 @@
     <input id="password2" placeholder="password2">
     <button onclick="setpassword()">neues password</button>
     <script>
+        var data;
           axios.post('/login',{
             email: "deinemutter@gmail.ch",
             password: "hell"
           })
           .then(function (response) {
+            data = response["data"]
             console.log(response);
-            website(response);
+            
           })
           .catch(function (error) {
             console.log(error);
           });
-    
+    function getdata(){
+        axios.post('/create_user',{
+            email: "afds", username: "afsd", password: "afsd", geburtsdatum: "fads", adresse: "fasd"
+          })
+        
+    }
     </script>
 </body>
 </html>
