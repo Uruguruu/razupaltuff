@@ -11,20 +11,25 @@ const rl = readline.createInterface({
 });
 
 // asks the user what he wants to do
-rl.question("1. create, 2. delelt, 3. Both, 4. Experimental :   ", (answer) => {
-  if (answer == 1) {
-    create();
-  } else if (answer == 2) {
-    deleteAll();
-  } else if (answer == 3) {
-    both();
-  } else if (answer == 4) {
-    idk();
-  } else {
-    console.log("fuck you");
+rl.question(
+  "1. create, 2. delelt, 3. Both, 4. Experimental,  5. Display the data :   ",
+  (answer) => {
+    if (answer == 1) {
+      create();
+    } else if (answer == 2) {
+      deleteAll();
+    } else if (answer == 3) {
+      both();
+    } else if (answer == 4) {
+      idk();
+    } else if (answer == 5) {
+      dispay();
+    } else {
+      console.log("fuck you");
+    }
+    rl.close();
   }
-  rl.close();
-});
+);
 
 //note the change function aren't in this file if you want to test them you have to do it on your own
 
@@ -60,6 +65,17 @@ function both() {
   deleteAll();
 }
 
+// this is just a test function
+
 function idk() {
   console.log("test");
+}
+
+// dispay the data
+// note you have to change the id of cart and rating to see the data
+function dispay() {
+  console.log(db.getUsers());
+  console.log(db.getProducts());
+  console.log(db.get_cart(1));
+  console.log(db.get_ratings(1));
 }
