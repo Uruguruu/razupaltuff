@@ -72,19 +72,33 @@ module.exports = function (file) {
     return this.db.prepare("select * from Produkte").all();
   };
 
-  this.create_product = function (produktID, Name, Image, price, producer) {
+  this.create_product = function (
+    produktID,
+    Name,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const insert = this.db.prepare(
-      "insert into Produkte (produktID, Name, Image, price, producer) values (@produktID, @Name, @Image, @price, @producer)"
+      "insert into Produkte (produktID, Name, Image, price, producer, description) values (@produktID, @Name, @Image, @price, @producer, @description)"
     );
-    insert.run({ produktID, Name, Image, price, producer });
+    insert.run({ produktID, Name, Image, price, producer, description });
     return 200, "Product created";
   };
 
-  this.update_product = function (Name, newName, Image, price, producer) {
+  this.update_product = function (
+    Name,
+    newName,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const update = this.db.prepare(
-      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer where Name = @Name"
+      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer, description = @description where Name = @Name"
     );
-    update.run({ newName, Image, price, producer, Name });
+    update.run({ newName, Image, price, producer, description, Name });
     return 200, "Product updated";
   };
 
@@ -172,5 +186,12 @@ module.exports = function (file) {
       }
       console.log("Close the database connection.");
     });
+  };
+
+  this.get_new_userID = function () {
+    const get_new_userID = this.db.prepare(
+      "select max(userID) as userID from users"
+    );
+    return get_new_userID.get();
   };
 };
