@@ -6,11 +6,23 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/login" method="POST">
         <label for="image">Melden sie sich an:</label>
         <input type="text" id="email" name="email">
-        <input type="password" name="password">
-        <button type="submit" style="height: 5%; width: 10%;">Submit</button>
-    </form>
+        <input type="password" name="password" id="password">
+        <button type="submit" style="height: 5%; width: 10%;" onclick="getdata()">Submit</button>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script>
+    function getdata(){
+           axios.post('/login',{
+             email: document.getElementById("email").value,  password: document.getElementById("password").value
+           })
+           .then(function (response) {
+            data = response["data"];
+            location.href = response["data"];
+            console.log(response);
+          })
+     }
+    </script>
 </body>
 </html>
