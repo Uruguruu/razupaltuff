@@ -6,10 +6,19 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/upload_image" method="post" enctype="multipart/form-data">
-        <label for="image">Bild hochladen:</label>
+    <h1>Produkt erstellen</h1>
+    <form action="/upload_image" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="price">Preis:</label>
+        <input type="text" id="price" name="price">
+        <label for="description">Beschreibung:</label>
+        <input type="text" id="description" name="description">
+        <label for="category">Kategorie:</label>
+        <input type="text" id="category" name="category">
+        <label for="image">Bild:</label>
         <input type="file" id="image" name="image">
-        <input type="submit" value="Hochladen">
+        <input type="submit" value="Produkt erstellen">
     </form>
       
 </body>
