@@ -7,21 +7,10 @@
 </head>
 <body>
     <form action="/login" method="post" enctype="multipart/form-data">
-        <label for="image">Bild hochladen:</label>
+        <label for="image">Melden sie sich an:</label>
         <input type="text" id="email" name="email">
-        <input type="password" value="password">
-        <button type="submit"></button>
+        <input type="password" name="password">
+        <button type="submit" style="height: 5%; width: 10%;">Submit</button>
     </form>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
-    <script>
-        axios.post('/login',{
-            UserName:"Niel", password:"12345", email: "admin",  geburtsdatum: "25.01.2007", adresse:"Wol" 
-          })
-          .then(function (response) {
-            console.log(response);
-            location.href = response["data"];
-            
-          })
-    </script>
 </body>
 </html>
