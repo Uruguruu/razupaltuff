@@ -2,11 +2,15 @@ const database = require("./database.js");
 const db = new database("./database.db");
 const readline = require("readline");
 
+// note do Not change this file unless you know what you are doing else you will lose your head
+
+// prepers the question to ask the user what he wants to do
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+// asks the user what he wants to do
 rl.question("1. create, 2. delelt, 3. Both, :   ", (answer) => {
   if (answer == 1) {
     create();
@@ -20,6 +24,9 @@ rl.question("1. create, 2. delelt, 3. Both, :   ", (answer) => {
   rl.close();
 });
 
+//note the change function aren't in this file if you want to test them you have to do it on your own
+
+// creates a user and a product and adds the product to the cart and rates it
 function create() {
   db.create_user(1, "John", "john@newMail.com", "1970-01-01", "mypassword");
   console.log(db.getUsers());
@@ -40,13 +47,12 @@ function create() {
   console.log(db.get_ratings(1));
 }
 
+// deletes all users, products, ratings and cart entries
 function deleteAll() {
-  console.log(db.delete_rating(1));
-  console.log(db.delete_from_cart(1));
-  console.log(db.delete_product(1));
-  console.log(db.delete_user("John"));
+  console.log(db.kill_all());
 }
 
+// calls both functions
 function both() {
   create();
   deleteAll();

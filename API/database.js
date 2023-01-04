@@ -232,4 +232,16 @@ module.exports = function (file) {
     );
     return get_new_produktID.get();
   };
+
+  this.kill_all = function () {
+    const delete_users = this.db.prepare("delete from users");
+    const delete_products = this.db.prepare("delete from Produkte");
+    const delete_ratings = this.db.prepare("delete from Rating");
+    const delete_cart = this.db.prepare("delete from warenkorb");
+    delete_ratings.run();
+    delete_cart.run();
+    delete_products.run();
+    delete_users.run();
+    return 200, "All tables cleared";
+  };
 };
