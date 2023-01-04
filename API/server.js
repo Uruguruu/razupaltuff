@@ -63,7 +63,7 @@ app.post('/login', (req, res) => {
           }
           else{
               res.status(403);
-              res.send('wrong user or password')    
+              res.send('wrong user or password')
           }
           console.log(keys);
       }
