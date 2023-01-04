@@ -18,6 +18,7 @@ console.log(db.get_cart(1));
 db.update_cart(1, "ordered");
 console.log(db.get_cart(1));
 db.add_rating(1, 5, "2020-01-01", 1, 1, "God product");
+console.log(db.get_ratings(1));
 
 console.log(db.delete_rating(1));
 console.log(db.delete_from_cart(1));
