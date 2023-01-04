@@ -15,7 +15,7 @@ module.exports = function (file) {
 
   this.check_user = function (eMail, password) {
     const check_user = this.db.prepare(
-      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
+      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
     return check_user.get({ eMail, password });
   };
@@ -25,23 +25,17 @@ module.exports = function (file) {
   };
 
   this.user_exist = function (email) {
-    const user_exist = this.db
-      .prepare("SELECT * FROM Users WHERE eMail = @eMail")
+    return this.db
+      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
       .all();
-    return user_exist({ email });
-  };
-
-  this.product_exist = function (name) {
-    const product_exist = this.db
-      .prepare("SELECT * FROM users WHERE name = @name")
-      .all();
-    return product_exist({ name });
   };
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
-    const insert = this.db.prepare("INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES ('"+userID+"', '"+UserName+"', '"+eMail+"', '"+birthDate+"', '"+password+"')"
+    const insert = this.db.prepare(
+      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
     insert.run({ userID, UserName, eMail, birthDate, password });
+
     return 200, "User created";
   };
 
@@ -78,19 +72,33 @@ module.exports = function (file) {
     return this.db.prepare("select * from Produkte").all();
   };
 
-  this.create_product = function (produktID, Name, Image, price, producer) {
+  this.create_product = function (
+    produktID,
+    Name,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const insert = this.db.prepare(
-      "insert into Produkte (produktID, Name, Image, price, producer) values (@produktID, @Name, @Image, @price, @producer)"
+      "insert into Produkte (produktID, Name, Image, price, producer, description) values (@produktID, @Name, @Image, @price, @producer, @description)"
     );
-    insert.run({ produktID, Name, Image, price, producer });
+    insert.run({ produktID, Name, Image, price, producer, description });
     return 200, "Product created";
   };
 
-  this.update_product = function (Name, newName, Image, price, producer) {
+  this.update_product = function (
+    Name,
+    newName,
+    Image,
+    price,
+    producer,
+    description
+  ) {
     const update = this.db.prepare(
-      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer where Name = @Name"
+      "update Produkte set Name = @newName, Image = @Image, price = @price, producer = @producer, description = @description where Name = @Name"
     );
-    update.run({ newName, Image, price, producer, Name });
+    update.run({ newName, Image, price, producer, description, Name });
     return 200, "Product updated";
   };
 
@@ -125,11 +133,11 @@ module.exports = function (file) {
     return 200, "Cart updated";
   };
 
-  this.delete_from_cart = function (warenkorbID, produktID) {
+  this.delete_from_cart = function (warenkorbID) {
     const delete_from_cart = this.db.prepare(
-      "delete from warenkorb where warenkorbID = @warenkorbID and produktID = @produktID"
+      "delete from warenkorb where warenkorbID = @warenkorbID"
     );
-    delete_from_cart.run({ warenkorbID, produktID });
+    delete_from_cart.run({ warenkorbID });
     return 200, "Product deleted from cart";
   };
 
@@ -180,7 +188,10 @@ module.exports = function (file) {
     });
   };
 
-  this.get_new_id_user = function () {
-    return this.db.prepare("SELECT MAX(userID) FROM users").all();
+  this.get_new_userID = function () {
+    const get_new_userID = this.db.prepare(
+      "select max(userID) as userID from users"
+    );
+    return get_new_userID.get();
   };
 };
