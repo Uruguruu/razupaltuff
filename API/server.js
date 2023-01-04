@@ -10,13 +10,14 @@ const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
 const multer = require('multer');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // parse application/json
 app.use(bodyParser.json());
-// app.use(bodyParser);
 var keys = {};
 var aidmin_key = "";
 // Mit diesem Kommando starten wir den Webserver.
@@ -37,38 +38,9 @@ async function getuser(rkey) {
   return Object.keys(keys).find((key) => object[key] === rkey);
 }
 
-app.post('/login', urlencodedParser,(req, res) => {
-  // to login into your account
-    make()
-    async function make(){
-        let { email, password } = req.body;
-        console.log(email === "admin" && password === "12345");
-        if(email === "admin" && password === "12345"){
-          aidmin_key = await genAPIKey();
-          res.send("admin_page?key="+aidmin_key);
-        }
-        else{
-          var check = await db.check_user(email, password);
-          var key_array = [];
-          var key = genAPIKey();
-          if(!(check === undefined || check.length === 0)){
-              if(!(keys[email] === undefined)){
-              key_array = keys[email];
-              }
-              key_array.push(key);
-              keys[email] = key_array;
-              res.status(200);
-              res.send(key);
-          }
-          else{
-              res.status(403);
-              res.send('wrong user or password')
-          }
-          console.log(keys);
-      }
-      console.log(keys);
-    }
-  });
+async function check_rights(user){
+
+}
 
 
 app.post("/logout", (req, res) => {
@@ -82,20 +54,26 @@ app.post("/logout", (req, res) => {
     console.log(keys);
   }
 });
+app.post("/upload_image", (req, res) => {
+  res.sendFile(__dirname+"\\test_backend.html");
+})
 
 app.post("/create_product", (req, res) => {
   // to login into your account
-  make(req, res)
   async function make(req, res){
-      let { name, description, price, Category, producer, images, key, imageBlob } = req.body;
-      if(!(key == aidmin_key))  res.send('forbidden'); 
-      
+      let { produktID,  name, imageData, price,  producer  } = req.body;
+
       // Lese den Inhalt der hochgeladenen Datei in eine Variable
-      const imageData = req.file.buffer;
+      imageData = req.file.buffer;
       // Wandeln  den Inhalt in einen BLOB um
-      imageBlob = Buffer.from(imageData).toString('base64');
+      const imageBlob = Buffer.from(imageData).toString('base64');
       // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
       console.log(imageBlob)
+      name = req.name
+      price = req.price
+      producer = req.producer
+      db.create_product(produktID,  name, imageBlob, price,  producer);
+
       let lowestIdp = null;
       // Iterate through all existing products
       for(let product of products){
@@ -109,28 +87,11 @@ app.post("/create_product", (req, res) => {
           response = "product exist"
       }
       else{
-          create_product(name, description, price, Category, producer, images, newId, imageBlob);
+          db.create_product(imageBlob);
           response = "product added"
       }
     }
-    // Generate a new ID for the product
-    let newId = lowestIdp + 1;
-    if (product_exist(name)) {
-      response = "product exist";
-    } else {
-      generate_product(
-        name,
-        description,
-        price,
-        Category,
-        producer,
-        images,
-        newId
-      );
-      response = "product added";
-    }
   })
-
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -223,29 +184,21 @@ app.post("/update_user", (req, res) => {
   }
 });
 
+
+
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
 
 
-app.get("/",(req, res) => {
-  res.sendFile(__dirname.substring(0, __dirname.length - 4)+"\\Seiten\\Html\\Homepage.html");
-})
 
 
 app.get('/get_html', (req,res) =>{
   res.sendFile(__dirname+"\\createproduct.html");
 })
 
-  // Führen  die Abfrage aus
- /* connection.execute(query, ['image_name', imageBlob], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error saving image to database');
-    } else {
-    }
-  })
-*/
+
+
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
