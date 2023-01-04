@@ -35,35 +35,37 @@ async function getuser(rkey) {
   return Object.keys(keys).find((key) => object[key] === rkey);
 }
 
-async function check_rights(user) {}
-app.post("/login", (req, res) => {
-  // to login into your account
-  make();
-  async function make() {
-    let { email, password } = req.body;
-    console.log(email, password);
-    console.log(email === "admin");
-    console.log(password === "12345");
-    console.log(email === "admin" && password === "12345");
-    if (email === "admin" && password === "12345") {
-      aidmin_key = await genAPIKey();
-      console.log(5);
-      res.sendFile(__dirname + "\\test_backend.html");
-    } else {
-      var check = await db.check_user(email, password);
-      var key_array = [];
-      var key = genAPIKey();
-      if (!(check.length === 0)) {
-        if (!(keys[email] === undefined)) {
-          key_array = keys[email];
+async function check_rights(user){
+
+}
+app.post('/login', (req, res) => {
+    // to login into your account
+    make()
+    async function make(){
+        let { email, password } = req.body;
+        console.log(email === "admin" && password === "12345");
+        if(email === "admin" && password === "12345"){
+          aidmin_key = await genAPIKey();
+          res.send("admin_page?key="+aidmin_key);
         }
-        key_array.push(key);
-        keys[email] = key_array;
-        res.status(200);
-        res.send(key);
-      } else {
-        res.status(403);
-        res.send("wrong user or password");
+        else{
+          var check = await db.check_user(email, password);
+          var key_array = [];
+          var key = genAPIKey();
+          if(!(check.length === 0)){
+              if(!(keys[email] === undefined)){
+              key_array = keys[email];
+              }
+              key_array.push(key);
+              keys[email] = key_array;
+              res.status(200);
+              res.send(key);
+          }
+          else{
+              res.status(403);
+              res.send('wrong user or password')    
+          }
+          console.log(keys);
       }
       console.log(keys);
     }
@@ -241,3 +243,17 @@ app.get("/admin", (req, res) => {
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
+
+app.get("/admin",(req, res) => {
+  res.sendFile(__dirname+"\\admin_login.html");
+})
+
+app.get("/admin_page?:key",(req, res) => {
+  console.log(1);
+  if(!(aidmin_key === req.query.key)){
+  res.sendFile(__dirname+"\\admin_login.html");
+  }
+  else{
+    res.sendFile(__dirname+"\\admin_page.html");
+  }
+})
