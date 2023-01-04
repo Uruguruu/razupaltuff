@@ -60,21 +60,19 @@ app.post("/upload_image", (req, res) => {
 
 app.post("/create_product", (req, res) => {
   // to login into your account
-  make(req, res)
   async function make(req, res){
       let { produktID,  name, imageData, price,  producer  } = req.body;
-      if(!(key == aidmin_key))  res.send('forbidden'); 
-      
+
       // Lese den Inhalt der hochgeladenen Datei in eine Variable
       imageData = req.file.buffer;
       // Wandeln  den Inhalt in einen BLOB um
       const imageBlob = Buffer.from(imageData).toString('base64');
       // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
       console.log(imageBlob)
-      const nameData = req.text;
-      const priceData = req.text;
-      const producerData = req.text
-      db.create_product(produktID,  nameData, imageBlob, priceData,  producerData);
+      name = req.name
+      price = req.price
+      producer = req.producer
+      db.create_product(produktID,  name, imageBlob, price,  producer);
 
       let lowestIdp = null;
       // Iterate through all existing products
