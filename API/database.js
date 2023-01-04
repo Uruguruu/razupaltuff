@@ -14,7 +14,10 @@ module.exports = function (file) {
   };
 
   this.check_user = function (eMail, password) {
-    return this.db.prepare("SELECT * FROM Users WHERE eMail = '"+eMail+"' AND password = '"+password+"'").all();
+    const check_user = this.db.prepare(
+      "SELECT * FROM users WHERE eMail = @eMail AND password = @password"
+    );
+    return check_user.get({ eMail, password });
   };
 
   this.getUsers = function () {
@@ -22,19 +25,24 @@ module.exports = function (file) {
   };
 
   this.user_exist = function (email) {
-    return this.db.prepare("SELECT * FROM Users WHERE eMail = '"+email+"'").all();
+    const user_exist = this.db
+      .prepare("SELECT * FROM Users WHERE eMail = @eMail")
+      .all();
+    return user_exist({ email });
   };
 
-  this.product_exist = function (product) {
-    return this.db.prepare("SELECT * FROM users WHERE '"+product+"' = @name").all();
+  this.product_exist = function (name) {
+    const product_exist = this.db
+      .prepare("SELECT * FROM users WHERE name = @name")
+      .all();
+    return product_exist({ name });
   };
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
     const insert = this.db.prepare(
-      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES ("+userID, UserName, eMail, birthDate, password+")"
+      "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
     insert.run({ userID, UserName, eMail, birthDate, password });
-
     return 200, "User created";
   };
 
