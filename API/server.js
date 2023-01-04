@@ -243,8 +243,39 @@ app.get('/get_html', (req,res) =>{
   res.sendFile(__dirname+"\\createproduct.html");
 })
 
-app.post('/upload_image', (req,res) =>{
-  res.sendFile(__dirname+"\\createproduct.html")
+  // Führen  die Abfrage aus
+  connection.execute(query, ['image_name', imageBlob], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error saving image to database');
+    } else {
+    }
+  })
+
+app.get("/admin",(req, res) => {
+  res.sendFile(__dirname+"\\admin_login.html");
 })
 
+app.get("/admin_page?:key",(req, res) => {
+  if(!(aidmin_key === req.query.key)){
+  res.sendFile(__dirname+"\\admin_login.html");
+  }
+  else{
+    res.sendFile(__dirname+"\\admin_page.html");
+  }
+})
+
+app.post('/load', (req, res) => {
+  // Get the file that was set to our field named "image"
+  console.log(req.files)
+  const { image } = req.files;
+
+  // If no image submitted, exit
+  if (!image) return res.sendStatus(400);
+
+  // Move the uploaded image to our upload folder
+  image.mv(__dirname + '/images/' + image.name);
+
+  res.sendStatus(200);
+});
 
