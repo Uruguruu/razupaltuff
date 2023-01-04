@@ -173,4 +173,8 @@ module.exports = function (file) {
       console.log("Close the database connection.");
     });
   };
+
+  this.get_new_id_user = function () {
+    return this.db.prepare("SELECT MAX(userID) FROM users").all();
+  };
 };
