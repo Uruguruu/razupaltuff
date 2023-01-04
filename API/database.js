@@ -13,10 +13,21 @@ module.exports = function (file) {
     });
   };
 
-  // do not touch this function unless you know what you are doing
+  this.check_user = function (eMail, password) {
+    const check_user = this.db.prepare(
+      "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
+    );
+    return check_user.get({ eMail, password });
+  };
 
   this.getUsers = function () {
     return this.db.prepare("SELECT * FROM users").all();
+  };
+
+  this.user_exist = function (email) {
+    return this.db
+      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
+      .all();
   };
 
   this.create_user = function (userID, UserName, eMail, birthDate, password) {
@@ -57,8 +68,6 @@ module.exports = function (file) {
     return "up and running";
   };
 
-  // do not touch this function unless you know what you are doing
-
   this.getProducts = function () {
     return this.db.prepare("select * from Produkte").all();
   };
@@ -85,6 +94,75 @@ module.exports = function (file) {
     );
     delete_product.run({ produktID });
     return 200, "Product deleted";
+  };
+
+  this.get_cart = function (userID) {
+    const get_cart = this.db.prepare(
+      "select * from warenkorb where userID = @userID"
+    );
+    return get_cart.all({ userID });
+  };
+
+  this.add_to_cart = function (warenkorbID, produktID, userID, status) {
+    const insert = this.db.prepare(
+      "insert into warenkorb (warenkorbID, produktID, userID, status) values (@warenkorbID, @produktID, @userID, @status)"
+    );
+    insert.run({ warenkorbID, produktID, userID, status });
+    return 200, "Product added to cart";
+  };
+
+  this.update_cart = function (userID, status) {
+    const update = this.db.prepare(
+      "update warenkorb set status = @status where userID = @userID"
+    );
+    update.run({ status, userID });
+    return 200, "Cart updated";
+  };
+
+  this.delete_from_cart = function (warenkorbID) {
+    const delete_from_cart = this.db.prepare(
+      "delete from warenkorb where warenkorbID = @warenkorbID"
+    );
+    delete_from_cart.run({ warenkorbID });
+    return 200, "Product deleted from cart";
+  };
+
+  this.add_rating = function (
+    ratingID,
+    starts,
+    date,
+    produktID,
+    userID,
+    comment
+  ) {
+    const insert = this.db.prepare(
+      "insert into Rating (ratingID, starts, date, produktID, userID, comment) values (@ratingID, @starts, @date, @produktID, @userID, @comment)"
+    );
+    insert.run({ ratingID, starts, date, produktID, userID, comment });
+    return 200, "Rating added";
+  };
+
+  this.get_ratings = function (produktID) {
+    const get_ratings = this.db.prepare(
+      "select * from Rating where produktID = @produktID"
+    );
+    return get_ratings.all({ produktID });
+  };
+
+  this.update_rating = function (ratingID, starts, comment) {
+    const update = this.db.prepare(
+      "update Rating set starts = @starts, comment = @comment where ratingID = @ratingID"
+    );
+    update.run({ starts, comment, ratingID });
+    return 200, "Rating updated";
+  };
+
+  this.delete_rating = function (ratingID) {
+    const delete_rating = this.db.prepare(
+      "delete from Rating where ratingID = @ratingID"
+    );
+    delete_rating.run({ ratingID });
+    return 200, "Rating deleted";
   };
 
   this.close = function () {

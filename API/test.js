@@ -3,19 +3,17 @@ const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 
-db.update_user("John", "john@newMail.com", "1970-01-01", "mypassword", "John");
-console.log(db.getUsers());
-db.delete_user("John");
+db.create_user(1, "John", "john@newMail.com", "1970-01-01", "mypassword");
 console.log(db.getUsers());
 db.create_product(1, "godProduct", "../img/logo.png", 12.5, "God product");
 console.log(db.getProducts());
-db.update_product(
-  "godProduct",
-  "godProduct",
-  "../img/logo.png",
-  15.8,
-  "God product"
-);
-console.log(db.getProducts());
-db.delete_product(1);
-console.log(db.getProducts());
+db.add_to_cart(1, 1, 1, "in cart");
+console.log(db.get_cart(1));
+db.update_cart(1, "ordered");
+console.log(db.get_cart(1));
+db.add_rating(1, 5, "2020-01-01", 1, 1, "God product");
+
+console.log(db.delete_rating(1));
+console.log(db.delete_from_cart(1));
+console.log(db.delete_product(1));
+console.log(db.delete_user(1));
