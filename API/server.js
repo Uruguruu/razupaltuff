@@ -310,3 +310,4 @@ app.post("/delete_shopping_cart", (req, res) => {
       res.send("sucess");
   }
 });
+
