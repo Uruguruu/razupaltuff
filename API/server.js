@@ -13,7 +13,6 @@ const multer = require('multer');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
@@ -46,7 +45,7 @@ async function getuser(value) {
   var object = keys
   return Object.keys(object).find(key =>  object[key].includes(value));
 }
-app.post('/login', urlencodedParser,(req, res) => {
+app.post('/login',(req, res) => {
   // to login into your account
     make()
     async function make(){
@@ -82,7 +81,7 @@ app.post('/login', urlencodedParser,(req, res) => {
   });
 
 
-app.post("/logout", urlencodedParser,(req, res) => {
+app.post("/logout",(req, res) => {
   let { email, key } = req.body;
   array_list = keys[email];
   console.log(key);
@@ -103,7 +102,7 @@ app.post("/create_product", (req, res) => {
   make(req, res);
   async function make(req, res){
       let { produktID,  name, imageData, price,  producer  } = req.body;
-
+    console.log(imageData);
       // Lese den Inhalt der hochgeladenen Datei in eine Variable
       imageData = req.file.buffer;
       // Wandeln  den Inhalt in einen BLOB um
@@ -165,7 +164,7 @@ app.post("/update_product", (req, res) => {
   }
 });
 
-app.post("/create_user", urlencodedParser, (req, res) => {
+app.post("/create_user", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -188,7 +187,7 @@ app.post("/create_user", urlencodedParser, (req, res) => {
   }
 });
 
-app.post("/update_user", urlencodedParser, (req, res) => {
+app.post("/update_user", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -247,4 +246,3 @@ app.post('/load', (req, res) => {
 
   res.sendStatus(200);
 });
-
