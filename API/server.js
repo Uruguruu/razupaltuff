@@ -40,7 +40,7 @@ async function getuser(value) {
   var object = keys;
   return Object.keys(object).find((key) => object[key].includes(value));
 }
-app.post("/login", urlencodedParser, (req, res) => {
+app.post("/login", (req, res) => {
   // to login into your account
   make();
   async function make() {
@@ -248,4 +248,17 @@ app.post("/load", (req, res) => {
   // Move the uploaded image to our upload folder
   image.mv(__dirname + "/images/" + image.name);
   res.sendStatus(200);
+});
+
+app.get("/get_product", (req, res) => {
+  //get all products
+  res.set("Access-Control-Allow-Origin", "*");
+  res.send(db.getProducts());
+});
+
+app.get("/get_product_by_ID", (req, res) => {
+  //get the id in the request
+  var id = req.query.id;
+  //get the product with the id
+  res.send(db.getProductByID(id));
 });
