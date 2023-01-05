@@ -3,10 +3,11 @@ const app = express();
 const port = 3004;
 const database = require("./database.js");
 const db = new database("./database.db");
-db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
+var cors = require("cors");
+// pleas don't do somthing here😅
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -14,10 +15,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
-var aidmin_key = "";
+var key_for_admin = "";
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
+  //  generated_api_key = genAPIKey();
+  //  console.log(generated_api_key);
   hell = genAPIKey();
   //console.log(hell);
 });
@@ -27,66 +30,73 @@ const genAPIKey = () => {
     .map((e) => ((Math.random() * 36) | 0).toString(36))
     .join("");
 };
-async function check_key(key, email) {
-  if (keys[email].includes(key)) {
+
+async function check_key(key, eMail) {
+  if (keys[eMail]?.includes(key)) {
     return true;
   } else {
     return false;
   }
 }
+
 async function getuser(value) {
   var object = keys;
   return Object.keys(object).find((key) => object[key].includes(value));
 }
-app.post("/login", (req, res) => {
-  // to login into your account
-  make();
-  async function make() {
-    let { email, password } = req.body;
-    console.log(email === "admin" && password === "12345");
-    if (email === "admin" && password === "12345") {
-      aidmin_key = await genAPIKey();
-      res.send("admin_page?key=" + aidmin_key);
+
+async function verifyCredentials(eMail, password) {
+  var get_user_form_db = await db.check_user(await eMail, await password);
+  console.log(get_user_form_db);
+  return get_user_form_db !== null;
+}
+
+app.use(cors());
+
+app.post("/login", async (req, res) => {
+  try {
+    const { eMail, password } = req.body;
+    console.log({ eMail, password });
+    // Verify the eMail and password
+    console.log(await verifyCredentials);
+    const isValid = await verifyCredentials(eMail, password);
+
+    if ((await eMail) === "admin" && (await password) === "12345") {
+      key_for_admin = await genAPIKey();
+      res.send("admin_page?key=" + key_for_admin);
+    } else if (isValid === true) {
+      console.log("sucessfull login");
+      // Generate a token
+      const token = await genAPIKey();
+      res.status(200).send({ token });
     } else {
-      var check = await db.check_user(email, password);
-      var key_array = [];
-      var key = genAPIKey();
-      console.log(1111);
-      console.log(check);
-      if (!(check === undefined || check.length === 0)) {
-        if (!(keys[email] === undefined)) {
-          key_array = keys[email];
-        }
-        key_array.push(key);
-        keys[email] = key_array;
-        res.status(200);
-        res.send(key);
-      } else {
-        res.status(403);
-        res.send("wrong user or password");
-      }
-      console.log(keys);
+      res.status(405).send({ error: "Invalid eMail or password" });
     }
-    console.log(keys);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
-app.post("/logout", bodyParser.urlencoded, (req, res) => {
-  let { email, key } = req.body;
-  array_list = keys[email];
-  console.log(key);
-  if (!array_list.includes(key)) res.send({ message: "failed. Not logged in" });
-  else {
-    const index = array_list.indexOf(key);
-    const x = array_list.splice(index, 1);
-    res.send({ message: "Successfully logged out." });
-    console.log(keys);
+
+app.get("/logout", (req, res) => {
+  try {
+    // Invalidate the JWT token
+    //invalidateJWT(req.headers.authorization);
+    res.status(200).send({ message: "Successfully logged out" });
+  } catch (error) {
+    console.error(error);
+    res.status(404).send({ error: "Error logging out" });
   }
 });
+
+/* if (eMail === "admin" && password === "12345") {
+ key_for_admin = await genAPIKey();
+  res.send("admin_page?key=" + key_for_admin); */
 
 app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
 });
 
+// wer das Kaput macht wird ein Kopf kürzer gemacht😑
 app.post("/create_product", upload.single("image"), (req, res) => {
   // Lese den Inhalt der hochgeladenen Datei in eine Variable
   setTimeout(() => {
@@ -114,7 +124,7 @@ app.post("/update_product", (req, res) => {
   async function make(req, res) {
     let { name, description, price, Category, producer, images, key } =
       req.body;
-    if (!(key == aidmin_key)) res.send("forbidden");
+    if (!(key == key_for_admin)) res.send("forbidden");
     let lowestIdp = null;
     // Iterate through all existing products
     for (let product of products) {
@@ -124,7 +134,7 @@ app.post("/update_product", (req, res) => {
     }
     // Generate a new ID for the product
     let newId = lowestIdp + 1;
-    if (check_rights(key, email)) {
+    if (check_rights(key, eMail)) {
       response = "product exist";
     } else {
       generate_product(
@@ -144,7 +154,7 @@ app.post("/create_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let { email, username, password, geburtsdatum, adresse } = req.body;
+    let { eMail, username, password, geburtsdatum, adresse } = req.body;
     let lowestIduser = null;
     // Iterate through all existing users
     var id = await db.get_new_userID();
@@ -152,16 +162,16 @@ app.post("/create_user", bodyParser.urlencoded, (req, res) => {
     // Generate a new ID for the user
     let newIduser = id["userID"] + 1;
     console.log(id);
-    console.log(db.user_exist(email));
+    console.log(db.user_exist(eMail));
     if (
-      !(db.user_exist(email) === undefined || db.user_exist(email).length === 0)
+      !(db.user_exist(eMail) === undefined || db.user_exist(eMail).length === 0)
     ) {
       res.send("user exist");
     } else {
       db.create_user(
         newIduser,
         username,
-        email,
+        eMail,
         geburtsdatum,
         password,
         adresse
@@ -175,8 +185,8 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
   make(req, res);
   async function make(req, res) {
     let {
-      original_email,
-      email,
+      original_eMail,
+      eMail,
       username,
       password,
       geburtsdatum,
@@ -193,7 +203,7 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       console.log(
         await getuser(key),
         username,
-        email,
+        eMail,
         password,
         geburtsdatum,
         adresse
@@ -201,7 +211,7 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       db.update_user(
         await getuser(key),
         username,
-        email,
+        eMail,
         password,
         geburtsdatum,
         adresse
@@ -220,7 +230,7 @@ app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
 app.get("/admin_page?:key", (req, res) => {
-  if (!(aidmin_key === req.query.key)) {
+  if (!(key_for_admin === req.query.key)) {
     res.sendFile(__dirname + "\\admin_login.html");
   } else {
     res.sendFile(__dirname + "\\admin_page.html");
@@ -244,10 +254,12 @@ app.get("/get_product", async (req, res) => {
 });
 
 app.get("/get_product_by_ID", (req, res) => {
-  //get the id in the request
-  var id = req.query.id;
-  //get the product with the id
-  res.send(db.getProductByID(id));
+  // get the id from the request query parameters
+  const id = req.query.id;
+  // get the product with the id
+  const product = db.get_product(id);
+  // send the product in the response
+  res.send(product);
 });
 
 app.post("/get_shopping_cart", (req, res) => {
@@ -271,4 +283,10 @@ app.post("/add_shopping_cart", (req, res) => {
     db.add_to_cart(warenkorbid, produktid, userid, 1);
     res.send("sucess");
   }
+});
+
+app.get("/get_shopping_cart_by_userID", (req, res) => {
+  const id = req.query.id;
+  const product = db.get_cart(id);
+  res.send(product);
 });
