@@ -41,6 +41,8 @@ app.post('/login', urlencodedParser,(req, res) => {
   // to login into your account
     make()
     async function make(){
+      console.log("sdvsdssssssssssssssssssss");
+      console.log(req.body);
         let { email, password } = req.body;
         console.log(email === "admin" && password === "12345");
         if(email === "admin" && password === "12345"){
