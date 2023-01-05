@@ -94,7 +94,7 @@ app.post("/create_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
     let { produktID, name, imageData, price, producer } = req.body;
-
+    console.log(produktID);
     // Lese den Inhalt der hochgeladenen Datei in eine Variable
     imageData = req.file.buffer;
     // Wandeln  den Inhalt in einen BLOB um
@@ -223,7 +223,7 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       res.send("user updated");
     }
   }
-});
+});+
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
@@ -269,22 +269,26 @@ app.post("/get_shopping_cart", (req, res) => {
 // to login into your account
 make(req, res);
   async function make(req, res) {
-    let { key} = req.body;
+    let {key} = req.body;
     var user = await getuser(key);
-    res.send(db.get_cart(key));
+    var userid = await db.get_user_ID(user);
+    res.send(db.get_cart(userid["userID"]));
 }
 });
-
 
 app.post("/add_shopping_cart", (req, res) => {
   // to login into your account
   make(req, res);
     async function make(req, res) {
       let { key, produktid} = req.body;
-      var user = await getuser(key);
+     var user = await getuser(key);
       var warenkorbid = await db.get_new_warenkorbID();
       var userid = await db.get_user_ID(user);
-      db.add_to_cart(warenkorbid, produktid, userid, 1)
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.add_to_cart(id_warenkorb, produktid, userid["userID"], 1)
       res.send("sucess");
   }
   });
