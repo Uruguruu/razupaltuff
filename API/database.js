@@ -160,11 +160,11 @@ module.exports = function (file) {
   };
 
   // deletes the product with the given warenkorbID
-  this.delete_from_cart = function (warenkorbID) {
+  this.delete_from_cart = function (userID, productID) {
     const delete_from_cart = this.db.prepare(
-      "delete from warenkorb where warenkorbID = @warenkorbID"
+      "delete from warenkorb where userID = @userID AND produktID = @productID"
     );
-    delete_from_cart.run({ warenkorbID });
+    delete_from_cart.run({userID, productID});
     return 200, "Product deleted from cart";
   };
 
@@ -272,11 +272,13 @@ module.exports = function (file) {
     );
     return product_exist.get({ name });
   };
+
+  
+this.get_user_ID = function (email){
+  const product_exist = this.db.prepare(
+    "select userID from Users where eMail = @email"
+  );
+  return product_exist.get({ email });
 };
 
-  this.get_user_ID = function (email){
-    const product_exist = this.db.prepare(
-      "select userID from Users where eMail = @email"
-    );
-    return product_exist.get({ email });
-  };
+};

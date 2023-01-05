@@ -4,6 +4,7 @@ const port = 3004;
 const database = require("./database.js");
 const db = new database("./database.db");
 const fs = require("fs");
+<<<<<<< HEAD
 const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
@@ -14,6 +15,14 @@ var bodyParser = require("body-parser");
 var cors = require('cors');
 db.connect("./database.db");
 app.use(bodyParser.urlencoded({ extended: false }));
+=======
+var bodyParser = require("body-parser");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+app.use(bodyParser.urlencoded({ extended: true }));
+
+>>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
@@ -21,8 +30,13 @@ var key_for_admin = "";
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
+<<<<<<< HEAD
 //  generated_api_key = genAPIKey();
 //  console.log(generated_api_key);
+=======
+  hell = genAPIKey();
+  //console.log(hell);
+>>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
 });
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
@@ -43,6 +57,7 @@ async function getuser(value) {
   var object = keys;
   return Object.keys(object).find((key) => object[key].includes(value));
 }
+<<<<<<< HEAD
 
 async function verifyCredentials(eMail, password) {
   var get_user_form_db = await db.check_user(await eMail, await password);
@@ -69,6 +84,17 @@ app.post("/login", async (req, res) => {
       // Generate a token
       const token = await genAPIKey();
       res.status(200).send({ token });
+=======
+app.post("/login", (req, res) => {
+  // to login into your account
+  make();
+  async function make() {
+    let { email, password } = req.body;
+    console.log(email === "admin" && password === "12345");
+    if (email === "admin" && password === "12345") {
+      aidmin_key = await genAPIKey();
+      res.send("admin_page?key=" + aidmin_key);
+>>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
     } else {
       res.status(405).send({ error: "Invalid eMail or password" });
     }
@@ -97,40 +123,28 @@ app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
 });
 
-app.post("/create_product", (req, res) => {
-  // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    console.log(req.body);
-    let { produktID, name, imageData, price, producer } = req.body;
-
-    // Lese den Inhalt der hochgeladenen Datei in eine Variable
-    imageData = req.file.buffer;
-    // Wandeln  den Inhalt in einen BLOB um
-    const imageBlob = Buffer.from(imageData).toString("base64");
-    // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-    console.log(imageBlob);
-    name = req.name;
-    price = req.price;
-    producer = req.producer;
-    db.create_product(produktID, name, imageBlob, price, producer);
-    let lowestIdp = null;
-    // Iterate through all existing products
-    for (let product of products) {
-      if (product.id < lowestIdp || lowestIdp === null) {
-        lowestIdp = product.id;
-      }
-    }
+app.post("/create_product", upload.single("image"), (req, res) => {
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  setTimeout(() => {
+    const imageBuffer = req.file.buffer;
+    const image = imageBuffer.toString("base64");
+    const name = req.body.name;
+    const price = req.body.price;
+    const description = req.body.description;
+    const producer = req.body.producer;
     // Generate a new ID for the product
-    let newId = lowestIdp + 1;
-    if (product_exist(name)) {
-      response = "product exist";
-    } else {
-      db.create_product(imageBlob);
-      response = "product added";
+    const ID = db.get_new_produktID();
+    const produktID = ID["produktID"] + 1;
+    try {
+      db.create_product(produktID, name, image, price, producer, description);
+      res.send("product added successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while creating the product");
     }
-  }
+  }, 1000);
 });
+
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -180,7 +194,6 @@ app.post("/create_user", bodyParser.urlencoded, (req, res) => {
     ) {
       res.send("user exist");
     } else {
-      console.log("wwwwwwwwwwwwwwwww");
       db.create_user(
         newIduser,
         username,
@@ -236,7 +249,7 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
-app.get("/get_html", (req, res) => {
+app.get("/create_product", (req, res) => {
   res.sendFile(__dirname + "\\createproduct.html");
 });
 app.get("/admin", (req, res) => {
@@ -267,10 +280,12 @@ app.get("/get_product", async (req, res) => {
 });
 
 app.get("/get_product_by_ID", (req, res) => {
-  //get the id in the request
-  var id = req.query.id;
-  //get the product with the id
-  res.send(db.getProductByID(id));
+  // get the id from the request query parameters
+  const id = req.query.id;
+  // get the product with the id
+  const product = db.getProductByID(id);
+  // send the product in the response
+  res.send(product);
 });
 
 app.post("/get_shopping_cart", (req, res) => {
@@ -294,4 +309,10 @@ app.post("/add_shopping_cart", (req, res) => {
     db.add_to_cart(warenkorbid, produktid, userid, 1);
     res.send("sucess");
   }
+});
+
+app.get("/get_shopping_cart_by_userID", (req, res) => {
+  const id = req.query.id;
+  const product = db.get_cart(id);
+  res.send(product);
 });
