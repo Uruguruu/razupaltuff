@@ -90,11 +90,12 @@ app.post("/upload_image", (req, res) => {
 app.post("/create_product", upload.single("image"), (req, res) => {
   // Lese den Inhalt der hochgeladenen Datei in eine Variable
   setTimeout(() => {
-    const image = req.file.buffer;
-    console.log(image);
+    const imageBuffer = req.file.buffer;
+    const image = imageBuffer.toString("base64");
     const name = req.body.name;
     const price = req.body.price;
     const description = req.body.description;
+    const producer = req.body.producer;
     // Generate a new ID for the product
     const ID = db.get_new_produktID();
     const produktID = ID["produktID"] + 1;
