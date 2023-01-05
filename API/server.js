@@ -274,3 +274,10 @@ app.get("/get_product", (req, res) => {
   //get all products
   res.send(db.getProducts());
 });
+
+app.get("/get_product_by_ID", (req, res) => {
+  //get the id in the request
+  var id = req.query.id;
+  //get the product with the id
+  res.send(db.getProductByID(id));
+});

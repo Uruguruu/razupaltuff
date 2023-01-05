@@ -84,6 +84,13 @@ module.exports = function (file) {
     return this.db.prepare("select * from Produkte").all();
   };
 
+  // gets the product with the given ID
+  this.get_product = function (produktID) {
+    const get_product = this.db.prepare(
+      "select * from Produkte where produktID = @produktID"
+    );
+    return get_product.get({ produktID });
+  };
   // creates a new product
   this.create_product = function (
     produktID,
