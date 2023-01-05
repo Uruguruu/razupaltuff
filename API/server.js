@@ -6,13 +6,10 @@ const db = new database("./database.db");
 db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
-const session = require("express-session");
-const mysql = require("mysql2");
-const { response } = require("express");
 const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-app.use(bodyParser.urlencoded({ extended: false }));
+const upload = multer({ dest: "uploads/" });
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
@@ -90,46 +87,26 @@ app.post("/upload_image", (req, res) => {
 });
 
 app.post("/create_product", upload.single("image"), (req, res) => {
-  // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    let { produktID, name, imageData, price, producer } = req.body;
-
-    // Lese den Inhalt der hochgeladenen Datei in eine Variable
-    imageData = req.file.buffer;
-    // Wandeln  den Inhalt in einen BLOB um
-    const imageBlob = Buffer.from(imageData).toString("base64");
-    // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-    var id = await db.get_new_produktID();
-    // Generate a new ID for the user
-    produktID = id["produktID"] + 1;
-    name = req.name;
-    price = req.price;
-    producer = req.producer;
-    description = req.description;
-    console.log(produktID);
-    console.log(name);
-    console.log(imageBlob);
-    console.log(price);
-    console.log(producer);
-    console.log(description);
-
-    if (db.product_exist(name)) {
-      response = "product exist";
-    } else {
-      db.create_product(imageBlob);
-      db.create_product(
-        produktID,
-        name,
-        imageBlob,
-        price,
-        producer,
-        description
-      );
-      response = "product added";
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  setTimeout(() => {
+    const image = req.file.buffer;
+    console.log(image);
+    const name = req.body.name;
+    const price = req.body.price;
+    const description = req.body.description;
+    // Generate a new ID for the product
+    const ID = db.get_new_produktID();
+    const produktID = ID["produktID"] + 1;
+    try {
+      db.create_product(produktID, name, image, price, producer, description);
+      res.send("product added successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while creating the product");
     }
-  }
+  }, 1000);
 });
+
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -234,7 +211,7 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
-app.get("/get_html", (req, res) => {
+app.get("/create_product", (req, res) => {
   res.sendFile(__dirname + "\\createproduct.html");
 });
 app.get("/admin", (req, res) => {
