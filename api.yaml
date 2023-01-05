@@ -107,7 +107,33 @@ paths:
             description: user was update successfully
           '405':
             description: no changes
-
+  /product/{id}:
+    post:
+      summary: 
+        description: 'to create a product'
+        operationId: create_product
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        parameters:
+          - in: body
+            name: name
+            required: true
+          - in: body
+            name: price
+            required: true
+          - in: body
+            name: producer
+            required: true
+          - in: formData
+            name: images
+            required: true
+        responses:
+          '200':
+            description: product was created successfully
+          '405':
+            description: product already exist
   /create_product:
     post:
       summary: 

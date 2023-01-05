@@ -28,12 +28,19 @@ module.exports = function (file) {
   // gets the user with the given email
   this.user_exist = function (email) {
     return this.db
-      .prepare("SELECT * FROM users WHERE '" + email + "' = @eMail")
+      .prepare("SELECT * FROM Users WHERE eMail= '" + email + "'")
       .all();
   };
 
   // makes a new user
-  this.create_user = function (userID, UserName, eMail, birthDate, password) {
+  this.create_user = function (
+    userID,
+    UserName,
+    eMail,
+    birthDate,
+    password,
+    adress
+  ) {
     const insert = this.db.prepare(
       "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
@@ -41,18 +48,19 @@ module.exports = function (file) {
 
     return 200, "User created";
   };
+
   // updates the user with the given username
   this.update_user = function (
-    UserName,
+    old_email,
     newUserName,
     eMail,
     birthDate,
     password
   ) {
     const update = this.db.prepare(
-      "UPDATE users SET UserName = @newUserName, eMail = @eMail, birthDate = @birthDate, password = @password WHERE UserName = @UserName"
+      "UPDATE users SET UserName = @newUserName, eMail = @eMail, birthDate = @birthDate, password = @password WHERE eMail = @old_email"
     );
-    update.run({ newUserName, eMail, birthDate, password, UserName });
+    update.run({ newUserName, eMail, birthDate, password, old_email });
 
     return 200, "User updated";
   };
@@ -207,11 +215,14 @@ module.exports = function (file) {
   // gets the userID of the last user
   this.get_new_userID = function () {
     const get_new_userID = this.db.prepare(
-      "select max(userID) as userID from users"
+      "select max(userID) as userID from Users"
     );
     return get_new_userID.get();
   };
 
+  // do i have to explain this?
+
+  // gives the higest id back which is in the database
   this.get_new_warenkorbID = function () {
     const get_new_warenkorbID = this.db.prepare(
       "select max(warenkorbID) as warenkorbID from warenkorb"
@@ -233,15 +244,24 @@ module.exports = function (file) {
     return get_new_produktID.get();
   };
 
+  // deletes evrething thats is in the tabel
+  // by the way this is only for testing purposes only so pleas don't use it
   this.kill_all = function () {
     const delete_users = this.db.prepare("delete from users");
-    delete_users.run();
     const delete_products = this.db.prepare("delete from Produkte");
-    delete_products.run();
     const delete_ratings = this.db.prepare("delete from Rating");
-    delete_ratings.run();
     const delete_cart = this.db.prepare("delete from warenkorb");
+    delete_ratings.run();
     delete_cart.run();
+    delete_products.run();
+    delete_users.run();
     return 200, "All tables cleared";
+  };
+
+  this.product_exist = function (name) {
+    const product_exist = this.db.prepare(
+      "select * from Produkte where Name = @name"
+    );
+    return product_exist.get({ name });
   };
 };
