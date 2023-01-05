@@ -1,4 +1,5 @@
 //please note that this is alredy working code so pleas do not change anything in this file unless you know what you are doing
+// wehe niel du machst was kaput
 
 //wathever you doing do not touch this please
 module.exports = function (file) {
@@ -164,7 +165,7 @@ module.exports = function (file) {
     const delete_from_cart = this.db.prepare(
       "delete from warenkorb where userID = @userID AND produktID = @productID"
     );
-    delete_from_cart.run({userID, productID});
+    delete_from_cart.run({ userID, productID });
     return 200, "Product deleted from cart";
   };
 
@@ -273,12 +274,10 @@ module.exports = function (file) {
     return product_exist.get({ name });
   };
 
-  
-this.get_user_ID = function (email){
-  const product_exist = this.db.prepare(
-    "select userID from Users where eMail = @email"
-  );
-  return product_exist.get({ email });
-};
-
+  this.get_user_ID = function (email) {
+    const product_exist = this.db.prepare(
+      "select userID from Users where eMail = @email"
+    );
+    return product_exist.get({ email });
+  };
 };
