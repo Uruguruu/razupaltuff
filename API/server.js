@@ -10,13 +10,14 @@ const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
 const multer = require('multer');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // parse application/json
 app.use(bodyParser.json());
-// app.use(bodyParser);
 var keys = {};
 var aidmin_key = "";
 // Mit diesem Kommando starten wir den Webserver.
@@ -33,10 +34,18 @@ const genAPIKey = () => {
     .join("");
 };
 
-async function getuser(rkey) {
-  return Object.keys(keys).find((key) => object[key] === rkey);
+async function check_key(key, email){
+  if(keys[email].includes(key)){
+    return true;
+  }
+  else {
+    return false;
+  }
 }
-
+async function getuser(value) {
+  var object = keys
+  return Object.keys(object).find(key =>  object[key].includes(value));
+}
 app.post('/login', urlencodedParser,(req, res) => {
   // to login into your account
     make()
@@ -53,6 +62,8 @@ app.post('/login', urlencodedParser,(req, res) => {
           var check = await db.check_user(email, password);
           var key_array = [];
           var key = genAPIKey();
+          console.log(1111);
+          console.log(check);
           if(!(check === undefined || check.length === 0)){
               if(!(keys[email] === undefined)){
               key_array = keys[email];
@@ -73,9 +84,10 @@ app.post('/login', urlencodedParser,(req, res) => {
   });
 
 
-app.post("/logout", (req, res) => {
+app.post("/logout", urlencodedParser,(req, res) => {
   let { email, key } = req.body;
   array_list = keys[email];
+  console.log(key);
   if (!array_list.includes(key)) res.send({ message: "failed. Not logged in" });
   else {
     const index = array_list.indexOf(key);
@@ -84,20 +96,27 @@ app.post("/logout", (req, res) => {
     console.log(keys);
   }
 });
+app.post("/upload_image", (req, res) => {
+  res.sendFile(__dirname+"\\test_backend.html");
+})
 
 app.post("/create_product", (req, res) => {
   // to login into your account
-  make(req, res)
+  make(req, res);
   async function make(req, res){
-      let { name, description, price, Category, producer, images, key, imageBlob } = req.body;
-      if(!(key == aidmin_key))  res.send('forbidden'); 
-      
+      let { produktID,  name, imageData, price,  producer  } = req.body;
+
       // Lese den Inhalt der hochgeladenen Datei in eine Variable
-      const imageData = req.file.buffer;
+      imageData = req.file.buffer;
       // Wandeln  den Inhalt in einen BLOB um
-      imageBlob = Buffer.from(imageData).toString('base64');
+      const imageBlob = Buffer.from(imageData).toString('base64');
       // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
       console.log(imageBlob)
+      name = req.name
+      price = req.price
+      producer = req.producer
+      db.create_product(produktID,  name, imageBlob, price,  producer);
+
       let lowestIdp = null;
       // Iterate through all existing products
       for(let product of products){
@@ -111,29 +130,11 @@ app.post("/create_product", (req, res) => {
           response = "product exist"
       }
       else{
-          create_product(name, description, price, Category, producer, images, newId, imageBlob);
+          db.create_product(imageBlob);
           response = "product added"
       }
     }
-    // Generate a new ID for the product
-    let newId = lowestIdp + 1;
-    if (product_exist(name)) {
-      response = "product exist";
-    } else {
-      generate_product(
-        name,
-        description,
-        price,
-        Category,
-        producer,
-        images,
-        newId
-      );
-      response = "product added";
-    }
   })
-
-
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -166,66 +167,47 @@ app.post("/update_product", (req, res) => {
   }
 });
 
-app.post("/create_user", (req, res) => {
+app.post("/create_user", urlencodedParser, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
     let { email, username, password, geburtsdatum, adresse } = req.body;
     let lowestIduser = null;
     // Iterate through all existing users
-    for (let user of users) {
-      if (user.id < lowestIduser || lowestIduser === null) {
-        lowestIduser = user.id;
-      }
-    }
+    var id = await db.get_new_userID();
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");;
     // Generate a new ID for the user
-    let newIduser = lowestIduser + 1;
-    if (user_exist(username, email)) {
-      response = "user exist";
+    let newIduser = id["userID"] + 1;
+    console.log(id);
+    console.log(db.user_exist(email));
+    if (!(db.user_exist(email) === undefined || db.user_exist(email).length === 0)) { 
+      res.send("user exist");
     } else {
-      create_user(email, username, password, geburtsdatum, adresse, newIduser);
-      if (db.user_exist(email)) {
-        response = "user exist";
-      } else {
-        var userID = 1;
-        console.log(newIduser, username, email, geburtsdatum, password);
-        db.create_user(newIduser, username, email, geburtsdatum, password);
-        response = "user created";
-      }
+      console.log("wwwwwwwwwwwwwwwww");
+      db.create_user(newIduser, username, email, geburtsdatum, password, adresse);
+      res.send("succesful");
     }
   }
 });
 
-app.post("/update_user", (req, res) => {
+app.post("/update_user", urlencodedParser, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let { email, username, password, geburtsdatum, adresse, key } = req.body;
-    if (!check_key(key)) {
+    let {original_email ,email, username, password, geburtsdatum, adresse, key } = req.body;
+    console.log(await getuser(key));
+    console.log(await getuser(key) === undefined);
+    console.log(111);
+    if (await getuser(key) === undefined) {
       res.status(403);
       res.send("forbidden");
     } else {
-      db.update_user(email, username, password, geburtsdatum, adresse);
-      response = "user created";
+      console.log(await getuser(key), username, email, password, geburtsdatum, adresse);
+      db.update_user(await getuser(key), username, email, password, geburtsdatum, adresse);
+      res.send("user updated");
     }
   }
 });
-
-app.post("/update_user", (req, res) => {
-  // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    let { email, username, password, geburtsdatum, adresse, key } = req.body;
-    if (!check_key(key)) {
-      res.status(403);
-      res.send("forbidden");
-    } else {
-      db.update_user(email, username, password, geburtsdatum, adresse);
-      response = "user created";
-    }
-  }
-});
-
 
 
 app.get("/admin",(req, res) => {
@@ -239,15 +221,8 @@ app.get('/get_html', (req,res) =>{
   res.sendFile(__dirname+"\\createproduct.html");
 })
 
-  // Führen  die Abfrage aus
- /* connection.execute(query, ['image_name', imageBlob], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error saving image to database');
-    } else {
-    }
-  })
-*/
+
+
 app.get("/admin",(req, res) => {
   res.sendFile(__dirname+"\\admin_login.html");
 })
