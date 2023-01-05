@@ -1,5 +1,5 @@
 //please note that this is alredy working code so pleas do not change anything in this file unless you know what you are doing
-// wehe niel du machst was kaput
+// wehe niel du machst was kaput😑
 
 //wathever you doing do not touch this please
 module.exports = function (file) {
@@ -279,5 +279,23 @@ module.exports = function (file) {
       "select userID from Users where eMail = @email"
     );
     return product_exist.get({ email });
+  };
+
+  //use this if you want to delet the user the other don't work's well
+  this.delet_all_form_user = function (username) {
+    const delete_user = this.db.prepare(
+      "delete from users where username = @username"
+    );
+    const delete_ratings = this.db.prepare(
+      "delete from Rating where userID = @userID"
+    );
+    const delete_cart = this.db.prepare(
+      "delete from warenkorb where userID = @userID"
+    );
+    const userID = this.get_user_ID(username);
+    delete_ratings.run({ userID });
+    delete_cart.run({ userID });
+    delete_user.run({ username });
+    return 200, "All of user cleared";
   };
 };
