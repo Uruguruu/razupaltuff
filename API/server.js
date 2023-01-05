@@ -17,10 +17,8 @@ var key_for_admin = "";
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-<<<<<<< HEAD
 //  generated_api_key = genAPIKey();
 //  console.log(generated_api_key);
-=======
   hell = genAPIKey();
   //console.log(hell);
 });
@@ -43,34 +41,6 @@ async function getuser(value) {
   var object = keys;
   return Object.keys(object).find((key) => object[key].includes(value));
 }
-<<<<<<< HEAD
-
-async function verifyCredentials(eMail, password) {
-  var get_user_form_db = await db.check_user(await eMail, await password);
-  console.log(get_user_form_db);
-  return get_user_form_db !== null;
-  }
-
-
-app.use(cors());
-
-app.post("/login", async (req, res) => {
-  try {
-    const { eMail, password } = req.body;
-    console.log({ eMail, password })
-    // Verify the eMail and password
-    console.log(await verifyCredentials)
-    const isValid = await verifyCredentials(eMail, password);
-
-    if (await eMail === "admin" && await password === "12345") {
-      key_for_admin = await genAPIKey();
-      res.send("admin_page?key=" + key_for_admin);
-    } else if (isValid === true) {
-      console.log("sucessfull login")
-      // Generate a token
-      const token = await genAPIKey();
-      res.status(200).send({ token });
-=======
 app.post("/login", (req, res) => {
   // to login into your account
   make();
@@ -80,7 +50,6 @@ app.post("/login", (req, res) => {
     if (email === "admin" && password === "12345") {
       aidmin_key = await genAPIKey();
       res.send("admin_page?key=" + aidmin_key);
->>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
     } else {
       res.status(405).send({ error: "Invalid eMail or password" });
     }
