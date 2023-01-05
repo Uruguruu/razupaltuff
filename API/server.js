@@ -42,6 +42,7 @@ async function getuser(value) {
 }
 app.post("/login", (req, res) => {
   // to login into your account
+  res.set("Access-Control-Allow-Origin", "*");
   make();
   async function make() {
     let { email, password } = req.body;
@@ -93,6 +94,7 @@ app.post("/create_product", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
+    console.log(req.body);
     let { produktID, name, imageData, price, producer } = req.body;
     console.log(produktID);
     // Lese den Inhalt der hochgeladenen Datei in eine Variable
@@ -251,10 +253,10 @@ app.post("/load", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/get_product", (req, res) => {
+app.get("/get_product", async (req, res) => {
   //get all products
   res.set("Access-Control-Allow-Origin", "*");
-  res.send(db.getProducts());
+  res.send(await db.getProducts());
 });
 
 app.get("/get_product_by_ID", (req, res) => {
@@ -264,10 +266,9 @@ app.get("/get_product_by_ID", (req, res) => {
   res.send(db.getProductByID(id));
 });
 
-
 app.post("/get_shopping_cart", (req, res) => {
-// to login into your account
-make(req, res);
+  // to login into your account
+  make(req, res);
   async function make(req, res) {
     let {key} = req.body;
     var user = await getuser(key);
@@ -291,5 +292,4 @@ app.post("/add_shopping_cart", (req, res) => {
       db.add_to_cart(id_warenkorb, produktid, userid["userID"], 1)
       res.send("sucess");
   }
-  });
-  
+});

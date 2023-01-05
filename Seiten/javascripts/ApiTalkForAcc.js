@@ -17,15 +17,17 @@ fetch(ApiUrl, {
 })
 .then(data => console.log(data))
 .catch(error => console.log('ERROR'))*/
+
 function loginTest(){
     axios.post('http://localhost:3004/login',{
         email: document.getElementById("email").value,
-        password: document.getElementById("password").value
+        password: document.getElementById("password").value,
       })
-      .then(function (response) {
-       data = response["data"];
-       location.href = response["data"];
+      .then(async function (response) {
+       data = await response["data"];
+       location.href = await response["data"];
        console.log(response);
      })
 }
+console.log("document.getElementById('email').value");
 
