@@ -7,7 +7,8 @@ db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
@@ -18,7 +19,7 @@ var aidmin_key = "";
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
   hell = genAPIKey();
-  console.log(hell);
+  //console.log(hell);
 });
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
