@@ -293,3 +293,20 @@ app.post("/add_shopping_cart", (req, res) => {
       res.send("sucess");
   }
 });
+
+app.post("/delete_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+     var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.delete_from_cart( userid["userID"] ,produktid)
+      res.send("sucess");
+  }
+});
