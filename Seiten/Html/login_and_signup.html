@@ -8,8 +8,8 @@
   <title>Login and SingUp</title>
   <link href="../01_css/stats_v2.css" rel="stylesheet" />
   <link href="../01_css/LoginStyle.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-    crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"crossorigin="anonymous" />
+  <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
   <style>
     body {
       background-image: url("../../img/LoginBackgroundImg.jpg");
@@ -67,9 +67,9 @@
           <input type="email" placeholder="Enter your E-Mail" name="emailLog" required id="email" />
 
           <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="pswLog" required id="pwassowrd" />
+          <input type="password" placeholder="Enter Password" name="pswLog" required id="password" />
 
-          <button type="submit" type="button" onclick="">Login</button>
+          <button type="submit" onclick="loginTest()">Login</button>
           <label>
             <input type="checkbox" checked="checked" name="remember" />
             Remember me
