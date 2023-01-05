@@ -98,39 +98,39 @@ app.post("/upload_image", (req, res) => {
 });
 
 app.post("/create_product", (req, res) => {
-  // to login into your account
-  make(req, res);
   async function make(req, res) {
-    let { produktID, name, imageData, price, producer } = req.body;
+    let { produktID, name, price, producer } = req.body;
 
-    // Lese den Inhalt der hochgeladenen Datei in eine Variable
-    imageData = req.file.buffer;
-    // Wandeln  den Inhalt in einen BLOB um
-    const imageBlob = Buffer.from(imageData).toString("base64");
-    // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-    console.log(imageBlob);
+    // Check if an image file was uploaded
+    let imageBlob = null;
+    if (req.file) {
+      // Read the contents of the uploaded file
+      imageData = req.file.buffer;
+      // Convert the contents to a base64-encoded string
+      imageBlob = Buffer.from(imageData).toString("base64");
+    }
+
+    var id = await db.get_new_produktID();
+    // Generate a new ID for the user
+    produktID = id["produktID"] + 1;
     name = req.name;
     price = req.price;
     producer = req.producer;
-    db.create_product(produktID, name, imageBlob, price, producer);
 
-    let lowestIdp = null;
-    // Iterate through all existing products
-    for (let product of products) {
-      if (product.id < lowestIdp || lowestIdp === null) {
-        lowestIdp = product.id;
-      }
-    }
-    // Generate a new ID for the product
-    let newId = lowestIdp + 1;
-    if (product_exist(name)) {
+    // Check if a product with the same name already exists
+    if (db.product_exist(name)) {
       response = "product exist";
+      return res.send(response);
     } else {
-      db.create_product(imageBlob);
+      db.create_product(produktID, name, imageBlob, price, producer);
       response = "product added";
+      return res.send(response);
     }
   }
+
+  make(req, res);
 });
+
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -268,4 +268,9 @@ app.post("/load", (req, res) => {
   image.mv(__dirname + "/images/" + image.name);
 
   res.sendStatus(200);
+});
+
+app.get("/get_product", (req, res) => {
+  //get all products
+  res.send(db.getProducts());
 });
