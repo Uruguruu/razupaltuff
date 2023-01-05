@@ -89,11 +89,10 @@ app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
 });
 
-app.post("/create_product", (req, res) => {
+app.post("/create_product", upload.single("image"), (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    console.log(req.body);
     let { produktID, name, imageData, price, producer } = req.body;
 
     // Lese den Inhalt der hochgeladenen Datei in eine Variable
@@ -101,24 +100,32 @@ app.post("/create_product", (req, res) => {
     // Wandeln  den Inhalt in einen BLOB um
     const imageBlob = Buffer.from(imageData).toString("base64");
     // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-    console.log(imageBlob);
+    var id = await db.get_new_produktID();
+    // Generate a new ID for the user
+    produktID = id["produktID"] + 1;
     name = req.name;
     price = req.price;
     producer = req.producer;
-    db.create_product(produktID, name, imageBlob, price, producer);
-    let lowestIdp = null;
-    // Iterate through all existing products
-    for (let product of products) {
-      if (product.id < lowestIdp || lowestIdp === null) {
-        lowestIdp = product.id;
-      }
-    }
-    // Generate a new ID for the product
-    let newId = lowestIdp + 1;
-    if (product_exist(name)) {
+    description = req.description;
+    console.log(produktID);
+    console.log(name);
+    console.log(imageBlob);
+    console.log(price);
+    console.log(producer);
+    console.log(description);
+
+    if (db.product_exist(name)) {
       response = "product exist";
     } else {
       db.create_product(imageBlob);
+      db.create_product(
+        produktID,
+        name,
+        imageBlob,
+        price,
+        producer,
+        description
+      );
       response = "product added";
     }
   }
@@ -172,7 +179,6 @@ app.post("/create_user", bodyParser.urlencoded, (req, res) => {
     ) {
       res.send("user exist");
     } else {
-      console.log("wwwwwwwwwwwwwwwww");
       db.create_user(
         newIduser,
         username,
