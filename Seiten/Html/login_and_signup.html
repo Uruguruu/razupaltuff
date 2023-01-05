@@ -139,13 +139,18 @@
       </div>
 
       <script>
-function logvar() {
-  var email = document.getElementById('email').value;
+async function logvar() {
+  var eMail = document.getElementById('email').value;
   var password = document.getElementById('password').value;
-  console.log(password);
+  console.log("The E-Mail typed in was:" + eMail)
+  console.log("The Password typed in was: " + password)
+  //Works until here
+  await login(eMail, password).then((response) => {
+    console.log(response);
+  });
 }
 
-async function login(email, password) {
+async function login(eMail, password) {
   try {
     const response = await fetch('http://localhost:3004/login', {
       method: 'POST',
@@ -153,19 +158,19 @@ async function login(email, password) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: email,
+        email: eMail,
         password: password,
       }),
     });
-    return await response.json();
+    return response.json();
   } catch (error) {
     console.error(error);
   }
 }
 
-login(email, password).then((response) => {
+/*login(email, password).then((response) => {
   console.log(response);
-});
+});*/
       </script>
 
       <!--register-->

@@ -17,7 +17,8 @@ module.exports = function (file) {
     const check_user = this.db.prepare(
       "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
-    return check_user.get({ eMail, password });
+    const result = check_user.get({ eMail, password });
+    return result === null;
   };
 
   // gets every user from the database
