@@ -4,25 +4,12 @@ const port = 3004;
 const database = require("./database.js");
 const db = new database("./database.db");
 const fs = require("fs");
-<<<<<<< HEAD
-const session = require("express-session");
-const mysql = require("mysql2");
-const { response } = require("express");
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-var bodyParser = require("body-parser");
-var cors = require('cors');
-db.connect("./database.db");
-app.use(bodyParser.urlencoded({ extended: false }));
-=======
 var bodyParser = require("body-parser");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 
->>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
@@ -36,7 +23,6 @@ app.listen(port, () => {
 =======
   hell = genAPIKey();
   //console.log(hell);
->>>>>>> 4a99e33c25edac9429e885af4f45b3cc5aaf1470
 });
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
