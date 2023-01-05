@@ -272,3 +272,10 @@ module.exports = function (file) {
     return product_exist.get({ name });
   };
 };
+
+  this.get_user_ID = function (email){
+    const product_exist = this.db.prepare(
+      "select userID from Users where eMail = @email"
+    );
+    return product_exist.get({ email });
+  };
