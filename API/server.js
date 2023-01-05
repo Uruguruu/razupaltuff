@@ -247,7 +247,7 @@ app.get("/get_product_by_ID", (req, res) => {
   // get the id from the request query parameters
   const id = req.query.id;
   // get the product with the id
-  const product = db.getProductByID(id);
+  const product = db.get_product(id);
   // send the product in the response
   res.send(product);
 });
