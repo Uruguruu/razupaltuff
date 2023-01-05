@@ -93,6 +93,7 @@ app.post("/logout",(req, res) => {
     console.log(keys);
   }
 });
+
 app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
 });
@@ -282,3 +283,29 @@ app.get("/get_product_by_ID", (req, res) => {
   //get the product with the id
   res.send(db.getProductByID(id));
 });
+
+
+app.post("/get_shopping_cart", (req, res) => {
+// to login into your account
+make(req, res);
+  async function make(req, res) {
+    let { key} = req.body;
+    var user = await getuser(key);
+    res.send(db.get_cart(key));
+}
+});
+
+
+app.post("/add_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+      var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      db.add_to_cart(warenkorbid, produktid, userid, 1)
+      res.send("sucess");
+  }
+  });
+  
