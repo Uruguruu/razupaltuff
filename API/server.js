@@ -92,6 +92,7 @@ app.post("/create_product", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
+    console.log(req.body);
     let { produktID, name, imageData, price, producer } = req.body;
 
     // Lese den Inhalt der hochgeladenen Datei in eine Variable
