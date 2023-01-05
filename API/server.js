@@ -46,7 +46,6 @@ async function getuser(value) {
 
 async function verifyCredentials(eMail, password) {
   var get_user_form_db = await db.check_user(eMail, password);
-  console.log(get_user_form_db);
   return get_user_form_db === true;
 }
 
@@ -57,10 +56,10 @@ app.post("/login", async (req, res) => {
     const { eMail, password } = req.body;
     console.log({ eMail, password });
     // Verify the eMail and password
-    console.log(await verifyCredentials);
+    console.log(await verifyCredentials(eMail, password));
     var isValid = await verifyCredentials(eMail, password);
 
-    if ((await eMail) === "admin" && (await password) === "12345") {
+    if (await eMail === "admin" && await password === "12345") {
       key_for_admin = await genAPIKey();
       res.send("admin_page?key=" + key_for_admin);
     } else if (isValid === true) {

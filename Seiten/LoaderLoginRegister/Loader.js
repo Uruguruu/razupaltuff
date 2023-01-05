@@ -24,7 +24,7 @@ async function KeyVerify() {
 
 async function LogedIn(KeyReceived) {
     const key = await KeyReceived;
-    console.log(key)
+    console.log("Here is you key"+ key)
     if (key === '1') { // schlussentliches auslesen.
       console.log("No Key Found or Timeouted");
       window.location.href = "./login_and_signup.html";
