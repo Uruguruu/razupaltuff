@@ -67,7 +67,11 @@ function both() {
 
 // this is just a test function
 function idk() {
-  console.log("test");
+  var id = db.get_new_produktID();
+  console.log(id);
+  // Generate a new ID for the user
+  produktID = id["produktID"] + 1;
+  console.log(produktID);
 }
 
 // dispay the data

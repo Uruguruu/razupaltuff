@@ -16,12 +16,11 @@
     <script>
         function submit(){
         axios.post('/login',{
-            UserName:"Niel", password:"12345", email: "admin",  geburtsdatum: "25.01.2007", adresse:"Wol" 
+            UserName:"Niel", password:"12345", email: "admin",  geburtsdatum: "25.01.2007", adresse:"Wol"
           })
           .then(function (response) {
             console.log(response);
             location.href = response["data"];
-            
           })
         }
     </script>
