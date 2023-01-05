@@ -6,10 +6,11 @@ const db = new database("./database.db");
 db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const session = require("express-session");
 const mysql = require("mysql2");
 const { response } = require("express");
-const multer = require('multer');
+const multer = require("multer");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -34,57 +35,53 @@ const genAPIKey = () => {
     .join("");
 };
 
-async function check_key(key, email){
-  if(keys[email].includes(key)){
+async function check_key(key, email) {
+  if (keys[email].includes(key)) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
 async function getuser(value) {
-  var object = keys
-  return Object.keys(object).find(key =>  object[key].includes(value));
+  var object = keys;
+  return Object.keys(object).find((key) => object[key].includes(value));
 }
-app.post('/login', urlencodedParser,(req, res) => {
+app.post("/login", urlencodedParser, (req, res) => {
   // to login into your account
-    make()
-    async function make(){
-      console.log("sdvsdssssssssssssssssssss");
-      console.log(req.body);
-        let { email, password } = req.body;
-        console.log(email === "admin" && password === "12345");
-        if(email === "admin" && password === "12345"){
-          aidmin_key = await genAPIKey();
-          res.send("admin_page?key="+aidmin_key);
+  make();
+  async function make() {
+    console.log("sdvsdssssssssssssssssssss");
+    console.log(req.body);
+    let { email, password } = req.body;
+    console.log(email === "admin" && password === "12345");
+    if (email === "admin" && password === "12345") {
+      aidmin_key = await genAPIKey();
+      res.send("admin_page?key=" + aidmin_key);
+    } else {
+      var check = await db.check_user(email, password);
+      var key_array = [];
+      var key = genAPIKey();
+      console.log(1111);
+      console.log(check);
+      if (!(check === undefined || check.length === 0)) {
+        if (!(keys[email] === undefined)) {
+          key_array = keys[email];
         }
-        else{
-          var check = await db.check_user(email, password);
-          var key_array = [];
-          var key = genAPIKey();
-          console.log(1111);
-          console.log(check);
-          if(!(check === undefined || check.length === 0)){
-              if(!(keys[email] === undefined)){
-              key_array = keys[email];
-              }
-              key_array.push(key);
-              keys[email] = key_array;
-              res.status(200);
-              res.send(key);
-          }
-          else{
-              res.status(403);
-              res.send('wrong user or password')
-          }
-          console.log(keys);
+        key_array.push(key);
+        keys[email] = key_array;
+        res.status(200);
+        res.send(key);
+      } else {
+        res.status(403);
+        res.send("wrong user or password");
       }
       console.log(keys);
     }
-  });
+    console.log(keys);
+  }
+});
 
-
-app.post("/logout", urlencodedParser,(req, res) => {
+app.post("/logout", urlencodedParser, (req, res) => {
   let { email, key } = req.body;
   array_list = keys[email];
   console.log(key);
@@ -97,44 +94,43 @@ app.post("/logout", urlencodedParser,(req, res) => {
   }
 });
 app.post("/upload_image", (req, res) => {
-  res.sendFile(__dirname+"\\test_backend.html");
-})
+  res.sendFile(__dirname + "\\test_backend.html");
+});
 
 app.post("/create_product", (req, res) => {
   // to login into your account
   make(req, res);
-  async function make(req, res){
-      let { produktID,  name, imageData, price,  producer  } = req.body;
+  async function make(req, res) {
+    let { produktID, name, imageData, price, producer } = req.body;
 
-      // Lese den Inhalt der hochgeladenen Datei in eine Variable
-      imageData = req.file.buffer;
-      // Wandeln  den Inhalt in einen BLOB um
-      const imageBlob = Buffer.from(imageData).toString('base64');
-      // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-      console.log(imageBlob)
-      name = req.name
-      price = req.price
-      producer = req.producer
-      db.create_product(produktID,  name, imageBlob, price,  producer);
+    // Lese den Inhalt der hochgeladenen Datei in eine Variable
+    imageData = req.file.buffer;
+    // Wandeln  den Inhalt in einen BLOB um
+    const imageBlob = Buffer.from(imageData).toString("base64");
+    // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
+    console.log(imageBlob);
+    name = req.name;
+    price = req.price;
+    producer = req.producer;
+    db.create_product(produktID, name, imageBlob, price, producer);
 
-      let lowestIdp = null;
-      // Iterate through all existing products
-      for(let product of products){
-          if(product.id < lowestIdp || lowestIdp === null){
-              lowestIdp = product.id;
-          }
-      }
-      // Generate a new ID for the product
-      let newId = lowestIdp + 1;
-      if(product_exist(name)){
-          response = "product exist"
-      }
-      else{
-          db.create_product(imageBlob);
-          response = "product added"
+    let lowestIdp = null;
+    // Iterate through all existing products
+    for (let product of products) {
+      if (product.id < lowestIdp || lowestIdp === null) {
+        lowestIdp = product.id;
       }
     }
-  })
+    // Generate a new ID for the product
+    let newId = lowestIdp + 1;
+    if (product_exist(name)) {
+      response = "product exist";
+    } else {
+      db.create_product(imageBlob);
+      response = "product added";
+    }
+  }
+});
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -175,16 +171,25 @@ app.post("/create_user", urlencodedParser, (req, res) => {
     let lowestIduser = null;
     // Iterate through all existing users
     var id = await db.get_new_userID();
-    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");;
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
     // Generate a new ID for the user
     let newIduser = id["userID"] + 1;
     console.log(id);
     console.log(db.user_exist(email));
-    if (!(db.user_exist(email) === undefined || db.user_exist(email).length === 0)) { 
+    if (
+      !(db.user_exist(email) === undefined || db.user_exist(email).length === 0)
+    ) {
       res.send("user exist");
     } else {
       console.log("wwwwwwwwwwwwwwwww");
-      db.create_user(newIduser, username, email, geburtsdatum, password, adresse);
+      db.create_user(
+        newIduser,
+        username,
+        email,
+        geburtsdatum,
+        password,
+        adresse
+      );
       res.send("succesful");
     }
   }
@@ -194,59 +199,73 @@ app.post("/update_user", urlencodedParser, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let {original_email ,email, username, password, geburtsdatum, adresse, key } = req.body;
+    let {
+      original_email,
+      email,
+      username,
+      password,
+      geburtsdatum,
+      adresse,
+      key,
+    } = req.body;
     console.log(await getuser(key));
-    console.log(await getuser(key) === undefined);
+    console.log((await getuser(key)) === undefined);
     console.log(111);
-    if (await getuser(key) === undefined) {
+    if ((await getuser(key)) === undefined) {
       res.status(403);
       res.send("forbidden");
     } else {
-      console.log(await getuser(key), username, email, password, geburtsdatum, adresse);
-      db.update_user(await getuser(key), username, email, password, geburtsdatum, adresse);
+      console.log(
+        await getuser(key),
+        username,
+        email,
+        password,
+        geburtsdatum,
+        adresse
+      );
+      db.update_user(
+        await getuser(key),
+        username,
+        email,
+        password,
+        geburtsdatum,
+        adresse
+      );
       res.send("user updated");
     }
   }
 });
 
+app.get("/admin", (req, res) => {
+  res.sendFile(__dirname + "\\admin_login.html");
+});
 
-app.get("/admin",(req, res) => {
-  res.sendFile(__dirname+"\\admin_login.html");
-})
+app.get("/get_html", (req, res) => {
+  res.sendFile(__dirname + "\\createproduct.html");
+});
 
+app.get("/admin", (req, res) => {
+  res.sendFile(__dirname + "\\admin_login.html");
+});
 
-
-
-app.get('/get_html', (req,res) =>{
-  res.sendFile(__dirname+"\\createproduct.html");
-})
-
-
-
-app.get("/admin",(req, res) => {
-  res.sendFile(__dirname+"\\admin_login.html");
-})
-
-app.get("/admin_page?:key",(req, res) => {
-  if(!(aidmin_key === req.query.key)){
-  res.sendFile(__dirname+"\\admin_login.html");
+app.get("/admin_page?:key", (req, res) => {
+  if (!(aidmin_key === req.query.key)) {
+    res.sendFile(__dirname + "\\admin_login.html");
+  } else {
+    res.sendFile(__dirname + "\\admin_page.html");
   }
-  else{
-    res.sendFile(__dirname+"\\admin_page.html");
-  }
-})
+});
 
-app.post('/load', (req, res) => {
+app.post("/load", (req, res) => {
   // Get the file that was set to our field named "image"
-  console.log(req.files)
+  console.log(req.files);
   const { image } = req.files;
 
   // If no image submitted, exit
   if (!image) return res.sendStatus(400);
 
   // Move the uploaded image to our upload folder
-  image.mv(__dirname + '/images/' + image.name);
+  image.mv(__dirname + "/images/" + image.name);
 
   res.sendStatus(200);
 });
-
