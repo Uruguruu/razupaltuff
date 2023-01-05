@@ -272,6 +272,7 @@ app.post("/load", (req, res) => {
 
 app.get("/get_product", (req, res) => {
   //get all products
+  res.set('Access-Control-Allow-Origin', '*');
   res.send(db.getProducts());
 });
 
