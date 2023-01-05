@@ -72,7 +72,7 @@ app.post("/login", (req, res) => {
     console.log(keys);
   }
 });
-app.post("/logout", urlencodedParser, (req, res) => {
+app.post("/logout", bodyParser.urlencoded, (req, res) => {
   let { email, key } = req.body;
   array_list = keys[email];
   console.log(key);
@@ -152,7 +152,7 @@ app.post("/update_product", (req, res) => {
     }
   }
 });
-app.post("/create_user", urlencodedParser, (req, res) => {
+app.post("/create_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -183,7 +183,7 @@ app.post("/create_user", urlencodedParser, (req, res) => {
     }
   }
 });
-app.post("/update_user", urlencodedParser, (req, res) => {
+app.post("/update_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
