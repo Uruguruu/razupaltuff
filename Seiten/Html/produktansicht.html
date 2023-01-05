@@ -40,7 +40,7 @@
 
   <script>
     // Parse the JSON data and display the product overview
-    fetch('/api/products')
+    fetch('http://localhost:3004/get_product')
       .then(response => response.json())
       .then(data => {
     // Define the sample data
