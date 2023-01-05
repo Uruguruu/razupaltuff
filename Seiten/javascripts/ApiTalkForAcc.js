@@ -17,6 +17,7 @@ fetch(ApiUrl, {
 })
 .then(data => console.log(data))
 .catch(error => console.log('ERROR'))*/
+
 function loginTest(){
     axios.post('http://localhost:3004/login',{
         email: document.getElementById("email").value,

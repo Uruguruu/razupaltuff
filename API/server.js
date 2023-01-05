@@ -42,6 +42,7 @@ async function getuser(value) {
 }
 app.post("/login", (req, res) => {
   // to login into your account
+  res.set("Access-Control-Allow-Origin", "*");
   make();
   async function make() {
     let { email, password } = req.body;
