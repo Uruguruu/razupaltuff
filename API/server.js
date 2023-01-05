@@ -6,6 +6,7 @@ const db = new database("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
+var cors = require("cors");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,8 +18,8 @@ var key_for_admin = "";
 // Mit diesem Kommando starten wir den Webserver.
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-//  generated_api_key = genAPIKey();
-//  console.log(generated_api_key);
+  //  generated_api_key = genAPIKey();
+  //  console.log(generated_api_key);
   hell = genAPIKey();
   //console.log(hell);
 });
@@ -26,7 +27,7 @@ const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
   return [...Array(300)]
     .map((e) => ((Math.random() * 36) | 0).toString(36))
-    .join("")
+    .join("");
 };
 
 async function check_key(key, eMail) {
@@ -46,24 +47,23 @@ async function verifyCredentials(eMail, password) {
   var get_user_form_db = await db.check_user(await eMail, await password);
   console.log(get_user_form_db);
   return get_user_form_db !== null;
-  }
-
+}
 
 app.use(cors());
 
 app.post("/login", async (req, res) => {
   try {
     const { eMail, password } = req.body;
-    console.log({ eMail, password })
+    console.log({ eMail, password });
     // Verify the eMail and password
-    console.log(await verifyCredentials)
+    console.log(await verifyCredentials);
     const isValid = await verifyCredentials(eMail, password);
 
-    if (await eMail === "admin" && await password === "12345") {
+    if ((await eMail) === "admin" && (await password) === "12345") {
       key_for_admin = await genAPIKey();
       res.send("admin_page?key=" + key_for_admin);
     } else if (isValid === true) {
-      console.log("sucessfull login")
+      console.log("sucessfull login");
       // Generate a token
       const token = await genAPIKey();
       res.status(200).send({ token });
