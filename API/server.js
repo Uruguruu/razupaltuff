@@ -7,6 +7,7 @@ const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
 var cors = require("cors");
+// pleas don't do somthing here😅
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -96,6 +97,7 @@ app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
 });
 
+// wer das Kaput macht wird ein Kopf kürzer gemacht😑
 app.post("/create_product", upload.single("image"), (req, res) => {
   // Lese den Inhalt der hochgeladenen Datei in eine Variable
   setTimeout(() => {
