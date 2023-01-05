@@ -17,14 +17,15 @@ fetch(ApiUrl, {
 })
 .then(data => console.log(data))
 .catch(error => console.log('ERROR'))*/
+function loginTest(){
+    axios.post('http://localhost:3004/login',{
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+      .then(function (response) {
+       data = response["data"];
+       location.href = response["data"];
+       console.log(response);
+     })
+}
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
-axios.post('/login',{
-    email: document.getElementById("email").value,
-    password: document.getElementById("password").value
-  })
-  .then(function (response) {
-   data = response["data"];
-   location.href = response["data"];
-   console.log(response);
- })
