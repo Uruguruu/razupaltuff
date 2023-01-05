@@ -244,10 +244,12 @@ app.get("/get_product", async (req, res) => {
 });
 
 app.get("/get_product_by_ID", (req, res) => {
-  //get the id in the request
-  var id = req.query.id;
-  //get the product with the id
-  res.send(db.getProductByID(id));
+  // get the id from the request query parameters
+  const id = req.query.id;
+  // get the product with the id
+  const product = db.getProductByID(id);
+  // send the product in the response
+  res.send(product);
 });
 
 app.post("/get_shopping_cart", (req, res) => {
