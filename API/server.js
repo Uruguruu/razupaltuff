@@ -274,3 +274,9 @@ app.post("/add_shopping_cart", (req, res) => {
     res.send("sucess");
   }
 });
+
+app.get("/get_shopping_cart_by_userID", (req, res) => {
+  const id = req.query.id;
+  const product = db.get_cart(id);
+  res.send(product);
+});
