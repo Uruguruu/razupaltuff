@@ -28,12 +28,19 @@ module.exports = function (file) {
   // gets the user with the given email
   this.user_exist = function (email) {
     return this.db
-      .prepare("SELECT * FROM Users WHERE eMail= '" + email+"'")
+      .prepare("SELECT * FROM Users WHERE eMail= '" + email + "'")
       .all();
   };
 
   // makes a new user
-  this.create_user = function (userID, UserName, eMail, birthDate, password, adress) {
+  this.create_user = function (
+    userID,
+    UserName,
+    eMail,
+    birthDate,
+    password,
+    adress
+  ) {
     const insert = this.db.prepare(
       "INSERT INTO users (userID, UserName, eMail, birthDate, password) VALUES (@userID, @UserName, @eMail, @birthDate, @password)"
     );
@@ -249,5 +256,12 @@ module.exports = function (file) {
     delete_products.run();
     delete_users.run();
     return 200, "All tables cleared";
+  };
+
+  this.product_exist = function (name) {
+    const product_exist = this.db.prepare(
+      "select * from Produkte where Name = @name"
+    );
+    return product_exist.get({ name });
   };
 };
