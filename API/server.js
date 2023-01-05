@@ -6,13 +6,11 @@ const db = new database("./database.db");
 db.connect("./database.db");
 const fs = require("fs");
 var bodyParser = require("body-parser");
-const session = require("express-session");
-const mysql = require("mysql2");
-const { response } = require("express");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // parse application/json
 app.use(bodyParser.json());
 var keys = {};
@@ -21,7 +19,7 @@ var aidmin_key = "";
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
   hell = genAPIKey();
-  console.log(hell);
+  //console.log(hell);
 });
 const genAPIKey = () => {
   //create a base-36 string that contains 30 chars in a-z,0-9
@@ -42,7 +40,6 @@ async function getuser(value) {
 }
 app.post("/login", (req, res) => {
   // to login into your account
-  res.set("Access-Control-Allow-Origin", "*");
   make();
   async function make() {
     let { email, password } = req.body;
@@ -91,46 +88,26 @@ app.post("/upload_image", (req, res) => {
 });
 
 app.post("/create_product", upload.single("image"), (req, res) => {
-  // to login into your account
-  make(req, res);
-  async function make(req, res) {
-    let { produktID, name, imageData, price, producer } = req.body;
-    console.log(produktID);
-    // Lese den Inhalt der hochgeladenen Datei in eine Variable
-    imageData = req.file.buffer;
-    // Wandeln  den Inhalt in einen BLOB um
-    const imageBlob = Buffer.from(imageData).toString("base64");
-    // Jetzt kannst du den BLOB (imageBlob) in deiner .db-Datei speichern
-    var id = await db.get_new_produktID();
-    // Generate a new ID for the user
-    produktID = id["produktID"] + 1;
-    name = req.name;
-    price = req.price;
-    producer = req.producer;
-    description = req.description;
-    console.log(produktID);
-    console.log(name);
-    console.log(imageBlob);
-    console.log(price);
-    console.log(producer);
-    console.log(description);
-
-    if (db.product_exist(name)) {
-      response = "product exist";
-    } else {
-      db.create_product(imageBlob);
-      db.create_product(
-        produktID,
-        name,
-        imageBlob,
-        price,
-        producer,
-        description
-      );
-      response = "product added";
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  setTimeout(() => {
+    const image = req.file.buffer;
+    console.log(image);
+    const name = req.body.name;
+    const price = req.body.price;
+    const description = req.body.description;
+    // Generate a new ID for the product
+    const ID = db.get_new_produktID();
+    const produktID = ID["produktID"] + 1;
+    try {
+      db.create_product(produktID, name, image, price, producer, description);
+      res.send("product added successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while creating the product");
     }
-  }
+  }, 1000);
 });
+
 app.post("/update_product", (req, res) => {
   make(req, res);
   async function make(req, res) {
@@ -231,11 +208,11 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       res.send("user updated");
     }
   }
-});+
+});
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
 });
-app.get("/get_html", (req, res) => {
+app.get("/create_product", (req, res) => {
   res.sendFile(__dirname + "\\createproduct.html");
 });
 app.get("/admin", (req, res) => {
@@ -276,44 +253,21 @@ app.post("/get_shopping_cart", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let {key} = req.body;
+    let { key } = req.body;
     var user = await getuser(key);
-    var userid = await db.get_user_ID(user);
-    res.send(db.get_cart(userid["userID"]));
-}
+    res.send(db.get_cart(key));
+  }
 });
 
 app.post("/add_shopping_cart", (req, res) => {
   // to login into your account
   make(req, res);
-    async function make(req, res) {
-      let { key, produktid} = req.body;
-     var user = await getuser(key);
-      var warenkorbid = await db.get_new_warenkorbID();
-      var userid = await db.get_user_ID(user);
-      console.log(warenkorbid);
-      var id_warenkorb = warenkorbid["warenkorbID"];
-      id_warenkorb++;
-      console.log(id_warenkorb, produktid, userid["userID"], 1);
-      db.add_to_cart(id_warenkorb, produktid, userid["userID"], 1)
-      res.send("sucess");
+  async function make(req, res) {
+    let { key, produktid } = req.body;
+    var user = await getuser(key);
+    var warenkorbid = await db.get_new_warenkorbID();
+    var userid = await db.get_user_ID(user);
+    db.add_to_cart(warenkorbid, produktid, userid, 1);
+    res.send("sucess");
   }
 });
-
-app.post("/delete_shopping_cart", (req, res) => {
-  // to login into your account
-  make(req, res);
-    async function make(req, res) {
-      let { key, produktid} = req.body;
-     var user = await getuser(key);
-      var warenkorbid = await db.get_new_warenkorbID();
-      var userid = await db.get_user_ID(user);
-      console.log(warenkorbid);
-      var id_warenkorb = warenkorbid["warenkorbID"];
-      id_warenkorb++;
-      console.log(id_warenkorb, produktid, userid["userID"], 1);
-      db.delete_from_cart( userid["userID"] ,produktid)
-      res.send("sucess");
-  }
-});
-
