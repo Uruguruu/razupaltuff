@@ -44,9 +44,9 @@ async function getuser(value) {
 }
 
 async function verifyCredentials(eMail, password) {
-  var get_user_form_db = await db.check_user(await eMail, await password);
+  var get_user_form_db = await db.check_user(eMail, password);
   console.log(get_user_form_db);
-  return get_user_form_db !== null;
+  return get_user_form_db === true;
 }
 
 app.use(cors());
@@ -57,7 +57,7 @@ app.post("/login", async (req, res) => {
     console.log({ eMail, password });
     // Verify the eMail and password
     console.log(await verifyCredentials);
-    const isValid = await verifyCredentials(eMail, password);
+    var isValid = await verifyCredentials(eMail, password);
 
     if ((await eMail) === "admin" && (await password) === "12345") {
       key_for_admin = await genAPIKey();
@@ -75,6 +75,7 @@ app.post("/login", async (req, res) => {
     res.status(500).send({ error: "Internal server error" });
   }
 });
+
 
 app.get("/logout", (req, res) => {
   try {
