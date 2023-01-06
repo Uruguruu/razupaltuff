@@ -19,7 +19,7 @@ module.exports = function (file) {
       "SELECT * FROM Users WHERE eMail = @eMail AND password = @password"
     );
     const result = check_user.get({ eMail, password });
-    return result === null;
+    return result;
   };
 
   // gets every user from the database
