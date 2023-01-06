@@ -23,8 +23,8 @@ module.exports = function (file) {
   };
 
   // gets every user from the database
-  this.getUsers = function () {
-    return this.db.prepare("SELECT * FROM users").all();
+  this.getUser = function (userId) {
+    return this.db.prepare("SELECT * FROM users WHERE userID = " + userId).all();
   };
 
   // gets the user with the given email

@@ -7,6 +7,7 @@ const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
 var cors = require("cors");
+const { json } = require("body-parser");
 // pleas don't do somthing here😅
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -45,52 +46,60 @@ async function getuser(value) {
 }
 
 async function verifyCredentials(eMail, password) {
-  var get_user_form_db = await db.check_user(await eMail, await password);
-  console.log(get_user_form_db);
-  return get_user_form_db !== null;
+  var get_user_form_db = await db.check_user(eMail, password);
+  return get_user_form_db === true;
 }
 
 app.use(cors());
 
-app.post("/login", async (req, res) => {
-  try {
-    const { eMail, password } = req.body;
-    console.log({ eMail, password });
-    // Verify the eMail and password
-    console.log(await verifyCredentials);
-    const isValid = await verifyCredentials(eMail, password);
-
-    if ((await eMail) === "admin" && (await password) === "12345") {
-      key_for_admin = await genAPIKey();
-      res.send("admin_page?key=" + key_for_admin);
-    } else if (isValid === true) {
-      console.log("sucessfull login");
-      // Generate a token
-      const token = await genAPIKey();
-      res.status(200).send({ token });
+app.post("/login", (req, res) => {
+  // to login into your account
+  res.set("Access-Control-Allow-Origin", "*");
+  make();
+  async function make() {
+    let { email, password } = req.body;
+    console.log(email === "admin" && password === "12345");
+    if (email === "admin" && password === "12345") {
+      aidmin_key = await genAPIKey();
+      res.send("admin_page?key=" + aidmin_key);
     } else {
-      res.status(405).send({ error: "Invalid eMail or password" });
+      var check = await db.check_user(email, password);
+      var key_array = [];
+      var key = genAPIKey();
+      console.log(1111);
+      console.log(check);
+      if (!(check === undefined || check.length === 0)) {
+        if (!(keys[email] === undefined)) {
+          key_array = keys[email];
+        }
+       // eval("var _"+email+" = setInterval(function(){delete_key('"+email+"')},3000);");
+        key_array.push(key);
+        keys[email] = key_array;
+        res.status(200);
+        res.send(key);
+      } else {
+        res.status(403);
+        res.send("wrong user or password");
+      }
+      console.log(keys);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: "Internal server error" });
+    console.log(keys);
   }
 });
-
-app.get("/logout", (req, res) => {
-  try {
-    // Invalidate the JWT token
-    //invalidateJWT(req.headers.authorization);
-    res.status(200).send({ message: "Successfully logged out" });
-  } catch (error) {
-    console.error(error);
-    res.status(404).send({ error: "Error logging out" });
+app.post("/logout", async (req, res) => {
+  let { key } = req.body;
+  var email = await getuser(key);
+  console.log(email);
+  array_list = keys[email];
+  console.log(array_list);
+  if ( array_list === undefined ||!array_list.includes(key)) res.send({ message: "failed. Not logged in" });
+  else {
+    const index = array_list.indexOf(key);
+    const x = array_list.splice(index, 1);
+    res.send({ message: "Successfully logged out." });
+    console.log(keys);
   }
 });
-
-/* if (eMail === "admin" && password === "12345") {
- key_for_admin = await genAPIKey();
-  res.send("admin_page?key=" + key_for_admin); */
 
 app.post("/upload_image", (req, res) => {
   res.sendFile(__dirname + "\\test_backend.html");
@@ -150,7 +159,7 @@ app.post("/update_product", (req, res) => {
     }
   }
 });
-app.post("/create_user", bodyParser.urlencoded, (req, res) => {
+app.post("/create_user", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -180,12 +189,30 @@ app.post("/create_user", bodyParser.urlencoded, (req, res) => {
     }
   }
 });
+//User Info
+// Create a route for the fetchUser function
+  app.get('/get_user/:userId', async (req, res) => {
+    res.set("Access-Control-Allow-Origin", "*");
+    // Get the userId from the request params
+    const userId = await req.params.userId;
+    console.log("User ID has been set: " + userId);
+
+    // Query the Users table for a dataset with the specified userId
+    const result = await db.getUser(userId);
+    console.log(await result)
+    // If a dataset was found, return a JSON object with the requested information
+    if (await result) {
+      res.send(JSON.stringify(result));
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+
 app.post("/update_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
     let {
-      original_eMail,
       eMail,
       username,
       password,

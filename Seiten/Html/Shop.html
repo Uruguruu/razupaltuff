@@ -58,7 +58,7 @@
           </nav>
         </div>
       </nav>
-
+      
     <div id="product-overview"></div>
 
     <script>
@@ -91,7 +91,7 @@
                     let img = document.createElement('img');
 
                     // Convert the BLOB data to a base64-encoded string
-                    let imageUrl = 'data:image/jpeg;base64,' + btoa(String.fromCharCode.apply(null, product.Image));
+                    let imageUrl = 'data:image/jpeg;base64,' + product.Image;
 
                     // Set the src attribute of the img element to the image URL
                     img.src = imageUrl;
@@ -147,7 +147,7 @@
                     cardBody.appendChild(name);
                     cardBody.appendChild(price);
                     cardBody.appendChild(producer);
-                    cardBody.appendChild(description);
+                    //cardBody.appendChild(description);
                     cardBody.appendChild(button);
                     cardBody.appendChild(shoppingCartLink);
 
