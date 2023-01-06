@@ -1,0 +1,6 @@
+[2023-01-06T09:53:20.305Z] POST /create_product 200
+[2023-01-06T09:53:29.497Z] GET /create_product 200
+[2023-01-06T09:53:32.003Z] POST /delet_product_by_Id 200
+[2023-01-06T09:53:45.401Z] POST /create_product 200
+[2023-01-06T09:53:51.215Z] GET /create_product 200
+[2023-01-06T09:53:54.511Z] POST /delet_product_by_Id 200

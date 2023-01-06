@@ -24,9 +24,7 @@ module.exports = function (file) {
 
   // gets every user from the database
   this.getUser = function (userId) {
-    return this.db
-      .prepare("SELECT * FROM users WHERE userID = " + userId)
-      .all();
+    return this.db.prepare("SELECT * FROM users WHERE userID = " + userId).all();
   };
 
   // gets the user with the given email
@@ -282,21 +280,5 @@ module.exports = function (file) {
     delete_cart.run({ userID });
     delete_user.run({ username });
     return 200, "All of user cleared";
-  };
-
-  this.delete_product = function (produktID) {
-    const delete_ratings = this.db.prepare(
-      "delete from Rating where produktID = @produktID"
-    );
-    const delete_cart = this.db.prepare(
-      "delete from warenkorb where produktID = @produktID"
-    );
-    const delete_product = this.db.prepare(
-      "delete from Produkte where produktID = @produktID"
-    );
-    delete_cart.run({ produktID });
-    delete_ratings.run({ produktID });
-    delete_product.run({ produktID });
-    return 200, "All of product cleared";
   };
 };

@@ -3,8 +3,8 @@
     "version": "2.2.11",
     "width": 2000,
     "height": 2000,
-    "scrollTop": -508.00000000000097,
-    "scrollLeft": -351.99999999999955,
+    "scrollTop": -477.6000000000006,
+    "scrollLeft": -483.99999999999955,
     "zoomLevel": 0.9,
     "show": {
       "tableComment": true,
@@ -19,7 +19,7 @@
     },
     "database": "SQLite",
     "databaseName": "",
-    "canvasType": "@vuerd/builtin-sql-ddl",
+    "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -186,10 +186,10 @@
           }
         ],
         "ui": {
-          "active": true,
-          "left": 486.9999,
-          "top": 455.1557,
-          "zIndex": 6,
+          "active": false,
+          "left": 464.7774,
+          "top": 507.6008,
+          "zIndex": 5,
           "widthName": 60,
           "widthComment": 60
         },
@@ -341,9 +341,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 1275.6,
-          "top": 459.4,
-          "zIndex": 4,
+          "left": 1022.8,
+          "top": 507.7566,
+          "zIndex": 12,
           "widthName": 60,
           "widthComment": 60
         },
@@ -472,9 +472,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 1274.2002,
-          "top": 875.5779,
-          "zIndex": 2,
+          "left": 1250.022,
+          "top": 809.4459,
+          "zIndex": 11,
           "widthName": 60,
           "widthComment": 60
         },
@@ -580,9 +580,9 @@
         ],
         "ui": {
           "active": false,
-          "left": 720.4666,
-          "top": 886.4258,
-          "zIndex": 1,
+          "left": 694.3322,
+          "top": 778.8701,
+          "zIndex": 9,
           "widthName": 62.6962890625,
           "widthComment": 60
         },
@@ -606,8 +606,8 @@
           "columnIds": [
             "c31e534d-cba1-4fbc-9a47-42dfed256e3d"
           ],
-          "x": 843.4676734375,
-          "y": 551.1557,
+          "x": 821.2451734375,
+          "y": 603.6007999999999,
           "direction": "right"
         },
         "end": {
@@ -615,8 +615,8 @@
           "columnIds": [
             "f56611b7-1a63-4ffe-8852-f9087cd64000"
           ],
-          "x": 1275.6,
-          "y": 555.4,
+          "x": 1022.8,
+          "y": 603.7565999999999,
           "direction": "left"
         },
         "constraintName": "fk_produkte_to_rating",
@@ -632,17 +632,17 @@
           "columnIds": [
             "c1e435b4-e3cd-4e81-9880-0bf435c05576"
           ],
-          "x": 1452.062748828125,
-          "y": 875.5779,
-          "direction": "top"
+          "x": 1250.022,
+          "y": 938.0709,
+          "direction": "left"
         },
         "end": {
           "tableId": "116ce239-6094-461d-9110-9fa5eb32588e",
           "columnIds": [
             "09ba4bb3-0ab3-43b4-a92c-58f47800ea25"
           ],
-          "x": 1451.40029296875,
-          "y": 651.4,
+          "x": 1198.60029296875,
+          "y": 699.7565999999999,
           "direction": "bottom"
         },
         "constraintName": "fk_users_to_rating",
@@ -658,8 +658,8 @@
           "columnIds": [
             "c31e534d-cba1-4fbc-9a47-42dfed256e3d"
           ],
-          "x": 665.23378671875,
-          "y": 647.1557,
+          "x": 643.01128671875,
+          "y": 699.6007999999999,
           "direction": "bottom"
         },
         "end": {
@@ -667,8 +667,8 @@
           "columnIds": [
             "996cf1a9-1f55-414d-9182-0c130d325f67"
           ],
-          "x": 720.4666,
-          "y": 961.9258,
+          "x": 694.3322,
+          "y": 854.3701,
           "direction": "left"
         },
         "constraintName": "fk_produkte_to_warenkorb",
@@ -684,8 +684,8 @@
           "columnIds": [
             "c1e435b4-e3cd-4e81-9880-0bf435c05576"
           ],
-          "x": 1274.2002,
-          "y": 961.3279,
+          "x": 1250.022,
+          "y": 852.3209,
           "direction": "left"
         },
         "end": {
@@ -693,8 +693,8 @@
           "columnIds": [
             "9e50a1bf-bcda-4d05-b088-e46257c1ef31"
           ],
-          "x": 1087.763475,
-          "y": 961.9258,
+          "x": 1061.6290749999998,
+          "y": 854.3701,
           "direction": "right"
         },
         "constraintName": "fk_users_to_warenkorb",

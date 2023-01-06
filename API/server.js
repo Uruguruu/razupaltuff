@@ -78,6 +78,11 @@ async function verifyCredentials(eMail, password) {
 
 app.use(cors());
 
+app.post("/check_key", async (req, res) => {
+  let { key } = req.body;
+  res.send(await check_key(key));
+})
+
 app.post("/login", (req, res) => {
   // to login into your account
   res.set("Access-Control-Allow-Origin", "*");
@@ -89,7 +94,7 @@ app.post("/login", (req, res) => {
     console.log(email === "admin" && password === "12345");
     if (email === "admin" && password === "12345") {
       aidmin_key = await genAPIKey();
-      res.send("admin_page?key=" + aidmin_key);
+      res.send("create_product?key=" + aidmin_key);
     } else {
       var check = await db.check_user(email, password);
       console.log(check);
@@ -122,13 +127,13 @@ app.post("/login", (req, res) => {
         res.status(200);
         res.send(key);
       } else {
-        res.status(403);
         res.send("wrong user or password");
       }
       console.log(keys);
     }
     console.log(keys);
   }
+  logger(req, res);
 });
 app.post("/logout", async (req, res) => {
   let { key } = req.body;
@@ -144,6 +149,7 @@ app.post("/logout", async (req, res) => {
     res.send({ message: "Successfully logged out." });
     console.log(keys);
   }
+  logger(req, res);
 });
 
 app.post("/upload_image", (req, res) => {
@@ -171,6 +177,7 @@ app.post("/create_product", upload.single("image"), (req, res) => {
       res.status(500).send("An error occurred while creating the product");
     }
   }, 1000);
+  logger(req, res);
 });
 
 app.post("/update_product", (req, res) => {
@@ -203,6 +210,7 @@ app.post("/update_product", (req, res) => {
       response = "product added";
     }
   }
+  logger(req, res);
 });
 app.post("/create_user", (req, res) => {
   // to login into your account
@@ -233,16 +241,18 @@ app.post("/create_user", (req, res) => {
       res.send("succesful");
     }
   }
+  logger(req, res);
 });
 //User Info
 // Create a route for the fetchUser function
-app.get("/get_user/:userId", async (req, res) => {
+app.get("/get_user/:userToken", async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  // Get the userId from the request params
-  const userId = await req.params.userId;
-  console.log("User ID has been set: " + userId);
-  // Query the Users table for a dataset with the specified userId
-  const result = await db.getUser(userId);
+  // Get the userToken from the request params
+  const userToken = await req.params.userToken;
+  const userEmail = await getuser(userToken);
+  console.log("User E-mail has been set: " + userEmail);
+  // Query the Users table for a dataset with the specified userToken
+  const result = await db.getUser(userEmail);
   console.log(await result);
   // If a dataset was found, return a JSON object with the requested information
   if (await result) {
@@ -250,6 +260,7 @@ app.get("/get_user/:userId", async (req, res) => {
   } else {
     res.status(404).send("User not found");
   }
+  logger(req, res);
 });
 
 app.post("/update_user", bodyParser.urlencoded, (req, res) => {
@@ -283,15 +294,19 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       res.send("user updated");
     }
   }
+  logger(req, res);
 });
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
+  logger(req, res);
 });
 app.get("/create_product", (req, res) => {
   res.sendFile(__dirname + "\\createproduct.html");
+  logger(req, res);
 });
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
+  logger(req, res);
 });
 app.get("/admin_page?:key", (req, res) => {
   if (!(key_for_admin === req.query.key)) {
@@ -299,6 +314,7 @@ app.get("/admin_page?:key", (req, res) => {
   } else {
     res.sendFile(__dirname + "\\admin_page.html");
   }
+  logger(req, res);
 });
 app.post("/load", (req, res) => {
   // Get the file that was set to our field named "image"
@@ -309,16 +325,19 @@ app.post("/load", (req, res) => {
   // Move the uploaded image to our upload folder
   image.mv(__dirname + "/images/" + image.name);
   res.sendStatus(200);
+  logger(req, res);
 });
 
 app.get("/get_product", async (req, res) => {
   //get all products
   res.set("Access-Control-Allow-Origin", "*");
   res.send(await db.getProducts());
+  logger(req, res);
 });
 
 app.get("/get_shopping_cart", (req, res) => {
   res.sendFile(__dirname + "\\razupaltuffSeitenHtmlwarenkorb.html");
+  logger(req, res);
 });
 
 app.get("/get_product_by_ID", (req, res) => {
@@ -328,6 +347,7 @@ app.get("/get_product_by_ID", (req, res) => {
   const product = db.get_product(id);
   // send the product in the response
   res.send(product);
+  logger(req, res);
 });
 
 app.get("/-+", (req, res) => {
@@ -338,6 +358,7 @@ app.get("/-+", (req, res) => {
     var user = await getuser(key);
     res.send(db.get_cart(key));
   }
+  logger(req, res);
 });
 
 app.post("/add_shopping_cart", (req, res) => {
@@ -351,12 +372,14 @@ app.post("/add_shopping_cart", (req, res) => {
     db.add_to_cart(warenkorbid, produktid, userid, 1);
     res.send("sucess");
   }
+  logger(req, res);
 });
 
 app.get("/get_shopping_cart_by_userID", (req, res) => {
   const id = req.query.id;
   const product = db.get_cart(id);
   res.send(product);
+  logger(req, res);
 });
 
 app.post("/delet_product_by_Id", (req, res) => {
@@ -368,4 +391,15 @@ app.post("/delet_product_by_Id", (req, res) => {
     db.delete_product(id);
     res.send("product deleted");
   }
+  logger(req, res);
 });
+
+function logger(req, res) {
+  const logString = `[${new Date().toISOString()}] ${req.method} ${req.url} ${
+    res.statusCode
+  }\n`;
+  console.log(logString);
+  fs.appendFile("log.txt", logString, (err) => {
+    if (err) throw err;
+  });
+}
