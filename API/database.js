@@ -24,9 +24,9 @@ module.exports = function (file) {
 
   // gets every user from the database
   this.getUser = async function (userEmail) {
-    console.log(userEmail)
+    console.log(userEmail);
     return this.db
-      .prepare("SELECT * FROM users WHERE eMail = " + await userEmail)
+      .prepare("SELECT * FROM users WHERE eMail = " + (await userEmail))
       .all();
   };
 
@@ -266,7 +266,7 @@ module.exports = function (file) {
     );
     return product_exist.get({ email });
   };
- 
+
   //use this if you want to delet the user the other don't work's well
   this.delete_user = function (username) {
     const delete_user = this.db.prepare(
@@ -299,5 +299,17 @@ module.exports = function (file) {
     delete_ratings.run({ produktID });
     delete_product.run({ produktID });
     return 200, "All of product cleared";
+  };
+
+  this.get_product_of_warenkorb = function (userID) {
+    const get_product_of_warenkorb = this.db.prepare(
+      "select * from warenkorb where userID = @userID"
+    );
+    const idk = get_product_of_warenkorb.all({ userID });
+    const productID = idk["produktID"];
+    const get_product = this.db.prepare(
+      "select * from Produkte where produktID = @produktID"
+    );
+    return get_product.all({ productID });
   };
 };
