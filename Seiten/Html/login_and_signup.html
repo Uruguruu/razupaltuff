@@ -94,66 +94,95 @@
       <!--WhiteBoxWithButtonsEND-->
 
       <div id="id02" class="modal">
-        <form class="modal-content animate">
-          <!--action="./Homepage.html"-->
-          <div class="container">
-            <label for="email"><b>E-Mail</b></label>
-            <input
-              type="text"
-              placeholder="Enter your E-Mail"
-              name="emailLog"
-              required
-              id="email"
-            />
-
-            <label for="psw"><b>Password</b></label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              name="pswLog"
-              required
-              id="password"
-            />
-
-            <button type="submit" onclick="logvar(), login();">Login</button>
-            <label>
-              <input type="checkbox" checked="checked" name="remember" />
-              Remember me
-            </label>
-          </div>
-
-          <div class="container" style="background-color: #f1f1f1">
-            <button
-              type="button"
-              onclick="document.getElementById('id02').style.display='none'"
-              class="cancelbtn"
-            >
-              Cancel
-            </button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
-          </div>
+        <form class="modal-content animate" onsubmit="return handleFormSubmit(event)">
+            <!--action="./Homepage.html"-->
+            <div class="container">
+              <label for="email"><b>E-Mail</b></label>
+              <input
+                type="text"
+                placeholder="Enter your E-Mail"
+                name="emailLog"
+                required
+                id="email"
+              />
+  
+              <label for="psw"><b>Password</b></label>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                name="pswLog"
+                required
+                id="password"
+              />
+  
+              <button type="submit" onclick="logvar(), login();">Login</button>
+              <label>
+                <input type="checkbox" checked="checked" name="remember" />
+                Remember me
+              </label>
+            </div>
+  
+            <div class="container" style="background-color: #f1f1f1">
+              <button
+                type="button"
+                onclick="document.getElementById('id02').style.display='none'"
+                class="cancelbtn"
+              >
+                Cancel
+              </button>
+              <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
         </form>
+        <script>
+          function handleFormSubmit(event) {
+            event.preventDefault();
+            // handle form submission here
+          }
+        </script>
       </div>
-
+      <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
       <script>
 async function logvar() {
+  alert(document.getElementById('email').value);
   var eMail = document.getElementById('email').value;
   var password = document.getElementById('password').value;
   console.log("The E-Mail typed in was: " + eMail)
   console.log("The Password typed in was: " + password)
   //Works until here
-  await login(eMail, password).then((response) => {
-    console.log(response);
-  });
+  alert(eMail);
+  login(eMail, password)
 }
 
 async function login(eMail, password) {
   try {
 // Variables working
-    const response = await fetch('http://localhost:3004/login', {
+axios.post('http://localhost:3004/login',{
+  email: eMail,  password: password
+}, {
+headers: { 
+ "Content-Type": "application/x-www-form-urlencoded"
+} 
+})
+.then(function (response) {
+ data = response["data"];
+ alert(data);
+ if(!(data === "wrong user or password")){
+  localStorage.setItem('key', data);
+  alert(data.includes("create_product"));
+  if(data.includes("create_product")){
+    location.href = "/API/createproduct.html";
+  }
+  else{
+    location.href = "/Seiten/Html/Homepage.html";
+  }
+  alert("hell"+localStorage.getItem('key'))
+ }
+ console.log(response);
+})
+   /* const response = await fetch('http://localhost:3004/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
         email: eMail,
@@ -161,7 +190,8 @@ async function login(eMail, password) {
       }),
     });
     return response.json();
-  } catch (error) {
+  */
+} catch (error) {
     console.error(error);
   }
 }
