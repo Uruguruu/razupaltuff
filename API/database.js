@@ -265,7 +265,7 @@ module.exports = function (file) {
     );
     return product_exist.get({ email });
   };
-
+ 
   //use this if you want to delet the user the other don't work's well
   this.delete_user = function (username) {
     const delete_user = this.db.prepare(
