@@ -32,6 +32,24 @@ const genAPIKey = () => {
     .join("");
 };
 
+async function delete_key(key){
+  var email = await getuser(key);
+  console.log(email);
+  array_list = keys[email];
+  console.log(array_list);
+  if ( array_list === undefined ||!array_list.includes(key)) console.log(2);
+  else {
+    const index = array_list.indexOf(key);
+    const x = array_list.splice(index, 1);
+    console.log(keys);
+    eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},3000000);");
+  }
+}
+
+function update_key(key) {
+  eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
+}
+
 async function check_key(key, eMail) {
   if (keys[eMail]?.includes(key)) {
     return true;
@@ -58,21 +76,27 @@ app.post("/login", (req, res) => {
   make();
   async function make() {
     let { email, password } = req.body;
+    console.log(1111111111111111111);
+    console.log(email, password);
     console.log(email === "admin" && password === "12345");
     if (email === "admin" && password === "12345") {
       aidmin_key = await genAPIKey();
       res.send("admin_page?key=" + aidmin_key);
     } else {
       var check = await db.check_user(email, password);
+      console.log(check);
       var key_array = [];
       var key = genAPIKey();
       console.log(1111);
       console.log(check);
-      if (!(check === undefined || check.length === 0)) {
+      if (!(check === undefined || check.length === 0 || check === false)) {
         if (!(keys[email] === undefined)) {
           key_array = keys[email];
         }
-        // eval("var _"+email+" = setInterval(function(){delete_key('"+email+"')},3000);");
+        if (typeof variable === 'undefined') {
+          eval("var _"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
+        }
+        else eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
         key_array.push(key);
         keys[email] = key_array;
         res.status(200);
@@ -197,7 +221,6 @@ app.get("/get_user/:userId", async (req, res) => {
   // Get the userId from the request params
   const userId = await req.params.userId;
   console.log("User ID has been set: " + userId);
-
   // Query the Users table for a dataset with the specified userId
   const result = await db.getUser(userId);
   console.log(await result);
@@ -321,9 +344,9 @@ app.post("/delet_product_by_Id", (req, res) => {
   const id = req.body.id;
   // check if id is empty
   if (!id) {
-    res.sendJSON({ error: "id is empty" });
+    res.send("id is empty");
   } else {
     db.delet_all_from_product(id);
-    res.sendJSON({ info: "product deleted" });
+    res.send("product deleted");
   }
 });
