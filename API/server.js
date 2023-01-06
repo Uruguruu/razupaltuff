@@ -280,6 +280,10 @@ app.get("/get_product", async (req, res) => {
   res.send(await db.getProducts());
 });
 
+app.get("/get_shopping_cart", (req, res) => {
+  res.sendFile(__dirname + "\\razupaltuff\Seiten\Html\warenkorb.html");
+});
+
 app.get("/get_product_by_ID", (req, res) => {
   // get the id from the request query parameters
   const id = req.query.id;
@@ -289,7 +293,7 @@ app.get("/get_product_by_ID", (req, res) => {
   res.send(product);
 });
 
-app.post("/get_shopping_cart", (req, res) => {
+app.get("/get_shopping_cart", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -317,6 +321,7 @@ app.get("/get_shopping_cart_by_userID", (req, res) => {
   const product = db.get_cart(id);
   res.send(product);
 });
+
 
 app.post("/delet_product_by_Id", (req, res) => {
   const id = req.query.id;
