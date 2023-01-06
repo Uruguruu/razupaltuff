@@ -236,13 +236,14 @@ app.post("/create_user", (req, res) => {
 });
 //User Info
 // Create a route for the fetchUser function
-app.get("/get_user/:userId", async (req, res) => {
+app.get("/get_user/:userToken", async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  // Get the userId from the request params
-  const userId = await req.params.userId;
-  console.log("User ID has been set: " + userId);
-  // Query the Users table for a dataset with the specified userId
-  const result = await db.getUser(userId);
+  // Get the userToken from the request params
+  const userToken = await req.params.userToken;
+  const userEmail = await getuser(userToken);
+  console.log("User E-mail has been set: " + userEmail);
+  // Query the Users table for a dataset with the specified userToken
+  const result = await db.getUser(userEmail);
   console.log(await result);
   // If a dataset was found, return a JSON object with the requested information
   if (await result) {
