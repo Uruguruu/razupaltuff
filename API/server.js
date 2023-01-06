@@ -78,6 +78,11 @@ async function verifyCredentials(eMail, password) {
 
 app.use(cors());
 
+app.post("/check_key", async (req, res) => {
+  let { key } = req.body;
+  res.send(await check_key(key));
+})
+
 app.post("/login", (req, res) => {
   // to login into your account
   res.set("Access-Control-Allow-Origin", "*");
@@ -89,7 +94,7 @@ app.post("/login", (req, res) => {
     console.log(email === "admin" && password === "12345");
     if (email === "admin" && password === "12345") {
       aidmin_key = await genAPIKey();
-      res.send("admin_page?key=" + aidmin_key);
+      res.send("create_product?key=" + aidmin_key);
     } else {
       var check = await db.check_user(email, password);
       console.log(check);
@@ -122,7 +127,6 @@ app.post("/login", (req, res) => {
         res.status(200);
         res.send(key);
       } else {
-        res.status(403);
         res.send("wrong user or password");
       }
       console.log(keys);
