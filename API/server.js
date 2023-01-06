@@ -46,7 +46,9 @@ async function delete_key(key){
   }
 }
 
-
+function update_key(key) {
+  eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
+}
 
 async function check_key(key, eMail) {
   if (keys[eMail]?.includes(key)) {
@@ -92,9 +94,9 @@ app.post("/login", (req, res) => {
           key_array = keys[email];
         }
         if (typeof variable === 'undefined') {
-          eval("var _"+key+" = setInterval(function(){delete_key('"+key+"')},3000);");
+          eval("var _"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
         }
-        else eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},3000);");
+        else eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
         key_array.push(key);
         keys[email] = key_array;
         res.status(200);
