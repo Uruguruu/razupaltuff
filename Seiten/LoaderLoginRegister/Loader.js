@@ -6,14 +6,11 @@ function LoadingCircle() {
 
 //  ---Start Timoutfunktion für API VerifikationsToken---
 const DreamKey = new Promise((resolve, reject) => {
-  setTimeout(resolve, 500, "0");
+  setTimeout(resolve, 500, "1");
 });
 const timeoutkey = new Promise((resolve, reject) => {
-  setTimeout(resolve, 400, "1"); //Wird als String augegeben, deshalb ''beim schlussentlichen auslesen.
+  setTimeout(resolve, 400, "0"); //Wird als String augegeben, deshalb ''beim schlussentlichen auslesen.
 });
-
-KeyVerify();
-LogedIn();
 //By racing the two different Variables i can achive a specific Timout range.
 async function KeyVerify() {
     return Promise.race([DreamKey, timeoutkey]);
@@ -24,12 +21,13 @@ async function KeyVerify() {
 
 async function LogedIn(KeyReceived) {
     const key = await KeyReceived;
-    console.log("Here is you key"+ key)
+    console.log("Here is you key: "+ key)
     if (key === '1') { // schlussentliches auslesen.
       console.log("No Key Found or Timeouted");
       window.location.href = "./login_and_signup.html";
     } else {
       console.log("Key found logging in...");
+      window.location.href = "../Html/AccountView.html";
     }
   }
 //  ---Ende Timoutfunktion für API VerifikationsToken---
