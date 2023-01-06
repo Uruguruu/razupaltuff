@@ -334,7 +334,7 @@ app.get("/get_product_by_ID", (req, res) => {
   res.send(product);
 });
 
-app.get("/get_shopping_cart", (req, res) => {
+app.get("/-+", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
@@ -369,7 +369,7 @@ app.post("/delet_product_by_Id", (req, res) => {
   if (!id) {
     res.send("id is empty");
   } else {
-    db.delet_all_from_product(id);
+    db.delete_product(id);
     res.send("product deleted");
   }
 });
