@@ -72,7 +72,7 @@ app.post("/login", (req, res) => {
         if (!(keys[email] === undefined)) {
           key_array = keys[email];
         }
-       // eval("var _"+email+" = setInterval(function(){delete_key('"+email+"')},3000);");
+        // eval("var _"+email+" = setInterval(function(){delete_key('"+email+"')},3000);");
         key_array.push(key);
         keys[email] = key_array;
         res.status(200);
@@ -92,7 +92,8 @@ app.post("/logout", async (req, res) => {
   console.log(email);
   array_list = keys[email];
   console.log(array_list);
-  if ( array_list === undefined ||!array_list.includes(key)) res.send({ message: "failed. Not logged in" });
+  if (array_list === undefined || !array_list.includes(key))
+    res.send({ message: "failed. Not logged in" });
   else {
     const index = array_list.indexOf(key);
     const x = array_list.splice(index, 1);
@@ -191,35 +192,28 @@ app.post("/create_user", (req, res) => {
 });
 //User Info
 // Create a route for the fetchUser function
-  app.get('/get_user/:userId', async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    // Get the userId from the request params
-    const userId = await req.params.userId;
-    console.log("User ID has been set: " + userId);
+app.get("/get_user/:userId", async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  // Get the userId from the request params
+  const userId = await req.params.userId;
+  console.log("User ID has been set: " + userId);
 
-    // Query the Users table for a dataset with the specified userId
-    const result = await db.getUser(userId);
-    console.log(await result)
-    // If a dataset was found, return a JSON object with the requested information
-    if (await result) {
-      res.send(JSON.stringify(result));
-    } else {
-      res.status(404).send('User not found');
-    }
-  });
+  // Query the Users table for a dataset with the specified userId
+  const result = await db.getUser(userId);
+  console.log(await result);
+  // If a dataset was found, return a JSON object with the requested information
+  if (await result) {
+    res.send(JSON.stringify(result));
+  } else {
+    res.status(404).send("User not found");
+  }
+});
 
 app.post("/update_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
-    let {
-      eMail,
-      username,
-      password,
-      geburtsdatum,
-      adresse,
-      key,
-    } = req.body;
+    let { eMail, username, password, geburtsdatum, adresse, key } = req.body;
     console.log(await getuser(key));
     console.log((await getuser(key)) === undefined);
     console.log(111);
@@ -320,6 +314,11 @@ app.get("/get_shopping_cart_by_userID", (req, res) => {
 
 app.post("/delet_product_by_Id", (req, res) => {
   const id = req.query.id;
-  db.delet_product(id);
-  res.send("product deleted");
+  // check if id is empty
+  if (!id) {
+    res.send("id is empty");
+  } else {
+    db.delet_all_from_product(id);
+    res.send("product deleted");
+  }
 });
