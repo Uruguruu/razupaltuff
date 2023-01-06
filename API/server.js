@@ -313,12 +313,12 @@ app.get("/get_shopping_cart_by_userID", (req, res) => {
 });
 
 app.post("/delet_product_by_Id", (req, res) => {
-  const id = req.query.id;
+  const id = req.body.id;
   // check if id is empty
   if (!id) {
-    res.send("id is empty");
+    res.sendJSON({ error: "id is empty" });
   } else {
     db.delet_all_from_product(id);
-    res.send("product deleted");
+    res.sendJSON({ info: "product deleted" });
   }
 });
