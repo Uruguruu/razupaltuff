@@ -6,10 +6,10 @@ function LoadingCircle() {
 
 //  ---Start Timoutfunktion für API VerifikationsToken---
 const DreamKey = new Promise((resolve, reject) => {
-  setTimeout(resolve, 500, "1");
+  setTimeout(resolve, 500, "0");
 });
 const timeoutkey = new Promise((resolve, reject) => {
-  setTimeout(resolve, 400, "0"); //Wird als String augegeben, deshalb ''beim schlussentlichen auslesen.
+  setTimeout(resolve, 400, "1"); //Wird als String augegeben, deshalb ''beim schlussentlichen auslesen.
 });
 //By racing the two different Variables i can achive a specific Timout range.
 async function KeyVerify() {

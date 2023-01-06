@@ -32,22 +32,30 @@ const genAPIKey = () => {
     .join("");
 };
 
-async function delete_key(key){
+async function delete_key(key) {
   var email = await getuser(key);
   console.log(email);
   array_list = keys[email];
   console.log(array_list);
-  if ( array_list === undefined ||!array_list.includes(key)) console.log(2);
+  if (array_list === undefined || !array_list.includes(key)) console.log(2);
   else {
     const index = array_list.indexOf(key);
     const x = array_list.splice(index, 1);
     console.log(keys);
-    eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},3000000);");
+    eval(
+      "_" +
+        key +
+        " = setInterval(function(){delete_key('" +
+        key +
+        "')},3000000);"
+    );
   }
 }
 
 function update_key(key) {
-  eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
+  eval(
+    "_" + key + " = setInterval(function(){delete_key('" + key + "')},600000);"
+  );
 }
 
 async function check_key(key, eMail) {
@@ -93,10 +101,22 @@ app.post("/login", (req, res) => {
         if (!(keys[email] === undefined)) {
           key_array = keys[email];
         }
-        if (typeof variable === 'undefined') {
-          eval("var _"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
-        }
-        else eval("_"+key+" = setInterval(function(){delete_key('"+key+"')},600000);");
+        if (typeof variable === "undefined") {
+          eval(
+            "var _" +
+              key +
+              " = setInterval(function(){delete_key('" +
+              key +
+              "')},600000);"
+          );
+        } else
+          eval(
+            "_" +
+              key +
+              " = setInterval(function(){delete_key('" +
+              key +
+              "')},600000);"
+          );
         key_array.push(key);
         keys[email] = key_array;
         res.status(200);
@@ -298,7 +318,7 @@ app.get("/get_product", async (req, res) => {
 });
 
 app.get("/get_shopping_cart", (req, res) => {
-  res.sendFile(__dirname + "\\razupaltuff\Seiten\Html\warenkorb.html");
+  res.sendFile(__dirname + "\\razupaltuffSeitenHtmlwarenkorb.html");
 });
 
 app.get("/get_product_by_ID", (req, res) => {
@@ -338,7 +358,6 @@ app.get("/get_shopping_cart_by_userID", (req, res) => {
   const product = db.get_cart(id);
   res.send(product);
 });
-
 
 app.post("/delet_product_by_Id", (req, res) => {
   const id = req.body.id;
