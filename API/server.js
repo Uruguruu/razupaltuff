@@ -129,6 +129,7 @@ app.post("/login", (req, res) => {
     }
     console.log(keys);
   }
+  logger(req, res);
 });
 app.post("/logout", async (req, res) => {
   let { key } = req.body;
@@ -144,6 +145,7 @@ app.post("/logout", async (req, res) => {
     res.send({ message: "Successfully logged out." });
     console.log(keys);
   }
+  logger(req, res);
 });
 
 app.post("/upload_image", (req, res) => {
@@ -171,6 +173,7 @@ app.post("/create_product", upload.single("image"), (req, res) => {
       res.status(500).send("An error occurred while creating the product");
     }
   }, 1000);
+  logger(req, res);
 });
 
 app.post("/update_product", (req, res) => {
@@ -203,6 +206,7 @@ app.post("/update_product", (req, res) => {
       response = "product added";
     }
   }
+  logger(req, res);
 });
 app.post("/create_user", (req, res) => {
   // to login into your account
@@ -233,6 +237,7 @@ app.post("/create_user", (req, res) => {
       res.send("succesful");
     }
   }
+  logger(req, res);
 });
 //User Info
 // Create a route for the fetchUser function
@@ -250,6 +255,7 @@ app.get("/get_user/:userId", async (req, res) => {
   } else {
     res.status(404).send("User not found");
   }
+  logger(req, res);
 });
 
 app.post("/update_user", bodyParser.urlencoded, (req, res) => {
@@ -283,15 +289,19 @@ app.post("/update_user", bodyParser.urlencoded, (req, res) => {
       res.send("user updated");
     }
   }
+  logger(req, res);
 });
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
+  logger(req, res);
 });
 app.get("/create_product", (req, res) => {
   res.sendFile(__dirname + "\\createproduct.html");
+  logger(req, res);
 });
 app.get("/admin", (req, res) => {
   res.sendFile(__dirname + "\\admin_login.html");
+  logger(req, res);
 });
 app.get("/admin_page?:key", (req, res) => {
   if (!(key_for_admin === req.query.key)) {
@@ -299,6 +309,7 @@ app.get("/admin_page?:key", (req, res) => {
   } else {
     res.sendFile(__dirname + "\\admin_page.html");
   }
+  logger(req, res);
 });
 app.post("/load", (req, res) => {
   // Get the file that was set to our field named "image"
@@ -309,16 +320,19 @@ app.post("/load", (req, res) => {
   // Move the uploaded image to our upload folder
   image.mv(__dirname + "/images/" + image.name);
   res.sendStatus(200);
+  logger(req, res);
 });
 
 app.get("/get_product", async (req, res) => {
   //get all products
   res.set("Access-Control-Allow-Origin", "*");
   res.send(await db.getProducts());
+  logger(req, res);
 });
 
 app.get("/get_shopping_cart", (req, res) => {
   res.sendFile(__dirname + "\\razupaltuffSeitenHtmlwarenkorb.html");
+  logger(req, res);
 });
 
 app.get("/get_product_by_ID", (req, res) => {
@@ -328,6 +342,7 @@ app.get("/get_product_by_ID", (req, res) => {
   const product = db.get_product(id);
   // send the product in the response
   res.send(product);
+  logger(req, res);
 });
 
 app.get("/-+", (req, res) => {
@@ -338,6 +353,7 @@ app.get("/-+", (req, res) => {
     var user = await getuser(key);
     res.send(db.get_cart(key));
   }
+  logger(req, res);
 });
 
 app.post("/add_shopping_cart", (req, res) => {
@@ -351,12 +367,14 @@ app.post("/add_shopping_cart", (req, res) => {
     db.add_to_cart(warenkorbid, produktid, userid, 1);
     res.send("sucess");
   }
+  logger(req, res);
 });
 
 app.get("/get_shopping_cart_by_userID", (req, res) => {
   const id = req.query.id;
   const product = db.get_cart(id);
   res.send(product);
+  logger(req, res);
 });
 
 app.post("/delet_product_by_Id", (req, res) => {
@@ -368,4 +386,15 @@ app.post("/delet_product_by_Id", (req, res) => {
     db.delete_product(id);
     res.send("product deleted");
   }
+  logger(req, res);
 });
+
+function logger(req, res) {
+  const logString = `[${new Date().toISOString()}] ${req.method} ${req.url} ${
+    res.statusCode
+  }\n`;
+  console.log(logString);
+  fs.appendFile("log.txt", logString, (err) => {
+    if (err) throw err;
+  });
+}
