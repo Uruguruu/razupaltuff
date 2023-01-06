@@ -23,9 +23,10 @@ module.exports = function (file) {
   };
 
   // gets every user from the database
-  this.getUser = function (userId) {
+  this.getUser = async function (userEmail) {
+    console.log(userEmail)
     return this.db
-      .prepare("SELECT * FROM users WHERE userID = " + userId)
+      .prepare("SELECT * FROM users WHERE eMail = " + await userEmail)
       .all();
   };
 

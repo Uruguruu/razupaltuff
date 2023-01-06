@@ -28,9 +28,8 @@
       .white-box-inf {
         background-color:gainsboro;
         color: black;
-        width: 70%;
         opacity: 0.9;
-        margin-top: 50px;
+        margin-top: 10px;
         margin-left: auto;
         margin-right: auto;
         padding: 5px;
@@ -117,17 +116,20 @@
           display: block;
           margin-left: auto;
           margin-right: auto;
-          width: 20%;
+          width: 10%;
         "
         src="../../img/DefaultAvatar.jpg"
       />
-      <h2>name</h2>
+      <div style="width: 70%; margin-left: 15%;">
+      <div id="AccInfName" class="white-box-inf"></div>
+      <div id="AccInfemail" class="white-box-inf"></div>
       <div id="AccInfID" class="white-box-inf"></div>
+      </div>
       <script>
         showAccount();
-        async function getUser(userId) {
+        async function getUser(userToken) {
           let data;
-          await fetch("http://localhost:3004/get_user/" + userId)
+          await fetch("http://localhost:3004/get_user/" + userToken)
             .then((res) => res.json())
             .then((json) => {
               data = json;
@@ -137,11 +139,15 @@
         }
 
         async function showAccount() {
-          var userId = 1;
-          var Data = await getUser(userId);
+          var userToken = 1;
+          var Data = await getUser(userToken);
           var DataID = Data[0].userID;
-          const div_Name = document.getElementById("AccInfID");
-          div_Name.innerHTML = "<h4 style='text-align: left; margin-left: 5pt;''>" + Data[0].UserName + "</h4>";
+          const div_Name = document.getElementById("AccInfName");
+          const div_email = document.getElementById("AccInfemail");
+          const div_ID = document.getElementById("AccInfID");
+          div_Name.innerHTML = "<h4 style='text-align: left; margin-left: 5pt;''> Name: " + Data[0].UserName + "</h4>";
+          div_email.innerHTML = "<h4 style='text-align: left; margin-left: 5pt;''> E-Mail: " + Data[0].eMail + "</h4>";
+          div_email.innerHTML = "<h4 style='text-align: left; margin-left: 5pt;''> Your User ID:  " + Data[0].userID + "</h4>";
         }
       </script>
       <a href="./AccountViewChange.html"

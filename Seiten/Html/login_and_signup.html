@@ -168,8 +168,15 @@ headers: {
  alert(data);
  if(!(data === "wrong user or password")){
   localStorage.setItem('key', data);
+  alert(data.includes("create_product"));
+  if(data.includes("create_product")){
+    location.href = "/API/createproduct.html";
+  }
+  else{
+    location.href = "/Seiten/Html/Homepage.html";
+  }
+  alert("hell"+localStorage.getItem('key'))
  }
-// location.href = response["data"];
  console.log(response);
 })
    /* const response = await fetch('http://localhost:3004/login', {
