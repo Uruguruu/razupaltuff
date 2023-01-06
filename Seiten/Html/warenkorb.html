@@ -105,8 +105,22 @@
     ></script>
     <script>
       const key = localStorage.getItem('key');
-      if(!(key === undefined)){
-        if(respnd +9)+-yö
+      if(!(key === undefined)){              
+        axios.post('http://localhost:3004/get_shopping_cart',{
+          key : key
+        }, {
+        headers: { 
+        "Content-Type": "application/x-www-form-urlencoded"
+        } 
+        })
+        .then(function (response) {
+        data = response["data"];        
+        do {
+          i = i + 1;
+          result = result + i;
+        } while (i < 5);
+
+        })
       }
     </script>
   </body>
