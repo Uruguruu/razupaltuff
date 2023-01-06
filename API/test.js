@@ -67,6 +67,7 @@ function both() {
 
 // this is just a test function
 function idk() {
+  //this is how you can get a new id
   var id = db.get_new_produktID();
   console.log(id);
   // Generate a new ID for the user
