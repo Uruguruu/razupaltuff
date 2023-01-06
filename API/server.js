@@ -7,6 +7,7 @@ const fs = require("fs");
 var bodyParser = require("body-parser");
 const multer = require("multer");
 var cors = require("cors");
+const { json } = require("body-parser");
 // pleas don't do somthing here😅
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -188,7 +189,26 @@ app.post("/create_user", (req, res) => {
     }
   }
 });
-app.post("/update_user", (req, res) => {
+//User Info
+// Create a route for the fetchUser function
+  app.get('/get_user/:userId', async (req, res) => {
+    res.set("Access-Control-Allow-Origin", "*");
+    // Get the userId from the request params
+    const userId = await req.params.userId;
+    console.log("User ID has been set: " + userId);
+
+    // Query the Users table for a dataset with the specified userId
+    const result = await db.getUser(userId);
+    console.log(await result)
+    // If a dataset was found, return a JSON object with the requested information
+    if (await result) {
+      res.send(JSON.stringify(result));
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+
+app.post("/update_user", bodyParser.urlencoded, (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
