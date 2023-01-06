@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title>Delete Product</title>
+</head>
+<body>
+  <h1>Delete Product</h1>
+  <form>
+    <label for="id">Product ID:</label>
+    <input type="text" id="id">
+    <button type="button" onclick="deleteProduct()">Delete</button>
+  </form>
+  <script>
+    async function deleteProduct() {
+      const id = document.getElementById("id").value;
+      try {
+        const response = await fetch(`http://localhost:3004/delete_product/${id}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
