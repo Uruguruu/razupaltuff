@@ -49,7 +49,7 @@ paths:
 
   /create_user:
     post:
-      summary: 
+      summary:
       description: 'to create a user'
       operationId: create_user
       consumes:
