@@ -134,14 +134,16 @@
           </div>
         </form>
       </div>
-
+      <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
       <script>
 async function logvar() {
+  alert(document.getElementById('email').value);
   var eMail = document.getElementById('email').value;
   var password = document.getElementById('password').value;
   console.log("The E-Mail typed in was: " + eMail)
   console.log("The Password typed in was: " + password)
   //Works until here
+  alert(eMail);
   await login(eMail, password).then((response) => {
     console.log(response);
   });
@@ -150,10 +152,22 @@ async function logvar() {
 async function login(eMail, password) {
   try {
 // Variables working
-    const response = await fetch('http://localhost:3004/login', {
+axios.post('http://localhost:3004/login',{
+  email: eMail,  password: password
+}, {
+headers: { 
+ "Content-Type": "application/x-www-form-urlencoded"
+} 
+})
+.then(function (response) {
+ data = response["data"];
+// location.href = response["data"];
+ console.log(response);
+})
+   /* const response = await fetch('http://localhost:3004/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
         email: eMail,
@@ -161,7 +175,8 @@ async function login(eMail, password) {
       }),
     });
     return response.json();
-  } catch (error) {
+  */
+} catch (error) {
     console.error(error);
   }
 }
