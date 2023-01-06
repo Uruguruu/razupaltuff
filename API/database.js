@@ -298,4 +298,20 @@ module.exports = function (file) {
     delete_user.run({ username });
     return 200, "All of user cleared";
   };
+
+  this.delet_all_from_product = function (produktID) {
+    const delete_ratings = this.db.prepare(
+      "delete from Rating where produktID = @produktID"
+    );
+    const delete_cart = this.db.prepare(
+      "delete from warenkorb where produktID = @produktID"
+    );
+    const delete_product = this.db.prepare(
+      "delete from Produkte where produktID = @produktID"
+    );
+    delete_cart.run({ produktID });
+    delete_ratings.run({ produktID });
+    delete_product.run({ produktID });
+    return 200, "All of product cleared";
+  };
 };

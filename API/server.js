@@ -290,3 +290,9 @@ app.get("/get_shopping_cart_by_userID", (req, res) => {
   const product = db.get_cart(id);
   res.send(product);
 });
+
+app.post("/delet_product_by_Id", (req, res) => {
+  const id = req.query.id;
+  db.delet_product(id);
+  res.send("product deleted");
+});
