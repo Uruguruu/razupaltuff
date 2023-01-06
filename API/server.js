@@ -197,7 +197,6 @@ app.get("/get_user/:userId", async (req, res) => {
   // Get the userId from the request params
   const userId = await req.params.userId;
   console.log("User ID has been set: " + userId);
-
   // Query the Users table for a dataset with the specified userId
   const result = await db.getUser(userId);
   console.log(await result);

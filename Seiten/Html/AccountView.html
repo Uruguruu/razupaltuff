@@ -26,10 +26,28 @@
         opacity: 0.9;
       }
       .white-box-inf {
-        background-color: white;
+        background-color:gainsboro;
         color: black;
         width: 10px;
         opacity: 0.9;
+        width: 500px;
+        height: 40%;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 30px;
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+      }
+
+      .white-box-inf {
+        opacity: 1;
       }
     </style>
   </head>
@@ -105,7 +123,7 @@
         "
         src="../../img/DefaultAvatar.jpg"
       />
-    <div id="AccINF" class="white-box-inf"></div>
+      <div id="AccINF" class="white-box-inf"></div>
       <script>
         showAccount();
         async function getUser(userId) {
@@ -113,8 +131,8 @@
           await fetch("http://localhost:3004/get_user/" + userId)
             .then((res) => res.json())
             .then((json) => {
-              console.log("picked user ID: " + json[0].userID);
               data = json;
+              console.log("picked user ID: " + json[0].userID);
             });
           return data;
         }
@@ -124,7 +142,7 @@
           var Data = await getUser(userId);
           var DataID = Data[0].userID;
           const div = document.getElementById("AccINF");
-          div.innerHTML = "<p>" + (Data[0].userID) + "</p>";
+          div.innerHTML = "<p>" + Data[0].userID + "</p>";
         }
       </script>
       <a href="./AccountViewChange.html"
