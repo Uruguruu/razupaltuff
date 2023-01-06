@@ -9,7 +9,7 @@
 
 <body>
     <h1>Produkt erstellen</h1>
-    <form action="http://localhost:3004/create_product" method="post" enctype="multipart/form-data">
+    <form action="http://localhost:3004/create_product"+localStorage.getItem("key") method="post" enctype="multipart/form-data">
         <label for="name">Name:</label>
         <input type="text" name="name">
         <label for="image">Bild:</label>
@@ -30,7 +30,7 @@
         function btnpressd() {
             var input = document.getElementById("myInput");
             var content = input.value;
-            fetch("http://localhost:3004/delet_product_by_Id", {
+            fetch("http://localhost:3004/delet_product_by_Id"+localStorage.getItem("key"), {
                 method: "POST",
                 body: JSON.stringify({ id: 1 }),
                 headers: {

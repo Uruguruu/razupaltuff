@@ -310,7 +310,7 @@ app.get("/get_product_by_ID", (req, res) => {
   res.send(product);
 });
 
-app.get("/get_shopping_cart", (req, res) => {
+app.get("/-+", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
