@@ -1,10 +1,12 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Produkt erstellen</h1>
     <form action="http://localhost:3004/create_product" method="post" enctype="multipart/form-data">
@@ -20,5 +22,28 @@
         <input type="text" name="description">
         <input type="submit" value="Produkt erstellen">
     </form>
+
+    <h1>delet prduct</h1>
+    <input type="text" id="myInput" value="">
+    <button onclick="btnpressd()">delet</button>
+    <script>
+        function btnpressd() {
+            var input = document.getElementById("myInput");
+            var content = input.value;
+            fetch("http://localhost:3004/delet_product_by_Id", {
+                method: "POST",
+                body: JSON.stringify({ id: 1 }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    window.alert(data);
+                });
+        }
+    </script>
+
 </body>
+
 </html>
