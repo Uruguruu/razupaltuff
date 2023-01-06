@@ -13,6 +13,8 @@
       integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
       crossorigin="anonymous"
     />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--<script src="../javascripts/ApiTalkForAcc.js"></script>-->
     <style>
       body {
         background-image: url("../../img/LoginBackgroundImg.jpg");
@@ -23,12 +25,6 @@
         background-color: white;
         color: black;
         width: 80%;
-        opacity: 0.9;
-      }
-      .white-box-inf {
-        background-color: white;
-        color: black;
-        width: 10px;
         opacity: 0.9;
       }
     </style>
@@ -81,66 +77,16 @@
     <!--Navigation End-->
     <!--WhiteBoxWithButtonsStart-->
     <div class="white-box">
-      <a href="./Homepage.html"
-        ><button
-          style="
-            background-color: red;
-            width: auto;
-            float: right;
-            border-radius: 15%;
-          "
-        >
-          X
-        </button></a
-      >
-      <h2 style="text-align: center; margin-bottom: 10px; font-size: xx-large">
-        Welcome to your Account
-      </h2>
-      <img
-        style="
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          width: 20%;
-        "
-        src="../../img/DefaultAvatar.jpg"
-      />
-    <div id="AccINF" class="white-box-inf"></div>
-      <script>
-        showAccount();
-        async function getUser(userId) {
-          let data;
-          await fetch("http://localhost:3004/get_user/" + userId)
-            .then((res) => res.json())
-            .then((json) => {
-              console.log("picked user ID: " + json[0].userID);
-              data = json;
-            });
-          return data;
-        }
-
-        async function showAccount() {
-          var userId = 1;
-          var Data = await getUser(userId);
-          var DataID = Data[0].userID;
-          const div = document.getElementById("AccINF");
-          div.innerHTML = "<p>" + (Data[0].userID) + "</p>";
-        }
-      </script>
-      <a href="./AccountViewChange.html"
-        ><button
-          style="
-            background-color: deepskyblue;
-            width: auto;
-            float: right;
-            border-radius: 15%;
-            margin-right: 25%;
-          "
-        >
-          Change
-        </button></a
-      >
-      <p style="margin-bottom: 25pt"></p>
+        <a href="./Homepage.html"><button style="background-color: red; width: auto; float: right; border-radius: 15%;">X</button></a>
+        <h2 style="text-align: center; margin-bottom: 10px; font-size:xx-large;">Welcome to your Account</h2>
+        <img 
+        style="display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 20%;"
+        src="../../img/DefaultAvatar.jpg">
+        <a href="./AccountViewChange.html"><button style="background-color:deepskyblue; width: auto; float: right; border-radius: 15%; margin-right: 25%;">Change</button></a>
+        <p style="margin-bottom: 25pt;"></p>
     </div>
     <!--WhiteBoxWithButtonsEnd-->
     <script
