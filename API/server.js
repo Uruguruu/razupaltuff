@@ -365,7 +365,7 @@ app.post("/delet_product_by_Id", (req, res) => {
   if (!id) {
     res.send("id is empty");
   } else {
-    db.delet_all_from_product(id);
+    db.delet_all_from_product(name);
     res.send("product deleted");
   }
 });
