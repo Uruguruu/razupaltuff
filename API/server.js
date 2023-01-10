@@ -328,6 +328,8 @@ app.get("/get_shopping_cart", (req, res) => {
 app.get("/get_product_by_ID", (req, res) => {
   // get the id from the request query parameters
   const id = req.query.id;
+  console.log("qqqqqqqqqqqqqqqqqq");
+  console.log(id);
   // get the product with the id
   const product = db.get_product(id);
   // send the product in the response
@@ -373,3 +375,55 @@ app.post("/delet_product_by_Id", (req, res) => {
     res.send("product deleted");
   }
 });
+
+
+app.post("/get_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+  async function make(req, res) {
+    let {key} = req.body;
+    var user = await getuser(key);
+    console.log(user);
+    var userid = await db.get_user_ID(user);
+    console.log(userid);
+    res.send(db.get_cart(userid["userID"]));
+}
+});
+
+app.post("/add_shopping_cart", (req, res) => {
+  // to login into your account
+  try{
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+     var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.add_to_cart(id_warenkorb, produktid, userid["userID"], 1)
+      res.send("sucess");
+  }
+}
+catch{res.send("error");}
+});
+
+app.post("/delete_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+     var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.delete_from_cart( userid["userID"] ,produktid)
+      res.send("sucess");
+  }
+});
+
