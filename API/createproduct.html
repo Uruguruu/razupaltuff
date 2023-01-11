@@ -5,22 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="LoginStyle.css">
+
 </head>
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+rel="stylesheet"
+integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+crossorigin="anonymous"
+/>
+
 
 <body>
     <h1>Produkt erstellen</h1>
     <form action="http://localhost:3004/create_product"+localStorage.getItem("key") method="post" enctype="multipart/form-data">
         <label for="name">Name:</label>
-        <input type="text" name="name">
+        <input type="text" name="name" ><br> 
+        <img id="myImage" src="#" alt="image preview"><br>
         <label for="image">Bild:</label>
-        <input type="file" name="image">
+        <input type="file" name="image" accept=".jpg, .png, .jpeg, .gif, .bmp, .tiff"><br>
         <label for="price">Preis:</label>
-        <input type="text" name="price">
+        <input type="text" name="price"><br>
         <label for="producer">Producer:</label>
-        <input type="text" name="producer">
+        <input type="text" name="producer"><br>
         <label for="description">Beschreibung:</label>
-        <input type="text" name="description">
-        <input type="submit" value="Produkt erstellen">
+        <input type="text" name="description"><br>
+        <button onclick="btnpressd()">create product</button>
+
     </form>
 
     <h1>delet prduct</h1>
@@ -38,8 +50,23 @@
                 }
             })
         }
-    </script>
+            // Eine Referenz auf das Bild-Input-Feld
+            const imageInput = document.querySelector('input[name="image"]');
+            // Eine Referenz auf das Bild-Vorschau-Element
+            const imagePreview = document.querySelector('#myImage');
 
+            // Eine Funktion, die aufgerufen wird, wenn das Bild-Input-Feld geändert wird
+            imageInput.addEventListener('change', () => {
+                // Lese den Inhalt des ausgewählten Bildes
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(imageInput.files[0]);
+                // Wenn das Bild gelesen wurde, setze die Bildquelle der Vorschau
+                fileReader.addEventListener('load', () => {
+                imagePreview.src = fileReader.result;
+                });
+            });
+    </script>
 </body>
 
-</html>
+
+
