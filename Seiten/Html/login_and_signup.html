@@ -115,7 +115,7 @@
                 id="password"
               />
   
-              <button type="submit" onclick="logvar(), login();">Login</button>
+              <button type="submit" onclick="logvar()">Login</button>
               <label>
                 <input type="checkbox" checked="checked" name="remember" />
                 Remember me
@@ -143,13 +143,13 @@
       <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
       <script>
 async function logvar() {
-  alert(document.getElementById('email').value);
+  //alert(document.getElementById('email').value);
   var eMail = document.getElementById('email').value;
   var password = document.getElementById('password').value;
   console.log("The E-Mail typed in was: " + eMail)
   console.log("The Password typed in was: " + password)
   //Works until here
-  alert(eMail);
+  //alert(eMail);
   login(eMail, password)
 }
 
@@ -165,7 +165,7 @@ headers: {
 })
 .then(function (response) {
  data = response["data"];
- alert(data);
+ //alert(data);
  if(!(data === "wrong user or password")){
   localStorage.setItem('key', data);
   alert(data.includes("create_product"));
@@ -201,7 +201,7 @@ headers: {
 });*/
 
       </script>
-
+     
       <!--register-->
 
       <div id="id01" class="modal">

@@ -299,4 +299,22 @@ module.exports = function (file) {
     delete_products.run({ produktID });
     return 200, "All of product cleared";
   };
+
+  this.create_users = function (
+    userID,
+    UserName,
+    eMail,
+    birthDate,
+    password,
+  ) {
+    const insert = this.db.prepare(
+      "insert into Users (userID, UserName, eMail, birthDate, password) values (@userID, @UserName, @eMail, @birthDate, @password)"
+    );
+    insert.run({ userID, UserName, eMail, birthDate, password });
+    return 200, "Product created";
+  };
+  
+  
+
 };
+

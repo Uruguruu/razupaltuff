@@ -58,6 +58,19 @@ function update_key(key) {
   );
 }
 
+async function check_key_w_E(key){
+  console.log(123456789);
+  console.log(Object.values(keys).includes(key));
+  console.log(keys["1"] === key)
+  console.log(key);
+  console.log(keys["1"]);
+  if (Object.values(keys).indexOf(key) > -1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 async function check_key(key, eMail) {
   if (keys[eMail]?.includes(key)) {
     return true;
@@ -343,6 +356,8 @@ app.get("/get_shopping_cart", (req, res) => {
 app.get("/get_product_by_ID", (req, res) => {
   // get the id from the request query parameters
   const id = req.query.id;
+  console.log("qqqqqqqqqqqqqqqqqq");
+  console.log(id);
   // get the product with the id
   const product = db.get_product(id);
   // send the product in the response
@@ -394,6 +409,64 @@ app.post("/delet_product_by_Id", (req, res) => {
   logger(req, res);
 });
 
+
+app.post("/get_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+  async function make(req, res) {
+    try{
+    let {key} = req.body;
+   
+      console.log(!(await check_key_w_E(key)));
+      var user = await getuser(key);
+      console.log(user);
+      var userid = await db.get_user_ID(user);
+      console.log(userid);
+      res.send(db.get_cart(userid["userID"]));
+   
+}
+catch{res.send("wrong key");}
+}
+});
+
+app.post("/add_shopping_cart", (req, res) => {
+  // to login into your account
+  try{
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+     var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.add_to_cart(id_warenkorb, produktid, userid["userID"], 1)
+      res.send("sucess");
+  }
+}
+catch{res.send("error");}
+});
+
+app.post("/delete_shopping_cart", (req, res) => {
+  // to login into your account
+  make(req, res);
+    async function make(req, res) {
+      let { key, produktid} = req.body;
+     var user = await getuser(key);
+      var warenkorbid = await db.get_new_warenkorbID();
+      var userid = await db.get_user_ID(user);
+      console.log(warenkorbid);
+      var id_warenkorb = warenkorbid["warenkorbID"];
+      id_warenkorb++;
+      console.log(id_warenkorb, produktid, userid["userID"], 1);
+      db.delete_from_cart( userid["userID"] ,produktid)
+      res.send("sucess");
+  }
+});
+
+
 function logger(req, res) {
   const logString = `[${new Date().toISOString()}] ${req.method} ${req.url} ${
     res.statusCode
@@ -403,3 +476,27 @@ function logger(req, res) {
     if (err) throw err;
   });
 }
+
+
+app.post("/create_users", (req, res) => {
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  setTimeout(() => {
+    console.log(req.body);
+    const UserName = req.body.UserName;
+    const eMail = req.body.eMail;
+    const birthDate = req.body.birthDate;
+    const password = req.body.password;
+    // Generate a new ID for the product
+    const ID = db.get_new_userID();
+    const userID = ID["userID"] + 1;
+    try {
+      console.log(userID, UserName, eMail, birthDate, password);
+      db.create_users(userID, UserName, eMail, birthDate, password);
+      res.send("product added successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while creating the product");
+    }
+  }, 1000);
+  logger(req, res);
+});
