@@ -28,6 +28,11 @@ body {
   flex: 1;
 }
 
+.sear {
+  display: flex;
+  flex: 1;
+}
+
 .form-control {
   border-radius: 0;
 }
