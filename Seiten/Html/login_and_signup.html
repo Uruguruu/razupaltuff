@@ -205,57 +205,38 @@ headers: {
       <!--register-->
 
       <div id="id01" class="modal">
-        <form class="modal-content animate" action="/create_user" method="post">
+        <form class="modal-content animate" action="http://localhost:3004/create_users"+localStorage.getItem("key") method="post" enctype="application/json">
+          
           <div class="container">
-            <label for="uname"><b>Username</b></label>
-            <input
-              type="text"
-              placeholder="Enter Username"
-              name="username"
-              required
-            />
-
-            <label for="email"><b>E-Mail</b></label>
-            <input
-              type="text"
-              placeholder="Enter your E-Mail"
-              name="email"
-              required
-            />
-
-            <label for="psw"><b>Password</b></label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              name="password"
-              required
-            />
-
-            <label for="GDate"><b>Geburtsdatum</b></label>
-            <input
-              type="text"
-              placeholder="Enter your Brithdate (DD/MM/YY)"
-              name="geburtsdatum"
-              required
-            />
-
-            <button type="submit">SignUp</button>
+            <h1>User erstellen</h1>
+             <label for="UserName">Name:</label>
+              <input type="text" name="UserName" ><br> 
+              <label for="eMail">eMail:</label>
+              <input type="text" name="eMail"><br>
+              <label for="birthDate">birthDate:</label>
+              <input type="text" name="birthDate"><br>
+              <label for="password">password:</label>
+              <input type="text" name="password"><br>
+              <button onclick="btnpressd()">SignUp</button>
+        
+            
             <label>
               <input type="checkbox" checked="checked" name="remember" />
               Remember me
             </label>
-          </div>
+         
 
-          <div class="container" style="background-color: #f1f1f1">
-            <button
-              type="button"
-              onclick="document.getElementById('id01').style.display='none'"
-              class="cancelbtn"
-            >
-              Cancel
-            </button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+            <div class="container" style="background-color: #f1f1f1">
+              <button
+               type="button"
+               onclick="document.getElementById('id01').style.display='none'"
+               class="cancelbtn"
+             >
+                Cancel
+              </button>
+             <span class="psw">Forgot <a href="#">password?</a></span>
           </div>
+        </div>
         </form>
       </div>
 
