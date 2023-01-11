@@ -58,6 +58,19 @@ function update_key(key) {
   );
 }
 
+async function check_key_w_E(key){
+  console.log(123456789);
+  console.log(Object.values(keys).includes(key));
+  console.log(keys["1"] === key)
+  console.log(key);
+  console.log(keys["1"]);
+  if (Object.values(keys).indexOf(key) > -1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 async function check_key(key, eMail) {
   if (keys[eMail]?.includes(key)) {
     return true;
@@ -402,11 +415,15 @@ app.post("/get_shopping_cart", (req, res) => {
   make(req, res);
   async function make(req, res) {
     let {key} = req.body;
-    var user = await getuser(key);
-    console.log(user);
-    var userid = await db.get_user_ID(user);
-    console.log(userid);
-    res.send(db.get_cart(userid["userID"]));
+    if(!(await check_key_w_E(key))) {res.send("wrong key");}
+    else{
+      console.log(!(await check_key_w_E(key)));
+      var user = await getuser(key);
+      console.log(user);
+      var userid = await db.get_user_ID(user);
+      console.log(userid);
+      res.send(db.get_cart(userid["userID"]));
+    }
 }
 });
 

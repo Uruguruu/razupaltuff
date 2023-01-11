@@ -115,7 +115,7 @@
                 id="password"
               />
   
-              <button type="submit" onclick="logvar(), login();">Login</button>
+              <button type="submit" onclick="logvar()">Login</button>
               <label>
                 <input type="checkbox" checked="checked" name="remember" />
                 Remember me
@@ -142,66 +142,48 @@
       </div>
       <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
       <script>
-async function logvar() {
-  alert(document.getElementById('email').value);
-  var eMail = document.getElementById('email').value;
-  var password = document.getElementById('password').value;
-  console.log("The E-Mail typed in was: " + eMail)
-  console.log("The Password typed in was: " + password)
-  //Works until here
-  alert(eMail);
-  login(eMail, password)
-}
-
-async function login(eMail, password) {
-  try {
-// Variables working
-axios.post('http://localhost:3004/login',{
-  email: eMail,  password: password
-}, {
-headers: { 
- "Content-Type": "application/x-www-form-urlencoded"
-} 
-})
-.then(function (response) {
- data = response["data"];
- alert(data);
- if(!(data === "wrong user or password")){
-  localStorage.setItem('key', data);
-  alert(data.includes("create_product"));
-  if(data.includes("create_product")){
-    location.href = "/API/createproduct.html";
-  }
-  else{
-    location.href = "/Seiten/Html/Homepage.html";
-  }
-  alert("hell"+localStorage.getItem('key'))
- }
- console.log(response);
-})
-   /* const response = await fetch('http://localhost:3004/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify({
-        email: eMail,
-        password: password,
-      }),
-    });
-    return response.json();
-  */
-} catch (error) {
-    console.error(error);
-  }
-}
-
-/*login(email, password).then((response) => {
-  console.log(response);
-});*/
-
+        async function logvar() {
+          alert(document.getElementById('email').value);
+          var eMail = document.getElementById('email').value;
+          var password = document.getElementById('password').value;
+          console.log("The E-Mail typed in was: " + eMail)
+          console.log("The Password typed in was: " + password)
+          //Works until here
+          alert(eMail);
+          login(eMail, password)
+        }
+        
+        async function login(eMail, password) {
+          try {
+            // Variables working
+              axios.post('http://localhost:3004/login',{
+                email: eMail,  password: password
+              }, {
+                headers: { 
+                  "Content-Type": "application/x-www-form-urlencoded"
+                } 
+              })
+            .then(response => {
+            data = response["data"];
+            if(!(data === "wrong user or password")){
+              localStorage.setItem('key', data);
+              alert(data.includes("create_product"));
+            if(data.includes("create_product")){
+              location.href = "/API/createproduct.html";
+            }
+            else{
+              location.href = "/Seiten/Html/Homepage.html";
+            }
+            alert("hell"+localStorage.getItem('key'))
+            }
+            console.log(response);
+        })
+        }
+        
+        catch{}
+      }
       </script>
-
+     
       <!--register-->
 
       <div id="id01" class="modal">

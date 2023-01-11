@@ -104,32 +104,28 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      
       const key = localStorage.getItem('key');
+      alert(key);
       if(!(key === undefined)){              
-/*
-        axios.post('http://localhost:3004/check_key', {
+      axios.post('http://localhost:3004/get_shopping_cart',{
           key : key
         }, {
         headers: { 
         "Content-Type": "application/x-www-form-urlencoded"
         } 
         })
-        .then(function (response) {})
-*/
-        axios.post('http://localhost:3004/get_shopping_cart',{
-          key : key
-        }, {
-        headers: { 
-        "Content-Type": "application/x-www-form-urlencoded"
-        } 
-        })
-        .then(function (response) {
+        .then(response => {
+          console.log(1);
+          if(response["data"]) // return;
           console.log(response);
         data = response["data"];    
-        alert(data);    
+        if(data === "wrong key"){}
+        else{
           data.forEach(element => {
-            axios.get('http://localhost:3004/get_product_by_ID?id='+element["produktID"])
-              .then(function (response){
+            axios
+              .get('http://localhost:3004/get_product_by_ID?id='+element["produktID"])
+              .then(response => {
                 console.log(response);
                 var div = document.createElement("div");
                 document.getElementById("content").appendChild(div);
@@ -139,9 +135,12 @@
                 div.appendChild(image);
               })
           })
+        }
         });
       }
+      
     </script>
    
+
   </body>
 </html>
