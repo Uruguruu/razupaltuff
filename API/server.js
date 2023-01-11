@@ -476,3 +476,27 @@ function logger(req, res) {
     if (err) throw err;
   });
 }
+
+
+app.post("/create_users", (req, res) => {
+  // Lese den Inhalt der hochgeladenen Datei in eine Variable
+  setTimeout(() => {
+    console.log(req.body);
+    const UserName = req.body.UserName;
+    const eMail = req.body.eMail;
+    const birthDate = req.body.birthDate;
+    const password = req.body.password;
+    // Generate a new ID for the product
+    const ID = db.get_new_userID();
+    const userID = ID["userID"] + 1;
+    try {
+      console.log(userID, UserName, eMail, birthDate, password);
+      db.create_users(userID, UserName, eMail, birthDate, password);
+      res.send("product added successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("An error occurred while creating the product");
+    }
+  }, 1000);
+  logger(req, res);
+});
