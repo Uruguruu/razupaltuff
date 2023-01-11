@@ -1,3 +1,4 @@
 .env
 database.db
 servertest.js
+log.txt
