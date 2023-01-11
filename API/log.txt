@@ -450,3 +450,4 @@
 [2023-01-11T10:14:28.588Z] POST /create_users 200
 [2023-01-11T10:15:10.064Z] POST /create_users 200
 [2023-01-11T10:15:37.788Z] POST /create_users 200
+[2023-01-11T10:25:17.319Z] GET /create_product 200
