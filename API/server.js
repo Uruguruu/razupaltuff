@@ -414,16 +414,18 @@ app.post("/get_shopping_cart", (req, res) => {
   // to login into your account
   make(req, res);
   async function make(req, res) {
+    try{
     let {key} = req.body;
-    if(!(await check_key_w_E(key))) {res.send("wrong key");}
-    else{
+   
       console.log(!(await check_key_w_E(key)));
       var user = await getuser(key);
       console.log(user);
       var userid = await db.get_user_ID(user);
       console.log(userid);
       res.send(db.get_cart(userid["userID"]));
-    }
+   
+}
+catch{res.send("wrong key");}
 }
 });
 

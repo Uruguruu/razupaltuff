@@ -66,14 +66,6 @@
         
       </div>
       <div class="blue-line"></div>
-      <div id="content">
-      <div class="d-flex  bd-highlight justify-content-evenly">
-        <div class="p-2 bd-highlight"><h4 class="card-title">water bottle</h4><img src="../../img/water.png" alt="Waterbottle" style="width: 10vw;" style="height: 10vw;"></div>
-        <div class="p-2 bd-highlight"><h4 class="card-title">
-        </h4></div>
-        <div class="*p-2 bd-highlight"><h5 class="red">17.-</h5></div>
-      </div>
-      <div class="blue-line"></div>
       <div class="d-flex  bd-highlight justify-content-evenly">
         <div class="p-2 bd-highlight"><h4 class="card-title">water bottle</h4><img src="../../img/water.png" alt="Waterbottle" style="width: 10vw;" style="height: 10vw;"></div>
         <div class="p-2 bd-highlight"><h4 class="card-title">
@@ -85,10 +77,20 @@
       </div>
       <div class="blue-line"></div>
       <div class="d-flex  bd-highlight justify-content-evenly">
+        <div class="p-2 bd-highlight"><h4 class="card-title">boots</h4><img src="../../img/boots.png" alt="boots" style="width: 10vw;" style="height: 10vw;"></div>
+        <div class="p-2 bd-highlight"><h4 class="card-title">
+          - leather <br />
+          - water proof <br />
+          - sustainability
+        </h4></div>
+        <div class="p-2 bd-highlight"><h5 class="red">135.-</h5></div>
+      </div>
+      <div class="blue-line"></div>
+      <div class="d-flex  bd-highlight justify-content-evenly">
         <div class="p-2 bd-highlight"></div>
         <div class="p-2 bd-highlight"></div>
         <div class="p-2 bd-highlight"></div>
-        <div class="p-2 bd-highlight"><h5 class="red">Total 17.-</h5></div>
+        <div class="p-2 bd-highlight"><h5 class="red">Total 152.-</h5></div>
       </div>
       <div class="d-flex  bd-highlight justify-content-evenly">
         <div class="p-2 bd-highlight"></div>
@@ -106,7 +108,6 @@
     <script>
       
       const key = localStorage.getItem('key');
-      alert(key);
       if(!(key === undefined)){              
       axios.post('http://localhost:3004/get_shopping_cart',{
           key : key
@@ -122,19 +123,7 @@
         data = response["data"];    
         if(data === "wrong key"){}
         else{
-          data.forEach(element => {
-            axios
-              .get('http://localhost:3004/get_product_by_ID?id='+element["produktID"])
-              .then(response => {
-                console.log(response);
-                var div = document.createElement("div");
-                document.getElementById("content").appendChild(div);
-                var image = document.createElement("img");
-                let imageUrl = 'data:image/jpeg;base64,' + btoa(String.fromCharCode.apply(null, response["data"]["Image"]));
-                image.src = imageUrl;
-                div.appendChild(image);
-              })
-          })
+          console.log(data);
         }
         });
       }
