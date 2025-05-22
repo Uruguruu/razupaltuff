@@ -1,7 +1,8 @@
 {
+  "name": "razupaltuff",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express-session": "^1.17.3",
-    "mysql2": "^2.3.3"
+    "cors": "2.8.5",
+    "express-session": "1.18.1",
+    "mysql2": "3.14.1"
   }
 }
