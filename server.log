@@ -1,0 +1,19 @@
+/app/API/node_modules/bindings/bindings.js:121
+        throw e;
+        ^
+
+Error: /app/API/node_modules/better-sqlite3/build/Release/better_sqlite3.node: invalid ELF header
+    at Object..node (node:internal/modules/cjs/loader:1921:18)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1487:12)
+    at require (node:internal/modules/helpers:135:16)
+    at bindings (/app/API/node_modules/bindings/bindings.js:112:48)
+    at new Database (/app/API/node_modules/better-sqlite3/lib/database.js:48:64)
+    at new module.exports (/app/API/database.js:8:13) {
+  code: 'ERR_DLOPEN_FAILED'
+}
+
+Node.js v22.17.1
